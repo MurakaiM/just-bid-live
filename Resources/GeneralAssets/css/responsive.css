@@ -1,0 +1,146 @@
+/*sm*/
+@media (min-width: 0px) and (max-width: 575px) {
+  .left{
+    text-align: center;
+  }
+
+  .right{
+    text-align: center;
+  }
+
+  .links a{
+    margin: 0 20px;
+  }
+
+  .products .pins{
+    padding: 0;
+    padding-top: 25px;
+    width: 100%;
+    margin: auto;
+  }
+
+  .product{
+    -webkit-box-shadow: 0 0 5px 0 rgba(0, 0, 0, .25);
+    -moz-box-shadow: 0 0 5px 0 rgba(0, 0, 0, .25);
+    box-shadow: 0 0 5px 0 rgba(0, 0, 0, .25);
+  }
+
+  .product:hover{
+    -webkit-box-shadow: 0 0 5px 0 rgba(0, 0, 0, .25);
+    -moz-box-shadow: 0 0 5px 0 rgba(0, 0, 0, .25);
+    box-shadow: 0 0 5px 0 rgba(0, 0, 0, .25);
+  }
+
+  nav .col-sm-0 a{
+    display: none;
+  }
+
+  .small_lefted{
+    text-align: left;
+  }
+
+  .small_righted{
+    display: block;
+    text-align: right;
+  }
+
+  .mobile_menu{
+    display: block;
+  }
+
+
+  .ui.search .searchbox{
+    position: relative;
+    top: -1px;
+    border-radius: 0;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+  }
+
+  nav .row{
+    margin-right: -5px;
+   margin-left: -15px;
+  }
+}
+
+
+/*sm*/
+@media (min-width: 576px) and (max-width: 767px) {
+  .left{
+    text-align: center;
+  }
+
+  .right{
+    text-align: center;
+  }
+
+  .links a{
+    margin: 0 20px;
+  }
+
+  .products .pins{
+    padding: 0;
+    padding-top: 25px;
+    width: 100%;
+    margin: auto;
+  }
+
+  .product{
+    -webkit-box-shadow: 0 0 5px 0 rgba(0, 0, 0, .25);
+    -moz-box-shadow: 0 0 5px 0 rgba(0, 0, 0, .25);
+    box-shadow: 0 0 5px 0 rgba(0, 0, 0, .25);
+  }
+
+  .product:hover{
+    -webkit-box-shadow: 0 0 5px 0 rgba(0, 0, 0, .25);
+    -moz-box-shadow: 0 0 5px 0 rgba(0, 0, 0, .25);
+    box-shadow: 0 0 5px 0 rgba(0, 0, 0, .25);
+  }
+
+  nav .col-sm-0 a{
+    display: none;
+  }
+
+  .small_lefted{
+    text-align: left;
+  }
+
+  .small_righted{
+    display: block;
+    text-align: right;
+  }
+
+  .mobile_menu{
+    display: block;
+  }
+
+  .ui.search .searchbox{
+    position: relative;
+    top: -1px;
+    border-radius: 0;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+  }
+
+  nav .row{
+    margin-right: -5px;
+   margin-left: -15px;
+  }
+
+}
+
+/*md*/
+@media (min-width: 768px) and (max-width: 991px) {
+
+
+}
+
+/*lg*/
+@media (min-width: 992px) and (max-width: 1199px) {
+
+}
+
+/*xl*/
+@media (min-width: 1200px) {
+
+ }

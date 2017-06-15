@@ -46,8 +46,8 @@
       </div>
   </div>
   <div class="mobile_nav">
-    <a href="#">Live</a>
-    <a href="#">Stock</a>
-    <a href="#">Contact Us</a>
+    <a class="first <%if(page=="Live"){%>selected<%}%>" href="/">Live</a>
+    <a class="<%if(page=="Stock"){%>selected<%}%>" href="#">Stock</a>
+    <a class="<%if(page=="Contact"){%>selected<%}%>" href="/contact">Contact Us</a>
   </div>
 </nav>

@@ -16,16 +16,13 @@ const droplet = express();
 const server = require('http').createServer(droplet);
 
 
-
-
-
-
 function startServer(port) {
     setUses(droplet);
     setEndpoints(droplet);
 
     server.listen(process.env.PORT || 8080, () => console.log('Server was started'));
 }
+
 
 
 function setUses(app) {

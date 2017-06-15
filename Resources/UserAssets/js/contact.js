@@ -58,11 +58,5 @@ function contactForm() {
   }
 
 
-
-  $('#contactForm')
-  .form({
-      fields : validationRules,
-      inline : true,
-      on     : 'blur'
-    });
+  new Form("contactForm","/rr", validationRules);
 }

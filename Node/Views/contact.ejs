@@ -1,0 +1,68 @@
+
+<!DOCTYPE html>
+<html>
+
+  <!--Head include!-->
+  <%-include('./Common/head')%>
+  <body>
+
+    <div class="content">
+      <!--Menu include!-->
+      <%-include('./Common/menu', { page : pageName })%>
+
+      <div class="single">
+
+          <form id="contactForm" class="ui form former">
+              <h3 class="ui dividing header"><i class="fa fa-envelope" aria-hidden="true"></i>Contact information</h3>
+              <div class="field fileds-margin">
+                <label>Personal information</label>
+                <div class="two fields">
+                  <div class="field">
+                    <input type="text" name="firstName" placeholder="First Name">
+                  </div>
+                  <div class="field">
+                    <input type="text" name="lastName" placeholder="Last Name">
+                  </div>
+                </div>
+              </div>
+              <div class="field fileds-margin">
+                <label>General information</label>
+                <div class="two fields">
+                  <div class="field">
+                    <input type="text" name="email" placeholder="Email">
+                  </div>
+                  <div class="field">
+                    <select class="ui selection dropdown" name="question">
+                      <option value="">Type of question</option>
+                      <option value="general">General</option>
+                      <option value="payment">Payment</option>
+                      <option value="product">Product</option>
+                      <option value="report">Report about seller</option>
+                      <option value="customer">Customer service</option>
+                      <option value="account">Other</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="field fileds-margin">
+                <label>Message</label>
+                <div class="field">
+                  <textarea name="message" rows="6" placeholder="Type your message here..."></textarea>
+                </div>
+              </div>
+              <div class="submit_holder">
+                <div class="ui submit button">Submit</div>
+              </div>
+          </form>
+
+      </div>
+
+      <%-include('./Common/footer')%>
+    </div>
+  </body>
+
+  <!--Head include!-->
+  <%-include('./Common/scripts')%>
+  <script src="../UserAssets/js/contact.js" charset="utf-8"></script>
+  
+</html>

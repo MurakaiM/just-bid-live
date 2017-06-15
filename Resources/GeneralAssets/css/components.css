@@ -576,3 +576,102 @@ nav .mobile_nav a {
 .loading .active-wrapper {
   display: none!important;
 }
+
+.single{
+  width: 100%;
+  margin: auto;
+  margin-top: 50px;
+  max-width: 768px;
+}
+
+.ui.form textarea{
+  resize: none;
+}
+
+.ui.form .field > label{
+  font-weight: 600;
+  color : #07406f;
+}
+
+.ui.form  .fileds-margin{
+  margin-bottom: 20px;
+}
+
+.ui.dividing.header{
+  margin-bottom: 35px;
+}
+
+.ui.form .field .prompt.label{
+  font-weight: 600;
+}
+
+.ui.form.former{
+  padding: 55px 35px;
+  padding-bottom: 25px;
+  -webkit-box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, .2);
+  -moz-box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, .2);
+  box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, .2);
+
+}
+
+.submit_holder{
+  width: 100%;
+  margin: auto;
+  text-align: center;
+}
+
+.ui.submit.button{
+  color:white;
+  background: #0d5699;
+  -webkit-box-shadow: 0px 2px 17px 0px rgba(0, 0, 0, .3);
+  -moz-box-shadow: 0px 2px 17px 0px rgba(0, 0, 0, .3);
+  box-shadow: 0px 2px 17px 0px rgba(0, 0, 0, .3);
+  transition: .5s ease all;
+}
+
+.ui.submit.button:hover{
+  background: #1069bc;
+}
+
+.ui.submit.button:active{
+  background: #07406f;
+}
+
+.ui.dividing.header{
+    color: #0d5699;
+}
+
+.ui.dividing.header i{
+  position: relative;
+  font-size: 25px;
+  margin-right:  5px;
+  top: 0px;
+}
+
+.datepicker table tr td.disabled, .datepicker table tr td.disabled:hover{
+  opacity: 0.2;
+}
+
+.dropdown-menu{
+  -webkit-box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, .2);
+  -moz-box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, .2);
+  box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, .2);
+}
+
+.ui.icon.input > input:focus ~ i.icon{
+  opacity: 1;
+  z-index: 0;
+}
+
+.ui.icon.input > input{
+  padding-right: 10px!important;
+  padding-left: 45px!important;
+}
+
+.ui[class*="left icon"].input > i.icon{
+  font-size: 19px;
+  top: 1px;
+  background: #f2f2f2;
+  width: 35px;
+  height: calc(100% - 2px);
+}

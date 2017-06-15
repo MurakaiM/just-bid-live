@@ -1,5 +1,8 @@
 <div class="top_wrapper gradiental_background"></div>
 
+
+
+
 <div class="above_menu row">
   <div class="col-md-6 left">
     <span class="logo">JustWhatsApp</span>
@@ -12,9 +15,9 @@
 <nav>
   <div class="row">
       <div class="col-sm-0 col-md-6 col-lg-6 left">
-          <a class="first selected" href="#">Live</a>
-          <a href="#">Stock</a>
-          <a href="#">Contact Us</a>
+          <a class="first <%if(page=="Live"){%>selected<%}%>" href="/">Live</a>
+          <a class="<%if(page=="Stock"){%>selected<%}%>" href="#">Stock</a>
+          <a class="<%if(page=="Contact"){%>selected<%}%>" href="/contact">Contact Us</a>
       </div>
       <div class="col-9 col-sm-6 col-md-6 col-lg-6 right small_lefted">
       <div class="relative">

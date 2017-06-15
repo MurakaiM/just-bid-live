@@ -7,13 +7,17 @@ const flash = require('connect-flash');
 const express = require('express');
 const bodyParser = require('body-parser');
 
-
 /* Local modules */
 const database = require('./Database/database.controller');
+const PMain = require('./Pages/main.renderer');
 
 /* Static init */
 const droplet = express();
 const server = require('http').createServer(droplet);
+
+
+
+
 
 
 function startServer(port) {
@@ -37,7 +41,8 @@ function setUses(app) {
 }
 
 function setEndpoints(app) {
-  app.get('/', (req,res) => res.render("home"));
+  app.get('/', PMain.live);
+  app.get('/contact', PMain.contact);
 }
 
 

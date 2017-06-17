@@ -17,7 +17,7 @@ body {
 .top_wrapper {
   position: absolute;
   width: 100%;
-  height: 300px;
+  height: 260px;
   top: 0;
   left: 0;
   z-index: -1;
@@ -235,6 +235,7 @@ nav input:focus~i {}
   -webkit-box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, .1);
   -moz-box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, .1);
   box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, .1);
+  border: 1px solid rgba(0, 0, 0, 0.125);
   width: 100%;
   margin: auto;
   background: white;
@@ -260,10 +261,43 @@ nav input:focus~i {}
   box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, .25);
 }
 
-.product:hover {
+
+.ui.label.new {
+  position: absolute;
+  top: 10px!important;
+  left: -10px!important;
+  cursor: default;
+  background: #37a000!important;
+  border-color: #2d8000!important;
+  color: white;
+  left: -15px;
+  transition: all .4s ease;
   -webkit-box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, .25);
   -moz-box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, .25);
   box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, .25);
+}
+
+.ui.label.pop{
+  position: absolute;
+  top: 10px!important;
+  left: -10px!important;
+  cursor: default;
+  background: #e6c300!important;
+  border-color: #ccad00!important;
+  color: white;
+  left: -15px;
+  transition: all .4s ease;
+  -webkit-box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, .25);
+  -moz-box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, .25);
+  box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, .25);
+}
+
+
+
+.product:hover {
+  -webkit-box-shadow: 0px 2px 9px 0px rgba(0, 0, 0, .25);
+  -moz-box-shadow: 0px 2px 9px 0px rgba(0, 0, 0, .25);
+  box-shadow: 0px 2px 9px 0px rgba(0, 0, 0, .25);
 }
 
 .product:hover .hot {
@@ -272,19 +306,43 @@ nav input:focus~i {}
   box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, .55);
 }
 
-.product img {
+
+
+.product .image:before{
+	content: "";
+	display: block;
+	padding-top: 100%; 	/* initial ratio of 1:1*/
+}
+
+.product .image{
+  position: relative;
+}
+
+.product .image img {
   width: 100%;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
   display: block;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
 }
 
 .product .titile {
+  border-top: 1px solid rgba(0, 0, 0, 0.125);
   font-weight: 500;
   font-size: 15px;
   text-align: center;
   color: #0d5699;
   padding: 5px 15px;
+  padding-top: 20px;
+}
+
+.product .description{
+  padding: 5px 20px;
+  text-align: center;
 }
 
 .product .name {
@@ -432,7 +490,6 @@ button span {
 }
 
 .list_item .icon {
-  color: #d12998;
   font-size: 11.5px;
   height: 100%;
   display: inline-block;

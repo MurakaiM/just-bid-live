@@ -40,6 +40,7 @@ function setUses(app) {
 function setEndpoints(app) {
   app.get('/', PMain.live);
   app.get('/contact', PMain.contact);
+  app.get('/stock', PMain.stock);
 }
 
 

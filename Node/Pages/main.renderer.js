@@ -1,3 +1,4 @@
+var categoriesPopups = require('../Database/database.categories').categoriesPopups;
 
 exports.live = function (req,res) {
   var pageInfo = {
@@ -14,3 +15,12 @@ exports.contact = function (req,res) {
 
   res.render('contact', pageInfo);
 };
+
+exports.stock = function (req,res) {
+  var pageInfo = {
+    pageName : "Stock",
+    popups : categoriesPopups.popups
+  };
+
+  res.render('stock', pageInfo);
+}

@@ -1,5 +1,9 @@
 /*sm*/
 @media (min-width: 0px) and (max-width: 575px) {
+  .special_purposes{
+    display: none;
+  }
+
   .left{
     text-align: center;
   }
@@ -66,6 +70,10 @@
 
 /*sm*/
 @media (min-width: 576px) and (max-width: 767px) {
+  .special_purposes{
+    display: none;
+  }
+
   .left{
     text-align: center;
   }

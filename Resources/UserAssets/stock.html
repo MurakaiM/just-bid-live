@@ -1,0 +1,520 @@
+
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Stock</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Work+Sans:400,500,600,700,800,900" rel="stylesheet">
+
+
+    <link rel="stylesheet" href="../GeneralAssets/css/bootstrap.css">
+    <link rel="stylesheet" href="../GeneralAssets/semantic/semantic.css">
+
+    <link rel="stylesheet" href="../GeneralAssets/css/components.css">
+    <link rel="stylesheet" href="../GeneralAssets/css/shop.css">
+
+    <link rel="stylesheet" href="../GeneralAssets/css/responsive.css">
+
+
+  </head>
+
+  <body>
+
+    <div class="content">
+      <div class="top_wrapper gradiental_background"></div>
+      <div class="above_menu row">
+        <div class="col-md-6 left">
+          <span class="logo">JustWhatsApp</span>
+        </div>
+        <div class="col-md-6 right links">
+            <a href="#">My Account</a>
+            <a href="#">Contact Us</a>
+        </div>
+      </div>
+      <nav>
+        <div class="row">
+            <div class="col-sm-0 col-md-6 col-lg-6 left">
+                <div class="ui">
+                  <a class="first selected" href="#">Live</a>
+                  <a  href="#">Stock</a>
+                  <a href="#">Contact Us</a>
+                </div>
+            </div>
+            <div class="col-9 col-sm-6 col-md-6 col-lg-6 right small_lefted">
+            <div class="relative">
+              <div class="ui category search">
+                <div class="ui icon input">
+                  <input class="prompt searchbox" type="text" placeholder="Search Store...">
+                  <i class="fa fa-search active-wrapper" aria-hidden="true"></i>
+                  <i class="loading-wrapper">
+                    <i class="loading-icon" aria-hidden="true"></i>
+                  </i>
+                </div>
+                <div class="results">
+                  <div class="name">Passwords</div>
+                  <a class="result"><div class="content"><div class="title">123456</div></div></a>
+                  <a class="result"><div class="content"><div class="title">12345678</div></div></a>
+                  <a class="result"><div class="content"><div class="title">1234</div></div></a>
+                </div>
+              </div>
+            </div>
+
+            </div>
+            <div class="col-3 col-sm-6 col-md-0 col-lg-0 small_righted">
+                <div class="mobile_menu">
+                    <i id="mobile_button" class="fa fa-bars" aria-hidden="true"></i>
+                </div>
+            </div>
+        </div>
+        <div class="mobile_nav">
+          <a href="#">Live</a>
+          <a href="#">Stock</a>
+          <a href="#">Contact Us</a>
+        </div>
+      </nav>
+
+
+      <div class="row products">
+        <div class="col-md-4 col-lg-3" >
+            <div class="stock header">
+               Categories
+            </div>
+            <div class="ui segment categories stock">
+              <div class="list stock_list">
+                <div class="list_item top_level" data-popup="women_clothing">
+                  <span class="icon"><img src="../UserAssets/img/LinearIcons/dress.png" alt=""></span>
+                  <span class="text">Women's Clothing</span>
+                </div>
+                <div class="list_item top_level" data-popup="men_clothing">
+                  <span class="icon"><img src="../UserAssets/img/LinearIcons/polo.png" alt=""></span>
+                  <span class="text">Men's Clothing</span>
+                </div>
+                <div class="list_item top_level" data-popup="watches">
+                  <span class="icon"><img src="../UserAssets/img/LinearIcons/watch.png" alt=""></span>
+                  <span class="text">Jewelry & Watches</span>
+                </div>
+                <div class="list_item top_level" data-popup="bags">
+                  <span class="icon"><img src="../UserAssets/img/LinearIcons/hand-bag.png" alt=""></span>
+                  <span class="text">Bags & Shoes</span>
+                </div>
+                <div class="list_item top_level" data-popup="health">
+                  <span class="icon"><img src="../UserAssets/img/LinearIcons/purse.png" alt=""></span>
+                  <span class="text">Health & Beauty, Hair</span>
+                </div>
+              </div>
+            </div>
+        </div>
+        <div class="col-md-8 col-lg-9 actions">
+
+          <div class="special_purposes">
+
+            <div class="special_wrapper">
+              <div class="special_purpose">
+                    <a href="#">
+                      <img src="http://picture-cdn.wheretoget.it/hwz42a-i.jpg" alt="">
+                    </a>
+                </div>
+              <div class="special_purpose">
+                    <a href="#">
+                      <img src="http://picture-cdn.wheretoget.it/48un9s-i.jpg" alt="">
+                    </a>
+                </div>
+            </div>
+
+            <div class="special_controlls">
+                <i class="radio icon"></i>
+                <i class="radio icon"></i>
+            </div>
+
+          </div>
+
+
+
+
+          <div id="women_clothing" class="ui segment list_categories hidden">
+              <div class="row">
+                <div class="col-lg-4 hoverable_list">
+                  <a class="hoverable_title" href="#">Hot Categories</a>
+                  <div class="hoverable_sublist">
+                    <a class="hoverable_item" href="#">Dresses</a>
+                    <a class="hoverable_item" href="#">Blouses & Shirts</a>
+                    <a class="hoverable_item" href="#">T-Shirts</a>
+                    <a class="hoverable_item" href="#">Jumpsuits</a>
+                    <a class="hoverable_item" href="#">Rompers</a>
+                    <a class="hoverable_item" href="#">Socks</a>
+                  </div>
+                </div>
+                <div class="col-lg-4 hoverable_list">
+                  <a class="hoverable_title" href="#">Bottoms</a>
+                  <div class="hoverable_sublist">
+                    <a class="hoverable_item" href="#">Skirts</a>
+                    <a class="hoverable_item" href="#">Shorts</a>
+                    <a class="hoverable_item" href="#">Leggings</a>
+                    <a class="hoverable_item" href="#">Jeans</a>
+                    <a class="hoverable_item" href="#">Pants & Capris</a>
+                    <a class="hoverable_item" href="#">Wide Leg Pants</a>
+                  </div>
+                </div>
+                <div class="col-lg-4 hoverable_list">
+                  <a class="hoverable_title" href="#">Intimates & Sleepwear</a>
+                  <div class="hoverable_sublist">
+                    <a class="hoverable_item" href="#">Bras</a>
+                    <a class="hoverable_item" href="#">Bra & Brief Sets</a>
+                    <a class="hoverable_item" href="#">Bustiers & Corsets</a>
+                    <a class="hoverable_item" href="#">Panties</a>
+                    <a class="hoverable_item" href="#">Nightgowns & Sleepshirts</a>
+                    <a class="hoverable_item" href="#">Pajama Sets</a>
+                  </div>
+                </div>
+
+                <div class="col-lg-4 hoverable_list">
+                  <a class="hoverable_title" href="#">Outwear & Jackets</a>
+                  <div class="hoverable_sublist">
+                    <a class="hoverable_item" href="#">Blazers</a>
+                    <a class="hoverable_item" href="#">Basic Jackets</a>
+                    <a class="hoverable_item" href="#">Trench</a>
+                    <a class="hoverable_item" href="#">Leather & Suede</a>
+                    <a class="hoverable_item" href="#">Parkas</a>
+                    <a class="hoverable_item" href="#">Down Coats</a>
+                  </div>
+                </div>
+                <div class="col-lg-4 hoverable_list">
+                  <a class="hoverable_title" href="#">Weddings & Events</a>
+                  <div class="hoverable_sublist">
+                    <a class="hoverable_item" href="#">Wedding Dresses</a>
+                    <a class="hoverable_item" href="#">Evening Dresses</a>
+                    <a class="hoverable_item" href="#">Prom Dresses</a>
+                    <a class="hoverable_item" href="#">Bridesmaid Dresses</a>
+                    <a class="hoverable_item" href="#">Flower Girl Dresses</a>
+                    <a class="hoverable_item" href="#">Cocktail Dresses</a>
+                  </div>
+                </div>
+                <div class="col-lg-4 hoverable_list">
+                  <a class="hoverable_title" href="#">Accessories</a>
+                  <div class="hoverable_sublist">
+                    <a class="hoverable_item" href="#">Sunglasses</a>
+                    <a class="hoverable_item" href="#">Headwear</a>
+                    <a class="hoverable_item" href="#">Baseball Caps</a>
+                    <a class="hoverable_item" href="#">Scarves & Wraps</a>
+                    <a class="hoverable_item" href="#">Belts</a>
+                    <a class="hoverable_item" href="#">Skullies & Beanies</a>
+                  </div>
+                </div>
+              </div>
+          </div>
+          <div id="men_clothing" class="ui segment list_categories hidden"></div>
+          <div id="watches" class="ui segment list_categories hidden"></div>
+          <div id="bags" class="ui segment list_categories hidden"></div>
+          <div id="health" class="ui segment list_categories hidden"></div>
+
+
+        </div>
+      </div>
+
+
+      <div class="row products">
+        <div class="col-12 prerow">
+           New products
+        </div>
+
+        <div class="col-lg-3">
+          <div class="product stock">
+            <div class="image">  <img src="https://img1.etsystatic.com/107/1/5609612/il_340x270.992188973_g9u7.jpg" alt=""> </div>
+            <div class="ui label new">NEW</div>
+            <div class="titile">
+                Great gray dress
+            </div>
+            <div class="description">
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+            </div>
+
+            <div class="stocked">
+              <div class="price"><i class="fa fa-usd" aria-hidden="true"></i>100</div>
+
+                <button class="added"><i class="add to cart icon" aria-hidden="true"></i></button>
+                <button class="added wish"><i class="heart icon" aria-hidden="true"></i></button>
+            </div>
+
+          </div>
+        </div>
+        <div class="col-lg-3">
+          <div class="product stock">
+            <div class="image">  <img src="  https://s-media-cache-ak0.pinimg.com/736x/fb/60/90/fb6090f6808037dd4aedb50f0cfbc7d8.jpg" alt=""> </div>
+            <div class="ui label new">NEW</div>
+            <div class="titile">
+                Another dress
+            </div>
+            <div class="description">
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+            </div>
+
+            <div class="stocked">
+              <div class="price"><i class="fa fa-usd" aria-hidden="true"></i>200</div>
+
+              <button class="added"><i class="add to cart icon" aria-hidden="true"></i></button>
+              <button class="added wish"><i class="heart icon" aria-hidden="true"></i></button>
+            </div>
+
+          </div>
+        </div>
+        <div class="col-lg-3">
+          <div class="product stock">
+            <div class="image">  <img src="https://s-media-cache-ak0.pinimg.com/736x/6a/ec/33/6aec33cb400c584df22c82f878db3db4.jpg" alt=""> </div>
+            <div class="ui label new">NEW</div>
+            <div class="titile">
+                Great gray dress
+            </div>
+            <div class="description">
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+            </div>
+
+            <div class="stocked">
+              <div class="price"><i class="fa fa-usd" aria-hidden="true"></i>40</div>
+                <button class="added"><i class="add to cart icon" aria-hidden="true"></i></button>
+                <button class="added wish"><i class="heart icon" aria-hidden="true"></i></button>
+            </div>
+
+          </div>
+        </div>
+        <div class="col-lg-3">
+          <div class="product stock">
+            <div class="image">  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKb2DM0rN2D1Ymq4KmmMh-BmJps-n3Lc1TOHGAih9RaoN0iWgJ" alt=""> </div>
+            <div class="ui label new">NEW</div>
+            <div class="titile">
+                Shirt
+            </div>
+            <div class="description">
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+            </div>
+
+            <div class="stocked">
+              <div class="price"><i class="fa fa-usd" aria-hidden="true"></i>200</div>
+                <button class="added"><i class="add to cart icon" aria-hidden="true"></i></button>
+                <button class="added wish"><i class="heart icon" aria-hidden="true"></i></button>
+            </div>
+
+            <div class="ui popup">
+              <div class="header">Custom Header</div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="row products">
+        <div class="col-12 prerow">
+           Popular products
+        </div>
+
+        <div class="col-lg-3">
+          <div class="product stock">
+            <div class="image">  <img src="https://img1.etsystatic.com/107/1/5609612/il_340x270.992188973_g9u7.jpg" alt=""> </div>
+            <div class="ui label pop">POP</div>
+            <div class="titile">
+                Great gray dress
+            </div>
+            <div class="description">
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+            </div>
+
+            <div class="stocked">
+              <div class="price"><i class="fa fa-usd" aria-hidden="true"></i>100</div>
+                <button class="added"><i class="add to cart icon" aria-hidden="true"></i></button>
+                <button class="added wish"><i class="heart icon" aria-hidden="true"></i></button>
+            </div>
+
+          </div>
+        </div>
+        <div class="col-lg-3">
+          <div class="product stock">
+            <div class="image">  <img src="  https://s-media-cache-ak0.pinimg.com/736x/fb/60/90/fb6090f6808037dd4aedb50f0cfbc7d8.jpg" alt=""> </div>
+            <div class="ui label pop">POP</div>
+            <div class="titile">
+                Another dress
+            </div>
+            <div class="description">
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+            </div>
+
+            <div class="stocked">
+              <div class="price"><i class="fa fa-usd" aria-hidden="true"></i>200</div>
+                <button class="added"><i class="add to cart icon" aria-hidden="true"></i></button>
+                <button class="added wish"><i class="heart icon" aria-hidden="true"></i></button>
+            </div>
+
+          </div>
+        </div>
+        <div class="col-lg-3">
+          <div class="product stock">
+            <div class="image">  <img src="https://s-media-cache-ak0.pinimg.com/736x/6a/ec/33/6aec33cb400c584df22c82f878db3db4.jpg" alt=""> </div>
+            <div class="ui label pop">POP</div>
+            <div class="titile">
+                Great gray dress
+            </div>
+            <div class="description">
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+            </div>
+
+            <div class="stocked">
+              <div class="price"><i class="fa fa-usd" aria-hidden="true"></i>40</div>
+                <button class="added"><i class="add to cart icon" aria-hidden="true"></i></button>
+                <button class="added wish"><i class="heart icon" aria-hidden="true"></i></button>
+            </div>
+
+          </div>
+        </div>
+        <div class="col-lg-3">
+          <div class="product stock">
+            <div class="image">  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKb2DM0rN2D1Ymq4KmmMh-BmJps-n3Lc1TOHGAih9RaoN0iWgJ" alt=""> </div>
+            <div class="ui label pop">POP</div>
+            <div class="titile">
+                Shirt
+            </div>
+            <div class="description">
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+            </div>
+
+            <div class="stocked">
+              <div class="price"><i class="fa fa-usd" aria-hidden="true"></i>200</div>
+                <button class="added"><i class="add to cart icon" aria-hidden="true"></i></button>
+                <button class="added wish"><i class="heart icon" aria-hidden="true"></i></button>
+            </div>
+
+            <div class="ui popup">
+              <div class="header">User Rating</div>
+              <div class="ui star rating" data-rating="3" data-max-rating="5"></div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="divider blue"></div>
+      <footer class="row">
+        <div class="col-12 col-sm-12 col-md-6 col-lg-3 categories" >
+          <div class="list_wrapper">
+            <div class="header">Information</div>
+            <div class="ui divider"></div>
+            <div class="list">
+              <div class="list_item">
+                <span class="icon"><i class="fa fa-arrow-right" aria-hidden="true"></i></span>
+                <span class="text">About</span>
+              </div>
+              <div class="list_item">
+                <span class="icon"><i class="fa fa-arrow-right" aria-hidden="true"></i></span>
+                <span class="text">Team</span>
+              </div>
+              <div class="list_item">
+                <span class="icon"><i class="fa fa-arrow-right" aria-hidden="true"></i></span>
+                <span class="text">Careers</span>
+              </div>
+              <div class="list_item">
+                <span class="icon"><i class="fa fa-arrow-right" aria-hidden="true"></i></span>
+                <span class="text">Privacy</span>
+              </div>
+              <div class="list_item">
+                <span class="icon"><i class="fa fa-arrow-right" aria-hidden="true"></i></span>
+                <span class="text">Reviews</span>
+              </div>
+              <div class="list_item">
+                <span class="icon"><i class="fa fa-arrow-right" aria-hidden="true"></i></span>
+                <span class="text">Copyright Policy</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-sm-12 col-md-6 col-lg-3 categories" >
+          <div class="list_wrapper">
+            <div class="header">Categories</div>
+            <div class="ui divider"></div>
+            <div class="list">
+              <div class="list_item">
+                <span class="icon"><i class="fa fa-arrow-right" aria-hidden="true"></i></span>
+                <span class="text">About</span>
+              </div>
+              <div class="list_item">
+                <span class="icon"><i class="fa fa-arrow-right" aria-hidden="true"></i></span>
+                <span class="text">Team</span>
+              </div>
+              <div class="list_item">
+                <span class="icon"><i class="fa fa-arrow-right" aria-hidden="true"></i></span>
+                <span class="text">Careers</span>
+              </div>
+              <div class="list_item">
+                <span class="icon"><i class="fa fa-arrow-right" aria-hidden="true"></i></span>
+                <span class="text">Privacy</span>
+              </div>
+              <div class="list_item">
+                <span class="icon"><i class="fa fa-arrow-right" aria-hidden="true"></i></span>
+                <span class="text">Reviews</span>
+              </div>
+              <div class="list_item">
+                <span class="icon"><i class="fa fa-arrow-right" aria-hidden="true"></i></span>
+                <span class="text">Copyright Policy</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-sm-12 col-md-6 col-lg-3 categories" >
+          <div class="list_wrapper">
+            <div class="header">Customer Support</div>
+            <div class="ui divider"></div>
+            <div class="list">
+              <div class="list_item">
+                <span class="icon"><i class="fa fa-arrow-right" aria-hidden="true"></i></span>
+                <span class="text">View FAQs</span>
+              </div>
+              <div class="list_item">
+                <span class="icon"><i class="fa fa-arrow-right" aria-hidden="true"></i></span>
+                <span class="text">Authenticity Guarantee</span>
+              </div>
+              <div class="list_item">
+                <span class="icon"><i class="fa fa-arrow-right" aria-hidden="true"></i></span>
+                <span class="text">Buyer Protection</span>
+              </div>
+              <div class="list_item">
+                <span class="icon"><i class="fa fa-arrow-right" aria-hidden="true"></i></span>
+                <span class="text">Buyer Terms of Use</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-sm-12 col-md-6 col-lg-3 categories" >
+          <div class="list_wrapper">
+            <div class="header">Contact Us</div>
+            <div class="ui divider"></div>
+            <div class="list">
+              <div class="list_item">
+                <span class="icon"><i class="fa fa-map-marker biger" aria-hidden="true"></i></span>
+                <span class="text">1349th St, ABC Fl 5/4 City XYZ</span>
+              </div>
+              <div class="list_item">
+                <span class="icon"><i class="fa fa-phone biger" aria-hidden="true"></i></span>
+                <span class="text">1-234-1234-567</span>
+              </div>
+              <div class="list_item">
+                <span class="icon"><i class="fa fa-envelope biger" aria-hidden="true"></i></span>
+                <span class="text">info@justwhatsup.com</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <div class="blackout"></div>
+
+
+  </body>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js" charset="utf-8"></script>
+  <script src="../GeneralAssets/semantic/semantic.js" charset="utf-8"></script>
+  <script src="../UserAssets/js/buttons.js" charset="utf-8"></script>
+  <script src="../UserAssets/js/search.js" charset="utf-8"></script>
+  <script src="../UserAssets/js/stock.js" charset="utf-8"></script>
+</html>

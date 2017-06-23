@@ -8,6 +8,11 @@ body {
   font-family: 'Work Sans', sans-serif;
 }
 
+body.stopscroll{
+  position: fixed;
+  overflow-y:scroll
+}
+
 .content {
   width: 100%;
   padding: 10px;
@@ -180,6 +185,13 @@ nav input:focus~i {}
   text-decoration: none;
   font-size: 16px;
   font-weight: 500;
+  position: relative;
+}
+
+.links .ui.label{
+
+  height: 30px;
+  padding-top: 9px;
 }
 
 .links a:hover {
@@ -316,9 +328,11 @@ nav input:focus~i {}
 
 .product .image{
   position: relative;
+  transition: opacity 1s ease;
 }
 
 .product .image img {
+  cursor: pointer;
   width: 100%;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
@@ -360,6 +374,10 @@ nav input:focus~i {}
   padding-left: 10px;
   color: #d12998;
   float: left;
+}
+
+.product .price span{
+  color : #b3b3b3;
 }
 
 .product .price i {
@@ -678,7 +696,7 @@ nav .mobile_nav a {
 }
 
 .ui.submit.button{
-  color:white;
+  color:white!important;
   background: #0d5699;
   -webkit-box-shadow: 0px 2px 17px 0px rgba(0, 0, 0, .3);
   -moz-box-shadow: 0px 2px 17px 0px rgba(0, 0, 0, .3);

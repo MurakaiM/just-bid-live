@@ -41,6 +41,7 @@ function setEndpoints(app) {
   app.get('/', PMain.live);
   app.get('/contact', PMain.contact);
   app.get('/stock', PMain.stock);
+  app.get('/product/id:product', PMain.product)
 }
 
 

@@ -24,3 +24,11 @@ exports.stock = function (req,res) {
 
   res.render('stock', pageInfo);
 }
+
+exports.product = function (req,res) {
+  var pageInfo = {
+    pageName : "Product"    
+  };
+
+  res.render('Products/product', pageInfo);
+}

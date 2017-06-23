@@ -5,6 +5,7 @@
   <!--Head include!-->
 
   <%-include('./Common/head')%>
+  <link rel="stylesheet" href="../GeneralAssets/css/responsive.css">
 
 
   <body>
@@ -14,7 +15,6 @@
       <%-include('./Common/menu', { page : pageName })%>
 
       <div class="row products">
-
         <div class="col-md-4 col-lg-3" >
             <div class="stock header">
                Categories
@@ -41,10 +41,46 @@
                   <span class="icon"><img src="../UserAssets/img/LinearIcons/purse.png" alt=""></span>
                   <span class="text">Health & Beauty, Hair</span>
                 </div>
+
+                <div class="list_item down_level" data-popup="health">
+                  <span class="icon"><img src="../UserAssets/img/OtherIcons/smartphone.png" alt=""></span>
+                  <span class="text">Phones & Accessories</span>
+                </div>
+                <div class="list_item down_level" data-popup="health">
+                  <span class="icon"><img src="../UserAssets/img/OtherIcons/monitor.png" alt=""></span>
+                  <span class="text">Computer & Office</span>
+                </div>
+                <div class="list_item down_level" data-popup="health">
+                  <span class="icon"><img src="../UserAssets/img/OtherIcons/quality.png" alt=""></span>
+                  <span class="text">Consumer Electronics</span>
+                </div>
+                <div class="list_item down_level" data-popup="health">
+                  <span class="icon"><img src="../UserAssets/img/OtherIcons/house.png" alt=""></span>
+                  <span class="text">Home & Garden, Furniture</span>
+                </div>
+                <div class="list_item down_level" data-popup="health">
+                  <span class="icon"><img src="../UserAssets/img/OtherIcons/robot.png" alt=""></span>
+                  <span class="text">Toys, Kids & Baby</span>
+                </div>
+                <div class="list_item down_level" data-popup="health">
+                  <span class="icon"><img src="../UserAssets/img/OtherIcons/tent.png" alt=""></span>
+                  <span class="text">Sports & Outdoors</span>
+                </div>
+                <div class="list_item down_level" data-popup="health">
+                  <span class="icon"><img src="../UserAssets/img/OtherIcons/car.png" alt=""></span>
+                  <span class="text">Automobiles & Motorcycles</span>
+                </div>
+                <div class="list_item down_level" data-popup="health">
+                  <span class="icon"><img src="../UserAssets/img/OtherIcons/drawing.png" alt=""></span>
+                  <span class="text">Home Improvement</span>
+                </div>
               </div>
             </div>
         </div>
         <div class="col-md-8 col-lg-9 actions">
+          <div class="stock header special">
+             Special offer
+          </div>
           <div class="special_purposes">
 
             <div class="special_wrapper">
@@ -84,195 +120,243 @@
             </div>
           <%})%>
         </div>
-
       </div>
 
       <div class="row products">
-        <div class="col-12 prerow">
-           New products
-        </div>
+              <div class="col-12 prerow">
+                 New products
+              </div>
 
-        <div class="col-lg-3">
-          <div class="product stock">
-            <div class="image">  <img src="https://img1.etsystatic.com/107/1/5609612/il_340x270.992188973_g9u7.jpg" alt=""> </div>
-            <div class="ui label new">NEW</div>
-            <div class="titile">
-                Great gray dress
-            </div>
-            <div class="description">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-            </div>
+              <div class="col-md-4 col-lg-3">
+                <div class="product stock">
+                  <div class="image">  <img src="https://img1.etsystatic.com/107/1/5609612/il_340x270.992188973_g9u7.jpg" alt=""> </div>
+                  <div class="ui label new">NEW</div>
+                  <div class="titile">
+                      Great gray dress
+                  </div>
+                  <div class="description">
+                      Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                  </div>
 
-            <div class="stocked">
-              <div class="price"><i class="fa fa-usd" aria-hidden="true"></i>100</div>
+                  <div class="stocked">
+                    <div class="price"><i class="fa fa-usd" aria-hidden="true"></i>100</div>
 
-                <button class="added"><i class="add to cart icon" aria-hidden="true"></i></button>
-                <button class="added wish"><i class="heart icon" aria-hidden="true"></i></button>
-            </div>
+                      <button class="added"><i class="add to cart icon" aria-hidden="true"></i></button>
+                      <button class="added wish"><i class="heart icon" aria-hidden="true"></i></button>
+                  </div>
 
-          </div>
-        </div>
-        <div class="col-lg-3">
-          <div class="product stock">
-            <div class="image">  <img src="  https://s-media-cache-ak0.pinimg.com/736x/fb/60/90/fb6090f6808037dd4aedb50f0cfbc7d8.jpg" alt=""> </div>
-            <div class="ui label new">NEW</div>
-            <div class="titile">
-                Another dress
-            </div>
-            <div class="description">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-            </div>
+                </div>
+              </div>
+              <div class="col-md-4 col-lg-3">
+                <div class="product stock">
+                  <div class="image">  <img src="  https://s-media-cache-ak0.pinimg.com/736x/fb/60/90/fb6090f6808037dd4aedb50f0cfbc7d8.jpg" alt=""> </div>
+                  <div class="ui label new">NEW</div>
+                  <div class="titile">
+                      Another dress
+                  </div>
+                  <div class="description">
+                      Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                  </div>
 
-            <div class="stocked">
-              <div class="price"><i class="fa fa-usd" aria-hidden="true"></i>200</div>
+                  <div class="stocked">
+                    <div class="price"><i class="fa fa-usd" aria-hidden="true"></i>200</div>
 
-              <button class="added"><i class="add to cart icon" aria-hidden="true"></i></button>
-              <button class="added wish"><i class="heart icon" aria-hidden="true"></i></button>
-            </div>
+                    <button class="added"><i class="add to cart icon" aria-hidden="true"></i></button>
+                    <button class="added wish"><i class="heart icon" aria-hidden="true"></i></button>
+                  </div>
 
-          </div>
-        </div>
-        <div class="col-lg-3">
-          <div class="product stock">
-            <div class="image">  <img src="https://s-media-cache-ak0.pinimg.com/736x/6a/ec/33/6aec33cb400c584df22c82f878db3db4.jpg" alt=""> </div>
-            <div class="ui label new">NEW</div>
-            <div class="titile">
-                Great gray dress
-            </div>
-            <div class="description">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-            </div>
+                </div>
+              </div>
+              <div class="col-md-4 col-lg-3">
+                <div class="product stock">
+                  <div class="image">  <img src="https://s-media-cache-ak0.pinimg.com/736x/6a/ec/33/6aec33cb400c584df22c82f878db3db4.jpg" alt=""> </div>
+                  <div class="ui label new">NEW</div>
+                  <div class="titile">
+                      Great gray dress
+                  </div>
+                  <div class="description">
+                      Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                  </div>
 
-            <div class="stocked">
-              <div class="price"><i class="fa fa-usd" aria-hidden="true"></i>40</div>
-                <button class="added"><i class="add to cart icon" aria-hidden="true"></i></button>
-                <button class="added wish"><i class="heart icon" aria-hidden="true"></i></button>
-            </div>
+                  <div class="stocked">
+                    <div class="price"><i class="fa fa-usd" aria-hidden="true"></i>40</div>
+                      <button class="added"><i class="add to cart icon" aria-hidden="true"></i></button>
+                      <button class="added wish"><i class="heart icon" aria-hidden="true"></i></button>
+                  </div>
 
-          </div>
-        </div>
-        <div class="col-lg-3">
-          <div class="product stock">
-            <div class="image">  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKb2DM0rN2D1Ymq4KmmMh-BmJps-n3Lc1TOHGAih9RaoN0iWgJ" alt=""> </div>
-            <div class="ui label new">NEW</div>
-            <div class="titile">
-                Shirt
-            </div>
-            <div class="description">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-            </div>
+                </div>
+              </div>
+              <div class="col-md-0 col-lg-3">
+                <div class="product stock">
+                  <div class="image">  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKb2DM0rN2D1Ymq4KmmMh-BmJps-n3Lc1TOHGAih9RaoN0iWgJ" alt=""> </div>
+                  <div class="ui label new">NEW</div>
+                  <div class="titile">
+                      Shirt
+                  </div>
+                  <div class="description">
+                      Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                  </div>
 
-            <div class="stocked">
-              <div class="price"><i class="fa fa-usd" aria-hidden="true"></i>200</div>
-                <button class="added"><i class="add to cart icon" aria-hidden="true"></i></button>
-                <button class="added wish"><i class="heart icon" aria-hidden="true"></i></button>
+                  <div class="stocked">
+                    <div class="price"><i class="fa fa-usd" aria-hidden="true"></i>200</div>
+                      <button class="added"><i class="add to cart icon" aria-hidden="true"></i></button>
+                      <button class="added wish"><i class="heart icon" aria-hidden="true"></i></button>
+                  </div>
+
+                </div>
+              </div>
             </div>
-
-            <div class="ui popup">
-              <div class="header">Custom Header</div>
-            </div>
-
-          </div>
-        </div>
-      </div>
-
       <div class="row products">
-        <div class="col-12 prerow">
-           Popular products
-        </div>
+              <div class="col-12 prerow">
+                 Popular products
+              </div>
 
-        <div class="col-lg-3">
-          <div class="product stock">
-            <div class="image">  <img src="https://img1.etsystatic.com/107/1/5609612/il_340x270.992188973_g9u7.jpg" alt=""> </div>
-            <div class="ui label pop">POP</div>
-            <div class="titile">
-                Great gray dress
-            </div>
-            <div class="description">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-            </div>
+              <div class="col-md-4 col-lg-3">
+                <div class="product stock">
+                  <div class="image">  <img src="https://img1.etsystatic.com/107/1/5609612/il_340x270.992188973_g9u7.jpg" alt=""> </div>
+                  <div class="ui label pop">POP</div>
+                  <div class="titile">
+                      Great gray dress
+                  </div>
+                  <div class="description">
+                      Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                  </div>
 
-            <div class="stocked">
-              <div class="price"><i class="fa fa-usd" aria-hidden="true"></i>100</div>
-                <button class="added"><i class="add to cart icon" aria-hidden="true"></i></button>
-                <button class="added wish"><i class="heart icon" aria-hidden="true"></i></button>
-            </div>
+                  <div class="stocked">
+                    <div class="price"><i class="fa fa-usd" aria-hidden="true"></i>100</div>
+                      <button class="added"><i class="add to cart icon" aria-hidden="true"></i></button>
+                      <button class="added wish"><i class="heart icon" aria-hidden="true"></i></button>
+                  </div>
 
-          </div>
-        </div>
-        <div class="col-lg-3">
-          <div class="product stock">
-            <div class="image">  <img src="  https://s-media-cache-ak0.pinimg.com/736x/fb/60/90/fb6090f6808037dd4aedb50f0cfbc7d8.jpg" alt=""> </div>
-            <div class="ui label pop">POP</div>
-            <div class="titile">
-                Another dress
-            </div>
-            <div class="description">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-            </div>
+                </div>
+              </div>
+              <div class="col-md-4 col-lg-3">
+                <div class="product stock">
+                  <div class="image">  <img src="  https://s-media-cache-ak0.pinimg.com/736x/fb/60/90/fb6090f6808037dd4aedb50f0cfbc7d8.jpg" alt=""> </div>
+                  <div class="ui label pop">POP</div>
+                  <div class="titile">
+                      Another dress
+                  </div>
+                  <div class="description">
+                      Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                  </div>
 
-            <div class="stocked">
-              <div class="price"><i class="fa fa-usd" aria-hidden="true"></i>200</div>
-                <button class="added"><i class="add to cart icon" aria-hidden="true"></i></button>
-                <button class="added wish"><i class="heart icon" aria-hidden="true"></i></button>
-            </div>
+                  <div class="stocked">
+                    <div class="price"><i class="fa fa-usd" aria-hidden="true"></i>200</div>
+                      <button class="added"><i class="add to cart icon" aria-hidden="true"></i></button>
+                      <button class="added wish"><i class="heart icon" aria-hidden="true"></i></button>
+                  </div>
 
-          </div>
-        </div>
-        <div class="col-lg-3">
-          <div class="product stock">
-            <div class="image">  <img src="https://s-media-cache-ak0.pinimg.com/736x/6a/ec/33/6aec33cb400c584df22c82f878db3db4.jpg" alt=""> </div>
-            <div class="ui label pop">POP</div>
-            <div class="titile">
-                Great gray dress
-            </div>
-            <div class="description">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-            </div>
+                </div>
+              </div>
+              <div class="col-md-4 col-lg-3">
+                <div class="product stock">
+                  <div class="image">  <img src="https://s-media-cache-ak0.pinimg.com/736x/6a/ec/33/6aec33cb400c584df22c82f878db3db4.jpg" alt=""> </div>
+                  <div class="ui label pop">POP</div>
+                  <div class="titile">
+                      Great gray dress
+                  </div>
+                  <div class="description">
+                      Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                  </div>
 
-            <div class="stocked">
-              <div class="price"><i class="fa fa-usd" aria-hidden="true"></i>40</div>
-                <button class="added"><i class="add to cart icon" aria-hidden="true"></i></button>
-                <button class="added wish"><i class="heart icon" aria-hidden="true"></i></button>
-            </div>
+                  <div class="stocked">
+                    <div class="price"><i class="fa fa-usd" aria-hidden="true"></i>40</div>
+                      <button class="added"><i class="add to cart icon" aria-hidden="true"></i></button>
+                      <button class="added wish"><i class="heart icon" aria-hidden="true"></i></button>
+                  </div>
 
-          </div>
-        </div>
-        <div class="col-lg-3">
-          <div class="product stock">
-            <div class="image">  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKb2DM0rN2D1Ymq4KmmMh-BmJps-n3Lc1TOHGAih9RaoN0iWgJ" alt=""> </div>
-            <div class="ui label pop">POP</div>
-            <div class="titile">
-                Shirt
-            </div>
-            <div class="description">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-            </div>
+                </div>
+              </div>
+              <div class="col-md-0 col-lg-3">
+                <div class="product stock">
+                  <div class="image">  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKb2DM0rN2D1Ymq4KmmMh-BmJps-n3Lc1TOHGAih9RaoN0iWgJ" alt=""> </div>
+                  <div class="ui label pop">POP</div>
+                  <div class="titile">
+                      Shirt
+                  </div>
+                  <div class="description">
+                      Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                  </div>
 
-            <div class="stocked">
-              <div class="price"><i class="fa fa-usd" aria-hidden="true"></i>200</div>
-                <button class="added"><i class="add to cart icon" aria-hidden="true"></i></button>
-                <button class="added wish"><i class="heart icon" aria-hidden="true"></i></button>
-            </div>
+                  <div class="stocked">
+                    <div class="price"><i class="fa fa-usd" aria-hidden="true"></i>200</div>
+                      <button class="added"><i class="add to cart icon" aria-hidden="true"></i></button>
+                      <button class="added wish"><i class="heart icon" aria-hidden="true"></i></button>
+                  </div>
 
-            <div class="ui popup">
-              <div class="header">User Rating</div>
-              <div class="ui star rating" data-rating="3" data-max-rating="5"></div>
-            </div>
 
-          </div>
-        </div>
-      </div>
+                </div>
+              </div>
+            </div>
 
 
 
       <%-include('./Common/footer')%>
     </div>
     <div class="blackout"></div>
-  </body>
 
-  <!--Head include!-->
-  <%-include('./Common/scripts')%>
-  <script src="../UserAssets/js/stock.js" charset="utf-8"></script>
+    <div id="expandable_body" class="expandable">
+        <div class="expandable_body ui segment">
+            <div class="row">
+              <div class="col-md-3 col-lg-3">
+                <div class="img_holder">
+                  <img src="https://s-media-cache-ak0.pinimg.com/736x/6a/ec/33/6aec33cb400c584df22c82f878db3db4.jpg" class="expandable_image" alt="">
+                  <div class="ui label closed pop">POP</div>
+                  <div class="ui label closed hot">HOT</div>
+                  <div class="ui label closed new">NEW</div>
+                </div>
+              </div>
+              <div class="col-md-9 col-lg-9">
+                <div class="header">
+                  <div class="subheader ui segment">
+                    <div class="name">Grey shirt</div>
+                    <div class="short_descrition">
+                      Lorem ipsum dolor sit amet, consectetur adipisicing elit,
+                      sed do eiusmod tempor incididunt ut labore et dolore magna
+                      aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+                      ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                    </div>
+                    <div class="row rating">
+                      <div class="col-sm-6 col-md-6 col-lg-6 left_block">
+                            <i class="i_label">Rating :</i>
+                            <div class="ui star rating rated" data-rating="4">
+                              <i class="icon active"></i>
+                              <i class="icon active"></i>
+                              <i class="icon active"></i>
+                              <i class="icon active"></i>
+                              <i class="icon"></i>
+                            </div>
+                          </div>
+                      <div class="col-sm-6 col-md-6 col-lg-6 left_block">
+                            <i class="i_label">Bought :</i>
+                            <span>(39)</span>
+                          </div>
+                      <div class="col-sm-6 col-md-6 col-lg-6 left_block">
+                            <i class="i_label">Seller :</i>
+                            <a href="/seller">Some seller</a>
+                          </div>
+                      <div class="col-sm-6 col-md-6 col-lg-6 left_block">
+                            <i class="i_label">Different types :</i>
+                            <span>Yes</span>
+                          </div>
+                    </div>
+                    <div class="button_holder">
+                      <a href="/product/idSomeid" class="ui submit button open_product">
+                        Open product page
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Scripts include!-->
+    <%-include('./Common/scripts')%>
+    <script src="../UserAssets/js/stock.js" charset="utf-8"></script>
+
+  </body>
 
 </html>

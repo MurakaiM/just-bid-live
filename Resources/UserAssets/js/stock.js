@@ -61,7 +61,7 @@ function Expandable(options) {
       dom.click(() => expand());
 
       function expand() {
-        if(!Props.isMobile){
+        if(!WProps.isMobile){
           currentDom = dom;
           expandOpen(img,url,label_name);
         }

@@ -1,3 +1,5 @@
+
+
 var categoriesPopups = {
     popups : [
       {
@@ -96,4 +98,4 @@ var categoriesPopups = {
 }
 */
 
-exports.categoriesPopups = categoriesPopups;
+export default categoriesPopups;

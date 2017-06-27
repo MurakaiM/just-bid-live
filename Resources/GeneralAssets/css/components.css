@@ -712,6 +712,28 @@ nav .mobile_nav a {
   background: #07406f;
 }
 
+
+.ui.ui.submit.reverse.button{
+  color:#0d5699!important;
+  background: white;
+  -webkit-box-shadow: 0px 2px 17px 0px rgba(0, 0, 0, .3);
+  -moz-box-shadow: 0px 2px 17px 0px rgba(0, 0, 0, .3);
+  box-shadow: 0px 2px 17px 0px rgba(0, 0, 0, .3);
+  transition: .5s ease all;
+}
+
+.ui.submit.reverse.button:hover{
+  background: #f2f2f2;
+}
+
+.ui.submit.reverse.button:active{
+  background: #f2f2f2;
+}
+
+
+
+
+
 .ui.dividing.header{
     color: #0d5699;
 }
@@ -739,8 +761,7 @@ nav .mobile_nav a {
 }
 
 .ui.icon.input > input{
-  padding-right: 10px!important;
-  padding-left: 45px!important;
+
 }
 
 .ui[class*="left icon"].input > i.icon{

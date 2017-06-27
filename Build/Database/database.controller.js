@@ -1,17 +1,18 @@
-const Sequelize = require('sequelize');
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const Sequelize = require("sequelize");
 const connectionString = 'postgres://admin:md53c17b0bb7cd76e4f80ad10e45d4acb56@localhost:5432/auction';
-
-
 var sequelize = new Sequelize(connectionString, {
-  logging: false,
-  dialect: 'postgres'
+    logging: false,
+    dialect: 'postgres'
 });
+/*
 sequelize.authenticate()
   .then(() => initSchemas().then(()=> console.log("All schemas are initialized")))
   .catch(err => console.error('Unable to connect to the database:', err));
 
 
-/* User schema */
+/* User schema
 const User = sequelize.define('user', {
   uid: {
     type: Sequelize.UUID,
@@ -52,12 +53,4 @@ const User = sequelize.define('user', {
   firstName: Sequelize.STRING,
   lastName: Sequelize.STRING
 });
-
-async function initSchemas() {
-  await User.sync();
-
-}
-
-
-
-exports.User = User;
+*/

@@ -404,6 +404,6 @@
   box-shadow: 0 10px 20px 0 rgba(0,0,0,.1)!important;
 }
 
-.item.active{
+.tabular  .item.active{
   box-shadow: 0 5px 20px 0 rgba(0,0,0,.2)!important;
 }

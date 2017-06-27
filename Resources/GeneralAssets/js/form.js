@@ -1,5 +1,5 @@
-var Props = new Props();
-var Cart = new Cart();
+var WProps = new Props();
+
 
 function Form(id, url, validationRules) {
   var $form = $("#"+id);
@@ -63,16 +63,6 @@ function Form(id, url, validationRules) {
   }
 }
 
-function Cart() {
-  var dom = $("#shoppingCart");
-
-  this.show = () => dom.modal('show');
-
-  this.close = () => dom.modal('hide');
-}
-
-
-
 function postForm(url,data){
     return new Promise((resolve, reject) => {
         backendPost(url, data, (err,data) => {
@@ -116,6 +106,40 @@ function backendGet(url, callback) {
     })
 }
 
+
+function GET(url){
+  return new Promise((resolve, reject) => {
+      backendGet(url,(err,result) => {
+          if(err){
+            return reject(10);
+          } 
+          else if(result.code >= 10 && result.code < 20 ){
+            return reject(result);
+          } 
+          
+          return resolve(result);
+          
+      });
+  });
+}
+
+function POST(url,json){
+  return new Promise((resolve, reject) => {
+      backendPost(url, json ,(err,result) => {
+          if(err){
+            return reject(10);
+          } 
+          else if(result.code >= 10 && result.code < 20 ){
+            return reject(result);
+          } 
+          
+          return resolve(result);
+          
+      });
+  });
+}
+
+
 function mobileDeviceInit() {
   var isMobileDevice = false;
 
@@ -142,9 +166,3 @@ function Props(){
   return this;
 }
 
-function preAnimation() {
-  var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
-                             window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
-
-  requestAnimationFrame();
-}

@@ -1,5 +1,56 @@
 /*sm*/
 @media (min-width: 0px) and (max-width: 575px) {
+  #shoppingCart .quantity i{
+    display: none;
+  } 
+
+  #shoppingCart .divider{
+    display: block;
+  }
+
+  #shoppingCart .cart_item .total{
+    padding-top: 15px;
+    width: 100%;
+    display: block;
+    text-align: left;
+    margin-bottom: 0;
+  }
+  
+  #shoppingCart .cart_item{
+    display: block;
+  }
+  
+  #shoppingCart .cart_item .image{
+    min-width: 100px;
+    min-height: 100px;
+    width: 100px;
+    height: 100px;
+    display: inline-block;
+    float: left;
+  }
+
+  #shoppingCart .cart_item .data{
+     min-width: calc(100% - 100px);
+     width: calc(100% - 100px);
+  }
+
+  #shoppingCart .cart_item .quantity{
+    min-width: 100px;
+    min-height: 100px;
+    width: 100px;
+    height: 100px;
+    float: left;
+  }
+
+  #shoppingCart .cart_item .price{
+    padding-left: 20px;
+    height: 100px;
+    align-items: baseline;
+    display: table-cell;
+    vertical-align: middle;
+  }
+
+
   .exactly.path{
     text-align: center;
     padding-left: 15px;
@@ -115,6 +166,59 @@
 
 /*sm*/
 @media (min-width: 576px) and (max-width: 767px) {
+  #shoppingCart .quantity i{
+    display: none;
+  }
+
+
+  #shoppingCart .divider{
+    display: block;
+  }
+
+  #shoppingCart .cart_item .total{
+    width: 100%;
+    display: block;
+    text-align: left;
+    padding-top: 15px;
+    margin-bottom: 0;
+  }
+  
+  #shoppingCart .cart_item{
+    display: block;
+  }
+  
+  #shoppingCart .cart_item .image{
+    min-width: 100px;
+    min-height: 100px;
+    width: 100px;
+    height: 100px;
+    display: inline-block;
+    float: left;
+  }
+
+  #shoppingCart .cart_item .data{
+     min-width: calc(100% - 100px);
+     width: calc(100% - 100px);
+  }
+
+  #shoppingCart .cart_item .quantity{
+    min-width: 100px;
+    min-height: 100px;
+    width: 100px;
+    height: 100px;
+    float: left;
+  }
+
+  #shoppingCart .cart_item .price{
+    padding-left: 20px;
+    height: 100px;
+    align-items: baseline;
+    display: table-cell;
+    vertical-align: middle;
+  }
+
+
+
   .exactly.path{
     text-align: center;
     padding-left: 15px;

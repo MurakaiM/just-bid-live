@@ -26,20 +26,19 @@
       </div>
 
       <div class="row exactly products">
-
         <div class="col-md-4 col-lg-4">
           <div class="exactly aller">
             <div class="exactly wrapper">
               <div class="exactly image">
                   <div class="ui text shape">
                     <div class="sides">
-                      <div id="first" class="ui header side active">
+                      <div id="Short" class="ui header side active">
                         <img src="https://s-media-cache-ak0.pinimg.com/736x/fb/60/90/fb6090f6808037dd4aedb50f0cfbc7d8.jpg" alt="">
                       </div>
-                      <div id="second" class="ui header side">
+                      <div id="Grey" class="ui header side">
                         <img src="https://img1.etsystatic.com/107/1/5609612/il_340x270.992188973_g9u7.jpg" alt="">
                       </div>
-                      <div id="third" class="ui header side">
+                      <div id="Flower" class="ui header side">
                         <img src="https://s-media-cache-ak0.pinimg.com/736x/6a/ec/33/6aec33cb400c584df22c82f878db3db4.jpg" alt="">
                       </div>
                     </div>
@@ -81,59 +80,62 @@
 
             <h4 class="ui fitted divider widther "></h4>
             <div class="exactly options">
-              <div class="option">
-                <span class="labeler">  <i class="paint brush icon"></i> Color :</span>
-                <div id="color" class="ui fluid selection dropdown ">
-                  <span class="default text">Select color</span>
-                  <div class="menu">
-                    <div class="scrolling menu">
+              <div class="types">
+                <div class="option">
+                  <span class="labeler">  <i class="paint brush icon"></i> Color :</span>
+                  <div id="color" class="ui fluid selection dropdown ">
+                    <span class="default text">Select color</span>
+                    <div class="menu">
+                      <div class="scrolling menu">
 
-                      <div class="item"  data-value="first">
-                        <div class="ui black empty circular label"></div>
-                        Short
-                      </div>
-                      <div class="item"  data-value="second">
-                        <div class="ui empty circular label" style="color:#b3b3b3;"></div>
-                        Grey
-                      </div>
-                      <div class="item"  data-value="third">
-                        <div class="ui red empty circular label"></div>
-                        Flower
-                      </div>
+                        <div class="item"  data-value="Short">
+                          <div class="ui black empty circular label"></div>
+                          Short
+                        </div>
+                        <div class="item"  data-value="Grey">
+                          <div class="ui empty circular label" style="color:#b3b3b3;"></div>
+                          Grey
+                        </div>
+                        <div class="item"  data-value="Flower">
+                          <div class="ui red empty circular label"></div>
+                          Flower
+                        </div>
 
+                      </div>
                     </div>
                   </div>
-                </div>
-              </div>
-              <div class="option">
-                <span class="labeler">  <i class="compress icon"></i> Size :</span>
-                <div id="size" class="ui fluid selection dropdown">
-                  <div class="default text">Select size</div>
-                  <div class="menu">
-                    <div class="item" data-value="jenny">
-                      Extra Small
-                    </div>
-                    <div class="item" data-value="elliot">
-                      Small
-                    </div>
-                    <div class="item" data-value="stevie">
-                      Medium
-                    </div>
-                    <div class="item" data-value="christian">
-                      Large
-                    </div>
-                    <div class="item" data-value="matt">
-                      Extra large
+                </div>             
+            
+                <div class="option">
+                  <span class="labeler">  <i class="compress icon"></i> Size :</span>
+                  <div id="size" class="ui fluid selection dropdown">
+                    <div class="default text">Select size</div>
+                    <div class="menu">
+                      <div class="item" data-value="Extra Small">
+                        Extra Small
+                      </div>
+                      <div class="item" data-value="Small">
+                        Small
+                      </div>
+                      <div class="item" data-value="Medium">
+                        Medium
+                      </div>
+                      <div class="item" data-value="Large">
+                        Large
+                      </div>
+                      <div class="item" data-value="Extra large">
+                        Extra large
+                      </div>
                     </div>
                   </div>
-                </div>
+                </div>                
               </div>
               <div class="option">
-                <span class="labeler">  <i class="hashtag icon"></i> Quantity :</span>
-                <div class="ui input">
-                  <input type="number" value="1" min="1" max="99">
-                </div>
-              </div>
+                  <span class="labeler">  <i class="hashtag icon"></i> Quantity :</span>
+                  <div class="ui input">
+                    <input type="number" value="1" min="1" max="99" id="quantity">
+                  </div>
+              </div>             
               <div class="option empty"></div>
               <div class="option">
                 <span class="labeler">  <i class="shipping icon"></i> Shipping : </span>
@@ -145,7 +147,7 @@
               </div>
             </div>
             <div class="exactly types">
-                <div id="cart" class="ui exactly submit button"><i class="add cart icon"></i> Add to cart</div>
+                <div id="cart" class="ui exactly submit button" data-id="12333"><i class="add cart icon"></i> Add to cart</div>
             </div>
 
             <div class="exactly statistic">

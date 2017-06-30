@@ -24,6 +24,8 @@
   text-align: left!important;
 }
 
+
+
 .ui.statistics {
   display: flex;
   align-items: center;
@@ -114,6 +116,7 @@
 .exactly.types {
   width: 100%;
   padding: 25px;
+  padding-bottom: 50px;
   display: flex;
   align-items: center;
 }
@@ -124,14 +127,22 @@
 }
 
 .exactly.wrapper{
+  opacity: 0;
   height: calc(100% + 60px);
   padding-top: 20px;
   top:0px;
+  transition:  .5s ease opacity;
+}
+
+.exactly.exactly.wrapper.opened{
+   opacity: 1;
 }
 
 .exactly.statistic{
   position: relative;
-  top:20px;
+  margin-top:25px;
+  margin-bottom: 0px;
+  top: -18px;
 }
 
 .ui.exactly.rounded{
@@ -269,7 +280,7 @@
 }
 
 .exactly.content{
-  margin-top: 120px;
+  margin-top: 70px;
 }
 
 
@@ -345,6 +356,7 @@
   font-size: 18px;
   font-weight: 700;
   background: transparent!important;
+  margin: 0;
 }
 
 .exactly .image{
@@ -356,10 +368,8 @@
   -moz-box-shadow: 0px -2px 10px 2px rgba(0, 0, 0, .15);
   box-shadow: 0px -2px 10px 2px rgba(0, 0, 0, .15);
   width: 100%!important;
-  height: 100%;
   object-fit: cover;
   border-radius: 5px;
-
 }
 
 .exactly.description .header {

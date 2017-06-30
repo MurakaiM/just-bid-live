@@ -7,6 +7,8 @@ $(function () {
   setSlider();
   dropdownListen();
 
+  setTimeout(()=> $('.exactly.wrapper').addClass('opened') , 200);
+
   currentItemId = $("#cart").data('id');
   $("#cart").click( () => addProduct());
 });
@@ -45,7 +47,6 @@ function addProduct() {
 }
 
 
-
 function dropdownListen() {
 
   $('.types .dropdown').each((i,item) => $(item).dropdown({
@@ -71,10 +72,10 @@ function setSlider(){
 
 
   shapeDom = $('.shape');
-  shapeDom.shape({ duration : 500});
+  shapeDom.shape({ duration : 400});
 
 
-  var heightImg = $(".exactly.image").width() * 1.2;
+  var heightImg = $(".exactly.image").width() * 1.1;
   var widthImg = $(".exactly.image").width() -15;
 
 

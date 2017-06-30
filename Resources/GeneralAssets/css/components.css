@@ -771,3 +771,9 @@ nav .mobile_nav a {
   width: 35px;
   height: calc(100% - 2px);
 }
+
+.datepicker-dropdown {
+    top: 0;
+    left: 0;
+    padding: 15px!important;
+}

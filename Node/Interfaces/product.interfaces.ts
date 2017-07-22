@@ -31,8 +31,8 @@ interface ProductInterface{
     prCost : number,
     prSold? : number,
     prWishes? : number,    
-    prTypes : ProductTypes,
-    prShipment : ProductShipment,
+    prTypes? : ProductTypes,
+    prShipment? : ProductShipment,
     prCategory : ProductCategories
 } 
 

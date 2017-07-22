@@ -1,14 +1,18 @@
-import { UserInterface, UserPassword, UserPublic } from '../Interfaces/user.interfaces'
-import { UserSchema } from '../Database/database.controller'
-import FileUploader from '../Utils/storage'
-
+import * as uuid from 'uuid/v4'
 import * as crypto from 'crypto'
+
+import { UserInterface, UserPassword, UserPublic, UserMessages } from '../Interfaces/user.interfaces'
+import { UserSchema } from '../Database/database.controller'
+import { getRandomCode } from '../Utils/Others/random'
+import { parse } from 'libphonenumber-js'
+
+import FileUploader from '../Utils/Controllers/storage'
 
 
 export default class User {
     private dbUser;
     private uuid: string;
-    
+        
 
     constructor(uuid : string){
         this.uuid = uuid;    
@@ -31,20 +35,54 @@ export default class User {
     }
 
 
-    public ForceLoad(data : JSON) : void{
+    public ForceLoad(data : any) : User{
+        this.uuid = data.uid;
         this.dbUser = data;
+        return this;
     }
 
     public isPassword(password : string) : boolean{
-        if(User.hashWithSalt(password,this.dbUser.salt).password == this.dbUser.password)
+        if(User.hashWithSalt(password,this.dbUser.salt).password != this.dbUser.password)
             return false;
 
         return true;        
     }
     
+
+    public clearReset() : Promise<any>{
+        return new Promise((resolve, reject) => {
+            this.dbUser.password_link = '';
+            this.dbUser.password_date = 0;
+            this.dbUser.save().then( result => resolve(result)).catch( error => reject(error));
+        });
+    }
+
+    public confirmReset(password : string) : Promise<any>{
+        return new Promise((resolve, reject) => {
+            var newData = User.hashWithSalt(password, User.getRandomString(15));
+            
+            this.dbUser.password = newData.password;
+            this.dbUser.salt = newData.salt;
+
+            this.dbUser.save()
+                .then( result => { 
+                    this.clearReset()
+                        .then(() => resolve(result))       
+                        .catch( error => reject(error))    
+                })
+                .catch( error => reject(error));    
+        });        
+    } 
+
+
     public isVerified() : boolean{
         return this.dbUser.veryfied;
     }
+
+    public isSeller() : boolean{     
+        return this.dbUser.isSeller;
+    }
+
 
     public hasImage() : boolean {
         return this.dbUser.imgUrl.length > 0 ? true : false; 
@@ -70,49 +108,40 @@ export default class User {
     }
     
 
-    public static async SignUpUser(data : any, file : any){
-        var hasUser = await User.LoadByEmail(data.email);
 
-        if(hasUser) return false;
-        
-        var imageUrl = '';
-        if(file){
-            imageUrl = await FileUploader.Instance.uploadAvatar(file);
-        }   
-        
-        await User.ForceCreate(
-            {
-                email : data.email,
-                password : data.password,
-                firstName : data.firstName,
-                lastName : data.lastName,
-                imgUrl : imageUrl
-            }
-        );
-        return true;
-    }
 
-    private static ForceCreate(data : UserInterface){
+
+
+    public static ForceCreate(data : UserInterface){
         var dataObject : any = data; 
-        var passwordData : UserPassword = User.hashWithSalt(data.password,User.getRandomString(15)) 
+        var passwordData : UserPassword = User.hashWithSalt(data.password,User.getRandomString(15));
+        var phoneParser  = parse(data.phone);
+        
         dataObject.password = passwordData.password;
-        dataObject.slat = passwordData.salt;
-
+        dataObject.salt = passwordData.salt;
+        dataObject.vrcode = getRandomCode();
+        dataObject.uid = uuid();
+        dataObject.phone = data.phone;
+        dataObject.country = phoneParser.country;    
+        
         return new Promise<User>((resolve, reject) => {
             var user = UserSchema.build(dataObject);
             user.save()
-             .then( () => {
+             .then( () => {            
                 var userObject : User = new User(dataObject.uid);
                 userObject.ForceLoad(user);
                 resolve(userObject);
              })
-             .catch(err => reject("Error occured (Database error)"));
+             .catch(err => { 
+                 console.log(err);  
+                 reject("Error occured (Database error)") });
         }); 
     }
 
     public static ForceVerification(uuid : string){
         return UserSchema.update({ veryfied : true },{ where : {uid : uuid} });
     }
+
 
     public static LoadByEmail( email : string) : Promise<User>{
         return new Promise<User>((resolve, reject) => {
@@ -130,6 +159,24 @@ export default class User {
         });
     }
     
+    public static LoadByEmailOrPhone( email : string, phone : string) : Promise<User>{
+        return new Promise<User>((resolve, reject) => {
+           UserSchema.findOne({ where : { $or: [{email: email}, {phone: phone}] }})
+            .then( user => {
+                if(user){
+                    var userObject = new User(user.uid);
+                    userObject.ForceLoad(user);
+                    resolve(userObject);
+                }else{
+                    reject("Can't get user (Such user not exists)");
+                }
+            })
+            .catch( err => reject("Can't get user (Database problem)"));
+        });
+    }
+
+
+
 
     private static getRandomString(length : number) : string{
         return crypto.randomBytes(Math.ceil(length/2))

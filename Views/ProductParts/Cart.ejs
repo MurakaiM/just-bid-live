@@ -1,19 +1,23 @@
 <div id="shoppingCart" class="ui modal">
   <i class="close icon"></i>
   <div class="header">
-    <i class="fa fa-shopping-cart" aria-hidden="true"></i>
-    Shopping Cart
+    <i class="fa fa-shopping-cart" aria-hidden="true"></i> Shopping Cart
   </div>
-  <div class="image content">
-    <div class="description">
-      <div class="ui header">We've auto-chosen a profile image for you.</div>
-      <p>We've grabbed the following image from the <a href="https://www.gravatar.com" target="_blank">gravatar</a> image associated with your registered e-mail address.</p>
-      <p>Is it okay to use this photo?</p>
+  <div class="ui segment content">
+    <div class="empty">
+      <img src="../UserAssets/img/icons/open-box.png" alt="">
+      <span>Your cart is empty </span>
+
     </div>
   </div>
   <div class="actions">
-    <div class="ui black deny button">
-      Close
-    </div>  
+    <div class="ui submit disabled button">
+      Checkout
+    </div>
+    <div class="totalCart">
+      <span class="label">Total :</span>
+      <i class="fa fa-usd" aria-hidden="true"></i>
+      <span id="shoppingOverall">0.00</span>
+    </div>
   </div>
 </div>

@@ -1,23 +1,30 @@
 var WCart;
 
 $(function () {
-  WCart = new Cart();
+  var cartButton = $("#mainCart");   
+  WCart = new Cart(cartButton);
+  cartButton.click( e => WCart.show());
+
 });
 
 
-function Cart() {
+function Cart(anchor) {
   var currentItems = {};
 
   var dom = $("#shoppingCart");
-  var overall = $("#shoppingOverall");
+  var overall = $("#shoppingOverall"); 
+  var icon = anchor.find('.label');
   
   var appender = dom.find('.content');
   var button = dom.find('.submit');
   var empty = dom.find('.empty');
 
+
   this.show = () => dom.modal('show');
 
+
   this.close = () => dom.modal('hide');
+
 
   this.loadJsonData = data => {
     empty.addClass('none');
@@ -37,7 +44,7 @@ function Cart() {
     appender.addClass('loading');
     button.addClass('loading');
 
-    POST('/api/user/cartLoad',data)
+    POST('/user/cart/load',data)
       .then( result => {
         loadJsonData(result.data);
         appender.removeClass('loading');
@@ -70,13 +77,21 @@ function Cart() {
     var cart;
   
     if (localStorage.getItem('cart') === null) {
-        cart = [];
+        cart = {};
     } else {         
         cart = JSON.parse(localStorage.getItem('cart'));     
      }
      
-     cart.push(data);  
+     if(cart[data.id] === undefined){
+        cart[data.id] = data;  
+     }else{   
+        cart[data.id].quantity = parseInt(cart[data.id].quantity) + parseInt(data.quantity);
+     }
+
      localStorage.setItem('cart', JSON.stringify(cart));
+     icon.transition('jiggle');
+
+     this.setNumber(Object.keys(cart).length);
   }
 
   this.getFromCart = () => {
@@ -89,6 +104,16 @@ function Cart() {
     }
 
     return cart;
+  }
+
+  this.setNumber = number => { 
+    if(number <= 0){
+      icon.addClass('hidden');
+    }else{
+      icon.removeClass('hidden');
+    }
+
+    icon.text(number); 
   }
 
   return this;

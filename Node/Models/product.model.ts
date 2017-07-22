@@ -1,7 +1,11 @@
+import * as uuid from 'uuid/v4'
+
 import ProductInterface from '../Interfaces/product.interfaces'
 import { ProductSchema } from '../Database/database.controller'
 
-class Product {
+
+
+export default class Product {
     private dbProduct;
     private uuid : string;
 
@@ -30,6 +34,7 @@ class Product {
        return this.dbProduct.remove();
     }
 
+
     public IncrementBought() : Promise<any>{
         return this.dbProduct.increment('prSold');
     } 
@@ -42,21 +47,42 @@ class Product {
         this.dbProduct = data;
     }
     
-    
+
+
+
     get Data() { 
         return this.dbProduct; 
     }
 
+
+    public static GetCart( data : any) : Promise<Array<Product>> {      
+        return new Promise((resolve, reject) => {
+            
+            ProductSchema.find({ 
+                attributes: ['prUid', 'prTitle', 'prDescription', 'prCost', 'prTypes'],
+                where : { 
+                    uid : { $in : data }
+                } 
+            })
+            .then( products => resolve(products) )
+            .catch( error => reject(error));
+        
+        });
+    }
+
+
     public static ForceCreate(data : ProductInterface) : Promise<Product>{
         return new Promise<Product>((resolve, reject) => {
+            data.prUid = uuid();         
             var product = ProductSchema.build(data);
+           
             product.save()
              .then( () => {
                 var productObject : Product = new Product(data.prUid);
                 productObject.ForceLoad(product);
                 resolve(productObject);
              })
-             .catch(err => reject("Error occured (Database error)"));
+             .catch(err => reject(err));
         });
     }
 

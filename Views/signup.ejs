@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <!--Head include!-->
+    <%-include('./Common/head')%>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker3.css"/>
+    <link rel="stylesheet" href="../GeneralAssets/css/responsive.css">
+  </head>
+
+  <body>
+    <div class="content">
+      <!--Menu include!-->
+
+
+      <%-include('./Common/menu', { page : pageName })%>
+
+        <div class="single">
+          <form id="signUp" class="ui form former ">
+            <h3 class="ui dividing header"><i class="fa fa-user" aria-hidden="true"></i> Sign Up</h3>
+            <div class="field fileds-margin">
+              <label>Personal information</label>
+              <div class="three fields">
+                <div class="field">
+                  <input type="text" name="firstName" placeholder="First Name">
+                </div>
+                <div class="field">
+                  <input type="text" name="lastName" placeholder="Last Name">
+                </div>
+                <div class="field">
+                  <input id="birthday" type="text" name="date" placeholder="Birth date">
+                </div>
+              </div>
+            </div>
+            <div class="field fileds-margin">
+              <label>Contact information</label>
+              <div class="two fields">
+                <div class="field">
+                  <input type="text" name="email" placeholder="Email">
+                </div>
+                <div class="field">
+                  <input type="text" name="phone" placeholder="Phone">
+                </div>
+              </div>
+
+            </div>
+            <div class="field fileds-margin">
+              <label>Passwords</label>
+              <div class="two fields">
+                <div class="field">
+                  <input type="password" name="password" placeholder="Password">
+                </div>
+                <div class="field">
+                  <input type="password" name="repeated_password" placeholder="Repeat password">
+                </div>
+              </div>
+
+            </div>
+            <div class="field fileds-margin">
+              <label>Additional</label>
+              <div class="two fields">
+                <div class="field avatar_holder">
+                  <img class="ui avatar tiny image" src="http://www.infozonelive.com/styles/FLATBOOTS/theme/images/user4.png">
+                  <input id="fileselect" type="file" style="display : none;" name="avatar" accept="image/*">
+                  <label class="ui select file button" for="fileselect">Select avatar</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="ui custom success message">
+              <div class="header">Action Completed</div>
+              <p>
+                You're successfully signed up. <br> Please chek your email for next steps.
+              </p>
+            </div>
+            <div class="ui custom error message">
+              <div class="header">Action Forbidden</div>
+              <p></p>
+            </div>
+
+
+            <div class="submit_holder">
+              <div class="ui submit button">Submit</div>
+            </div>
+          </form>
+        </div>
+
+
+        <%-include('./Common/each')%>
+        <%-include('./Common/footer')%>
+    </div>
+  </body>
+
+  <!--Head include!-->
+  <%-include('./Common/scripts')%>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/libphonenumber-js/0.4.18/libphonenumber-js.min.js"></script>
+  <script src="../UserAssets/js/signup.js" charset="utf-8"></script>
+
+</html>

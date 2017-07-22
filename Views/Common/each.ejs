@@ -1,0 +1,54 @@
+<div id="signModal" class="my-modal">
+    <div class="body">
+        <h2 class="ui header main">
+            <div class="content">
+                Sign In
+            </div>
+        </h2>
+        <h4 class="ui header main wrap">with your social network</h4>
+
+        <div class="ui two column grid">
+            <div class="column social">
+                <button class="ui facebook button">
+                  <i class="facebook icon"></i>
+                  Facebook
+                </button>
+            </div>
+            <div class="column social">
+                <button class="ui google plus button">
+                  <i class="google plus icon"></i>
+                  Google
+                </button>
+            </div>
+        </div>
+
+        <div class="ui horizontal divider gray">Or</div>
+        <form class="ui form signin">
+
+            <div class="field">
+                <input type="text" placeholder="Email" name="email" />
+            </div>
+            <div class="field">
+                <input type="password" placeholder="Password" name="password" />
+            </div>
+
+            <div class="center">
+                <a class="not" href="/signup">Forgot password ?</a>
+            </div>
+
+            <div class="ui error custom message">
+                <div class="header">Action Forbidden</div>
+                <p></p>
+            </div>
+
+            <div class="buttons container">
+                <button type="submit" class="ui submit button">Sign In</button>
+                <a class="ui button original" href="/signup">Sign Up</a>
+            </div>
+        </form>
+
+
+    </div>
+</div>
+
+<%-include('../ProductParts/Cart')%>

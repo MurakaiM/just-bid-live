@@ -1,11 +1,12 @@
 
 <!DOCTYPE html>
-<html>
+<html>  
 
-  <!--Head include!-->
-  <%-include('./Common/head')%>
-  <link rel="stylesheet" href="../GeneralAssets/css/responsive.css">  
-
+  <head>
+    <!--Head include!-->
+    <%-include('./Common/head')%>
+    <link rel="stylesheet" href="../GeneralAssets/css/responsive.css">  
+  </head>
 
   <body>
 
@@ -14,7 +15,6 @@
       <%-include('./Common/menu', { page : pageName })%>
 
       <div class="single">
-
           <form id="contactForm" class="ui form former">
               <h3 class="ui dividing header"><i class="fa fa-envelope" aria-hidden="true"></i>Contact information</h3>
               <div class="field fileds-margin">
@@ -26,6 +26,8 @@
                   <div class="field">
                     <input type="text" name="lastName" placeholder="Last Name">
                   </div>
+
+
                 </div>
               </div>
               <div class="field fileds-margin">
@@ -60,6 +62,7 @@
 
       </div>
 
+      <%-include('./Common/each')%>
       <%-include('./Common/footer')%>
     </div>
   </body>

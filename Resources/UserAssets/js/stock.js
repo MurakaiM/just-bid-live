@@ -93,10 +93,6 @@ function Expandable(options) {
 }
 
 
-
-
-
-
 function categoriesHover() {
     blackout = $('.blackout');
     blackout.hover(() => onBlackout(), () => onBlackout());

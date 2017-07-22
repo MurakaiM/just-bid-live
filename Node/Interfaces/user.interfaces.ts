@@ -1,5 +1,6 @@
 export interface UserInterface{
   email: string,
+  phone : string,
   password: string,  
   firstName: string,
   lastName: string,
@@ -22,4 +23,9 @@ export interface UserPublic{
 export interface UserLogin{
   email : string,
   password : string
+}
+
+export interface UserMessages{
+  reason: string,
+  success :  boolean
 }

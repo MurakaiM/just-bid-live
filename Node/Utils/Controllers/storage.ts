@@ -1,4 +1,4 @@
-import * as fileUpload from 'express-fileupload'
+
 import * as GCStorage from '@google-cloud/storage'
 import * as crypto from 'crypto'
 
@@ -10,14 +10,14 @@ export default class FileUploader{
     appId : string;
     
     constructor( app, appId: string, bucketId:string, credits : JSON){
-        app.use(fileUpload());
-
+ 
         this.initBucket(credits);
         this.appId = appId;
         this.bucketId = bucketId;
 
         FileUploader.Instance = this;
     }   
+
 
     public uploadAvatar(fileData : any) : Promise<any>{
         return this.uploadFile(fileData,'avatars');

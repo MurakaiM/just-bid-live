@@ -1,6 +1,9 @@
+import { countries } from 'country-data';
+
 import categoriesPopups from '../Database/database.categories'
 
 export default class Renderer {
+    
 
     public static live(req,res){
         var pageInfo = {
@@ -33,6 +36,15 @@ export default class Renderer {
         };
 
         res.render('Products/product', pageInfo);
+    }
+
+    public static signup(req,res){
+        var pageInfo = {
+          pageName : "Sign up",
+          countryData : countries  
+        };
+
+        res.render('signup', pageInfo);
     }
 
 }

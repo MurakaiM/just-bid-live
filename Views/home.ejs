@@ -45,132 +45,22 @@
         </div>
 
         <div class="col-md-8 col-lg-9 row pins">
-          <div class="col-md-6 col-lg-4">
-            <div class="product">
-
-              <div class="image">  <img src="https://img1.etsystatic.com/107/1/5609612/il_340x270.992188973_g9u7.jpg" alt=""> </div>
-              <div class="ui label hot">HOT</div>
-
-              <div class="titile">
-                  iPhone 5, iPhone 5S, iPhone 6, iPhone 6S
-              </div>
-              <div class="name">
-                  Adam is Winning
-              </div>
-              <div class="numbers">
-                <span class="price"><span>RRP:</span> <i class="fa fa-usd" aria-hidden="true"></i>100</span>
-                <span class="off">90% Off</span>
-              </div>
-
-              <button class="ui button blue_button">
-                <div class="bigger">BID $20</div>
-                <div class="smaller">+$5 Shipping</div>
-               </button>
-
-
-              <div class="going">
-                  Going once
-                  <img src="../UserAssets/img/justice.png">
-               </div>
-
-
-            </div>
-          </div>
-          <div class="col-md-6 col-lg-4">
-            <div class="product">
-              <div class="image">  <img src="https://img1.etsystatic.com/107/1/5609612/il_340x270.992188973_g9u7.jpg" alt=""> </div>
-              <div class="titile">
-                  iPhone 5, iPhone 5S, iPhone 6, iPhone 6S
-              </div>
-              <div class="name">
-                  Adam is Winning
-              </div>
-              <div class="numbers">
-                <span class="price"><span>RRP:</span> <i class="fa fa-usd" aria-hidden="true"></i>100</span>
-                <span class="off">90% Off</span>
-              </div>
-
-              <button class="ui button blue_button">
-                <div class="bigger">BID $30</div>
-                <div class="smaller">+$18 Shipping</div>
-               </button>
-
-              <div class="going">
-                  <div class="timer">
-                    <i class="fa fa-clock-o" aria-hidden="true"></i>
-                    <span> 0:02</span>
-                  </div>
-               </div>
-            </div>
-
-          </div>
-          <div class="col-md-6 col-lg-4">
-            <div class="product">
-              <div class="image">  <img src="https://img1.etsystatic.com/107/1/5609612/il_340x270.992188973_g9u7.jpg" alt=""> </div>
-              <div class="titile">
-                  iPhone 5, iPhone 5S, iPhone 6, iPhone 6S
-              </div>
-              <div class="name">
-                  Adam is Winning
-              </div>
-              <div class="numbers">
-                <span class="price">
-                  <span>RRP:</span>
-                  <i class="fa fa-usd" aria-hidden="true"></i>100
-                </span>
-                <span class="off">90% Off</span>
-              </div>
-
-              <button class="ui button blue_button">
-                <div class="bigger">BID $20</div>
-                <div class="smaller">+$5 Shipping</div>
-               </button>
-
-
-              <div class="going">
-                  Going once
-                  <img src="../UserAssets/img/justice.png">
-               </div>
-
-
-            </div>
-          </div>
-          <div class="col-md-6 col-lg-4">
-            <div class="product">
-              <div class="image">  <img src="https://img1.etsystatic.com/107/1/5609612/il_340x270.992188973_g9u7.jpg" alt=""> </div>
-              <div class="titile">
-                  iPhone 5, iPhone 5S, iPhone 6, iPhone 6S
-              </div>
-              <div class="name">
-                  Adam is Winning
-              </div>
-              <div class="numbers">
-                <span class="price"><span>RRP:</span> <i class="fa fa-usd" aria-hidden="true"></i>100</span>
-                <span class="off">90% Off</span>
-              </div>
-
-              <button class="ui button blue_button">
-                <div class="bigger">BID $30</div>
-                <div class="smaller">+$18 Shipping</div>
-               </button>
-
-              <div class="going">
-                  <div class="timer">
-                    <i class="fa fa-clock-o" aria-hidden="true"></i>
-                    <span> 0:02</span>
-                  </div>
-               </div>
-            </div>
-
-          </div>
+          
         </div>
 
       </div>
 
-        <%-include('./Common/footer')%>
+      <%-include('./Common/each')%>
+      <%-include('./Common/footer')%>
     </div>
+
+
   </body>
 
-  <!--Head include!-->
+  <!--Head include!-->  
   <%-include('./Common/scripts')%>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
+  <script src="../UserAssets/js/Auction/auction.js"></script>
+   
+
 </html>

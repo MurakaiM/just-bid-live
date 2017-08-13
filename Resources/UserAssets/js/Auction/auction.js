@@ -1,30 +1,44 @@
 var GOING_OFFSET = 20;
-
+var GOING_TIMER = 80000;
 
 $(function(){
     appender = $('.pins');
     ReworkAuction();
+    ReworkActivity();
+    
 });
 
+function ReworkActivity(){
+    var listener = new Listener(GOING_TIMER)
+    var popup = new Modal(
+        { 
+           id : '#waiterModal',
+           middleware : body => body.find('button').click( e =>  { listener.ForceAction(); popup.toggleState(); })
+        }
+    );
 
+    listener.ForceStart( e => { 
+        if(window.WModals.signModal.isOpened()){
+            window.WModals.signModal.toggleState();
+        }
+
+        popup.toggleState(); 
+    });
+}
 
 function ReworkAuction(){
     GET('/auction/current')
-      .then( result => {
-            
+      .then( result => {            
            if(result.code == 0){
               new Auction().LoadState(result.data) 
-           }else{
-
-           }       
-           
-      })
-      .catch();
+           }                  
+      }).catch();
 }
 
 
 function Auction(){
     const appender = $('.pins');
+    const empty = $('.empty');
     const currentStorage = {};
 
     const AuctionListener = io('/auction');
@@ -32,23 +46,35 @@ function Auction(){
          
         AuctionListener.on('bid', bid => currentStorage[bid.uid].ForceChange(bid) );
 
-        AuctionListener.on('end', uid => currentStorage[uid].ForceEnding() );
+        AuctionListener.on('end', uid => {
+            currentStorage[uid].ForceEnding();
 
-        AuctionListener.on('new', bid => currentStorage[bid[0]] = new Item( bid[1]) );
+            if(Object.keys(currentStorage).length == 0)
+                empty.show();
+        });
+
+        AuctionListener.on('new', bid => {            
+            empty.hide();
+
+            if(!currentStorage[bid[0]])
+                 currentStorage[bid[0]] = new Item( bid[1]);
+        });
 
         AuctionListener.on('stock', bid => currentStorage[bid[0]].ForceStock( bid[1] ));
     });
    
 
-    this.LoadState = ( data ) => data.forEach(element => currentStorage[element[0]] = new Item(element[1]) );
+    this.LoadState =  data  => {
+        if(data.length > 0)
+            empty.hide();        
+
+        data.forEach(element => currentStorage[element[0]] = new Item(element[1]) );
+    }
     
-    this.LoadNext = (next) => currentStorage[data.uid] = new Item(data);
+    this.LoadNext = next => currentStorage[data.uid] = new Item(data);
 
     this.ForceChange = (uid,data) => currentStorage[uid].ForceChange(data);
 
-    function startListening(){
-
-    }
 }
     
 
@@ -108,11 +134,11 @@ function Item(data){
         clearTimeout(offsetTimeout);
         clearInterval(staticInterval);
 
-        offsetTimeout = setTimeout( e => {   
-            props.currentName.transition('bounce');
-            props.currentBid.text(data.price);
-            props.currentName.text(data.name);
-            
+        props.currentName.transition('bounce');
+        props.currentBid.text(data.price/100);
+        props.currentName.text(data.name);
+
+        offsetTimeout = setTimeout( e => {  
             SetDate(total,seconds,getTime(seconds - GOING_OFFSET));
             seconds--;     
 
@@ -182,7 +208,7 @@ function render(data){
             </div>
 
             <button class="ui button blue_button">
-                <div class="bigger">BID $<span>${data.currentBid}</span></div>
+                <div class="bigger">BID $<span>${data.currentBid/100}</span></div>
                 <div class="smaller">+$${data.offShipment} Shipping</div>
             </button>
 
@@ -218,4 +244,14 @@ function getTime(seconds){
         minutes : (minutes < 10 ? '0' : '')+minutes,
         seconds : (second < 10 ? '0' : '') + second
     }
+}
+
+
+function waiter(){
+    return $(`
+     <div class="empty">
+        <div class="loader"></div>
+        <span> Waiting for new auction items... </span>
+     </div>
+    `)
 }

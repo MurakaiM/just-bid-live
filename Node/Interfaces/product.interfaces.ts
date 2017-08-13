@@ -11,11 +11,16 @@ interface ProductShipment{
 interface TypeItem {
     value : string,
     title : string,
+    disabled : false,
     image? : string
+}
+ 
+interface TypeGroup{
+    [index: string]: TypeItem;
 }
 
 interface ProductTypes{
-    [index: string]: TypeItem;
+    [index : string] : TypeGroup;
 }
 
 interface ProductCategories{
@@ -26,14 +31,15 @@ interface ProductCategories{
 interface ProductInterface{
     prUid?: string,
     prTitle : string,
-    prSeller : string,
+    prSeller? : string,
+    prFull : string,
     prDescription : string,
     prCost : number,
-    prSold? : number,
-    prWishes? : number,    
-    prTypes? : ProductTypes,
-    prShipment? : ProductShipment,
-    prCategory : ProductCategories
+    prTypes : any,
+    prShipment : number,
+    prCategory : any,
+    prStock : number,
+    prGuarantee : number
 } 
 
 

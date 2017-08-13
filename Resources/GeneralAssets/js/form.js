@@ -1,17 +1,20 @@
-var WProps = new Props();
-var WStorage = new Storage();
+window.WProps = new Props();
+window.WStorage = new Storage();
 
-WProps.mobilePhone();
+window.WProps.mobilePhone();
+window.WProps.currency();
+window.WModals = {};
 
 $(e => setUpSignSystem());
 
 
 
 function setUpSignSystem() {
-  var signModal = new Modal('#signModal', true);
-  SignIn(signModal);
+  window.WModals.signModal = new Modal({ id :'#signModal' }, true);
+  SignIn(window.WModals.signModal);
 
-  $("#account").click(e => signModal.toggleState());
+  $("#account").click(e => window.WModals.signModal.toggleState());
+  $('.mail.icon').click( e => POST('/user/signout'));
 }
 
 
@@ -37,7 +40,8 @@ function Form(id, url, validationRules, ...args) {
     on: validationRules.on
   });
 
-  $form.submit(() => {
+  $form.submit(e => {
+    e.preventDefault();
     postThis(url);
     return false;
   });
@@ -52,14 +56,17 @@ function Form(id, url, validationRules, ...args) {
     $form.removeClass('overall error success');
   }
 
-  function setError(value) {    
+  function setError(value) {   
     $messages.error.text(value);
     $form.removeClass('loading success');
     $form.addClass('overall error');
   }
 
   function setSuccess() {
-    $form.form('reset');
+    if(validationRules.reset == false){
+      $form.form('reset');
+    }
+
     $form.removeClass('loading error');
     $form.addClass('overall success');
   }
@@ -71,22 +78,34 @@ function Form(id, url, validationRules, ...args) {
 
 
   function postThis(url) {
-    var data = args[1] == true ? new FormData($form[0]) : getFormData();
+    var data = args[0] == true ? new FormData($form[0]) : getFormData();
+    
+    if(validationRules.dataMiddleware){
+      data = validationRules.dataMiddleware(data);
+    }
 
 
     if ($form.form('is valid')) {
       setLoading();
-
       setTimeout(() => {
-        postForm(url, data, args[1] == true ? true : false)
-          .then(data => {   
+        postForm(url, data, args[0] == true ? true : false)
+          .then(data => {  
             if (data.code >= 10) {
+              if(validationRules.failure)
+                validationRules.failure(data.data);
+             
               setError(data.message);
-            } else {
+            } else {            
+              if(validationRules.success)
+                validationRules.success(data.data);
+
+              if(validationRules.notSuccess == true)
+                return;
+
               setSuccess();
             }
           })
-          .catch(err => setError("Request failed"));
+          .catch(err => setError(err.message));
       }, 1000);
 
     }
@@ -116,25 +135,26 @@ function Storage(){
 
 
 function postForm(url, data, isMultipart) {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {   
     if (isMultipart) {
-      backendPostForm(url, data, (err, data) => {
+      backendPostForm(url, data, (err, answer) => {
+        console.log(answer);
         if (err) {
-          reject("Ajax errpor");
-        } else if (data.code == 404) {
-          reject(data.message);
+          reject("Request failed");
+        } else if (answer.code == 404) {
+          reject(answer.message);
         } else {
-          resolve(data);
+          resolve(answer);
         }
       });
     } else {
-      backendPost(url, data, (err, data) => {
+      backendPost(url, data, (err, answer) => {        
         if (err) {
-          reject("Ajax errpor");
-        } else if (data.code == 404) {
-          reject(data.message);
+          reject("Request failed");
+        } else if (answer.code == 404) {
+          reject(answer.message);
         } else {
-          resolve(data);
+          resolve(answer);
         }
       });
     }
@@ -272,21 +292,62 @@ function Props() {
     }
   }
 
+  this.currency = () => {
+    $.fn.form.settings.rules.currency = (value, params) => {
+      const reg =   /^\d+([.]\d{1,2})?$/;
+      return reg.test(value);      
+    }
+
+    $.fn.form.settings.rules.shipment = (value, params) => {
+      const reg =   /^\d+([.]\d{1,2})?$/;
+      
+      if(!reg.test(value))
+          return false;
+
+      let float = parseFloat(value);
+      if(float < 0 || float > 20)
+        return false;
+      else 
+        return true;
+    }
+
+  }
+
   return this;
 }
 
 
 
-function Modal(id, formable = false) {
-  var overlay = $(id);
+function Modal(options, formable = false) {
+  var overlay = $(options.id);
   var body = overlay.find('.body');
-  var form = body.find('form');
-  this.opened = false;
+  var window = $('body');
+  var props = {};
+  var disabledToggle = false;
+ 
+  if(formable)
+    var form = body.find('form');
 
-  overlay.click(e => this.toggleState());
+  overlay.click(e => {
+    if(!options.closable){
+      this.toggleState();
+    }   
+  });
   body.click(e => e.stopPropagation());
 
+  if(options.closer){
+      body.find(options.closer).click( e => this.toggleState());
+  }
+
+  this.opened = false;
+
+  if(options.middleware)
+    options.middleware(body,props,this);
+
   this.toggleState = () => {
+    if(disabledToggle) 
+      return;
+
     if(formable){
       if(!this.opened){
         form.form('reset');        
@@ -294,16 +355,36 @@ function Modal(id, formable = false) {
       }  
     }
 
+    if(!this.opened){
+      if(options.onOpen){
+        options.onOpen(body,props,this);
+      }
+    }else{
+      if(options.onOpen){
+        options.onClose(body,props,this);
+      }
+    }
+
     overlay.toggleClass('opened');
     this.opened = !this.opened;
-  } 
 
+    if(options.overflowed){
+      if(this.opened)
+        window.css('overflow','hidden');
+      else
+        window.css('overflow','auto');
+    }
+  } 
   this.getBody = () => body;
+
+  this.toggleDisabling = () => disabledToggle = !disabledToggle;
+
+  this.isOpened = e => overlay.hasClass('opened');
 }
 
 function SignIn(modal) {
   var form = new Form(modal.getBody().find('form'), '/user/signin', {
-    inline : true,
+    inline : true,    
     rules : {
       email: {
         identifier: 'email',
@@ -320,7 +401,12 @@ function SignIn(modal) {
         }]
       }
     },
-    on : 'submit'
+    on : 'submit',
+    success : user => {
+      modal.toggleState();
+      window.WAuth.signIn(user);
+    },
+    failure : err => {}
   });
 
 }

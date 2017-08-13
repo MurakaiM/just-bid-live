@@ -4,10 +4,12 @@ import AuctionItem from '../../Models/auction.model'
 import User from '../../Models/user.model'
 
 import { AuctionSchema } from '../../Database/database.controller'
+import TimeModule from '../../Utils/Others/time'
 
 export default class AuctionLoader{
     public static Instace : AuctionLoader;
     private static ON_AUCTION : number = 50;
+    private static INTERVAL : number = TimeModule.getSeconds(5);
    
     private Store : AuctionStorage; 
     private WaitingInterval : any;
@@ -21,7 +23,12 @@ export default class AuctionLoader{
     }
     
     public async StartLoop( number : number =  AuctionLoader.ON_AUCTION, firstLoad : boolean = true) : Promise<any>{
-        var auctionItems = await AuctionItem.LoadState(number);
+        let auctionItems = [];
+       
+        if(firstLoad)
+            auctionItems = await AuctionItem.LoadFirst(number);
+        else
+            auctionItems = await AuctionItem.LoadState(number);
 
         this.CurrentItems += auctionItems.length;
         auctionItems.forEach( async element => { 
@@ -41,9 +48,12 @@ export default class AuctionLoader{
 
     public HandleExcept() : void {
         this.WaitingInterval = setInterval( async () => {            
-            let different = AuctionLoader.ON_AUCTION - this.CurrentItems;            
-            await this.StartLoop(different,false);                
-        }, 3000);
+            let different = AuctionLoader.ON_AUCTION - this.CurrentItems;       
+            
+            if(different > 0)
+                await this.StartLoop(different,false);        
+                    
+        }, AuctionLoader.INTERVAL);
     }
 
 

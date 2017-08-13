@@ -25,8 +25,7 @@ export default class AuctionStorage{
         return this.storage.get(data);
     }
 
-    public DeleteItem( uidRecord : string){
-       console.log(uidRecord);
+    public DeleteItem( uidRecord : string){      
        this.storage.delete(uidRecord); 
     }
 

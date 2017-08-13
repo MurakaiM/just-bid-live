@@ -4,6 +4,7 @@ export interface UserInterface{
   password: string,  
   firstName: string,
   lastName: string,
+  birthday : Date,
   imgUrl : string
 }
 

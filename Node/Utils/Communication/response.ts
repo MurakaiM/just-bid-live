@@ -36,7 +36,7 @@ export class RuleController {
     public allowed(fn) {          
         
         if (this.currentState == RCState.Resolved) {          
-            fn(this.answerableParams)
+            fn(this.answerableParams[0])
         } else { 
             this.resolveCallback = fn;
         }

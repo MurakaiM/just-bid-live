@@ -1,8 +1,8 @@
-var WCart;
+
 
 $(function () {
   var cartButton = $("#mainCart");   
-  WCart = new Cart(cartButton);
+  window.WCart = new Cart(cartButton);
   cartButton.click( e => WCart.show());
 
 });
@@ -20,7 +20,10 @@ function Cart(anchor) {
   var empty = dom.find('.empty');
 
 
-  this.show = () => dom.modal('show');
+  this.show = () => { 
+    this.loadUidData(this.getFromCart());
+    dom.modal('show')
+  };
 
 
   this.close = () => dom.modal('hide');
@@ -43,14 +46,21 @@ function Cart(anchor) {
   this.loadUidData = data => {
     appender.addClass('loading');
     button.addClass('loading');
+    
+    let list = [];   
+    Object.keys(data).forEach( e => list.push(data[e].id))
 
-    POST('/user/cart/load',data)
+    POST('/user/orders/cart',{ cart : list})
       .then( result => {
+        console.log(result);
+
         loadJsonData(result.data);
         appender.removeClass('loading');
         button.removeClass('loading');
       })
       .catch( result => {
+        console.log(result);
+
         appender.removeClass('loading');
         button.addClass('disabled');
       });

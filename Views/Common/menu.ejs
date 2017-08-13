@@ -1,14 +1,16 @@
 <div class="top_wrapper gradiental_background"></div>
-
-
-
-
 <div class="above_menu row">
   <div class="col-md-6 left">
-    <img class="logo" src='../GeneralAssets/img/logo.png' />
+    <a href="/">
+      <img class="logo" src='../GeneralAssets/img/logo.png' />
+    </a>
   </div>
   <div class="col-md-6 right links">
-    <a id="account">My Account</a>
+
+    <a id="account" style="<%if(user){%> display:none; <%}%>">My Account</a>
+    <a id="user" href="/my" style="<%if(!user){%> display:none; <%}%>"> Hello, <%if(user){%> <%=user.PublicData.firstName%> <%}%> </a>
+       
+       
     <a href="#" class="ui large">
         <i class="alarm icon"></i>
         <span></span>
@@ -18,19 +20,31 @@
     </a>
     
 
-    <a class="ui large" id="mainCart">
-        <i class="fa fa-shopping-basket" aria-hidden="true"></i>
-        <div class="floating ui circular teal label hidden">0</div>
-    </a>
-  
+
+    <%if(user){
+       if(!user.isSeller()){
+      %> 
+      <a class="ui large" id="mainCart">
+          <i class="fa fa-shopping-basket" aria-hidden="true"></i>
+          <div class="floating ui circular teal label hidden">0</div>
+      </a>
+    
+    <%}
+    }else{%>
+      <a class="ui large" id="mainCart">
+          <i class="fa fa-shopping-basket" aria-hidden="true"></i>
+          <div class="floating ui circular teal label hidden">0</div>
+      </a>
+    <%}%>
+
   </div>
 </div>
 <nav>
   <div class="row">
     <div class="col-sm-0 col-md-6 col-lg-6 left">
-      <a class="first <%if(page==" Live "){%>selected<%}%>" href="/">Live</a>
-      <a class="<%if(page==" Stock "){%>selected<%}%>" href="/stock">Stock</a>
-      <a class="<%if(page==" Contact "){%>selected<%}%>" href="/contact">Contact Us</a>
+      <a class="first <%if(page=="Live"){%>selected<%}%>" href="/">Live</a>
+      <a class="<%if(page=="Stock"){%>selected<%}%>" href="/stock">Stock</a>
+      <a class="<%if(page=="Contact"){%>selected<%}%>" href="/contact">Contact Us</a>
     </div>
     <div class="col-9 col-sm-6 col-md-6 col-lg-6 right small_lefted">
       <div class="relative">

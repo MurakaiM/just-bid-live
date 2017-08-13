@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <!--Head include!-->
+    <%-include('../Common/mobile')%>
+    <%-include('../Common/head')%>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker3.css"/>
+    <link rel="stylesheet" href="../GeneralAssets/css/responsive.css">
+  </head>
+
+  <body>
+    <div class="content">
+      <!--Menu include!-->
+      <%-include('../Common/minimenu', { page : pageName  })%>
+
+      <div class="single">
+          <form id="sellerIn" class="ui form former small">
+              <h3 class="ui image header flexcenter"> <img src="../GeneralAssets/img/commericalicons/briefcase.png" alt="store"> Sign in as seller</h3>
+              <div class="field">
+                <input type="text" placeholder="Email" name="email">
+              </div>
+              <div class="field">
+                  <input type="password" placeholder="Password" name="password">
+              </div>
+
+              <div class="center">
+                  <a class="not" href="/forgot">Forgot password ?</a>
+              </div>
+
+              <div class="ui error custom message">
+                  <div class="header">Action Forbidden</div>
+                  <p></p>
+              </div>
+
+              <div class="buttons container">
+                  <button type="submit" class="ui submit button">Sign In</button>
+                  <a class="ui button original" href="/seller/signup">Sign Up</a>
+              </div>
+          </form>
+      </div>
+     
+      <%-include('../Common/footer')%>
+    </div>
+  </body>
+
+  <!--Head include!-->
+  <%-include('../Common/scripts')%>
+  <script src="../AdminAssets/js/signin.js" charset="utf-8"></script>
+
+</html>

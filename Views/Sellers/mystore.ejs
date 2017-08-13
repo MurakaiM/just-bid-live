@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <!--Head include!-->
+        <%-include('../Common/head', { pageName : pageName })%>
+        <link rel="stylesheet" type="text/css" href="../AdminAssets/editor/css/simditor.css" />
+
+        <link rel="stylesheet" type="text/css" href="../UserAssets/css/user.css" />
+        <link rel="stylesheet" type="text/css" href="../GeneralAssets/css/orders.css" />
+        <link rel="stylesheet" type="text/css" href="../AdminAssets/css/table.css" />
+
+        <link rel="stylesheet" type="text/css" href="../GeneralAssets/css/responsive.css">
+    </head>
+    <body>
+        <div class="content">
+            <!--Menu include!-->
+            <%-include('../Common/menu', { page : pageName , user : currentUser })%>
+            <div class="row products admin">
+              <div class="col-md-2">
+                <div class="ui vertical menu profiler tabs head">   
+                    <a class="item active" data-tab="home">Home</a>                
+                    <a class="item" data-tab="products">Products</a>
+                    <a class="item" data-tab="auctions">Auctions</a>
+                    <a class="item disabled" data-tab="orders">Orders</a>
+                    <a class="item " data-tab="disabled">Disabled</a>
+                    <a class="item disabled" data-tab="history">History</a>
+                    <a class="item disabled" data-tab="messages">Messages</a>
+                    <a class="item disabled" data-tab="settings">Settings</a>
+                    <a class="item" id="signout">Sign out</a>
+                </div>
+              </div>
+              <div class="col-md-10">
+                <div class="tabs body">         
+                    <div id="homeData" class="ui segment padding tab active loading" data-tab="home">
+                        <div class="ui grid nomargin">
+                            <div class="row margin auto">
+                                <div class="four wide column"> 
+                                    <img class="ui small image margin auto" src="../GeneralAssets/img/usericons/image.png"> 
+                                </div>
+                                <div class="twelve wide column flex center"> 
+                                    <div>
+                                        <div class="title"> My store </div> 
+                                        <div class="subtitle"> Small subtitle </div> 
+                                        <div class="description"> 
+                                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. 
+                                            Ut sapiente commodi nostrum, deleniti delectus veritatis ratione
+                                            incidunt consequuntur iusto, doloremque esse eum consequatur 
+                                            architecto doloribus! Modi est, quisquam. Eveniet, natus.
+                                        </div> 
+                                    </div>    
+                                </div>
+                            </div>
+                        </div>      
+                        <h4 class="ui horizontal divider header">
+                            <i class="bar chart icon"></i>
+                            Statistics
+                        </h4>   
+                        <div class="ui four statistics">
+                            <div class="statistic">
+                                <div class="value allProducts"></div>
+                                <div class="label">Products</div>
+                            </div>   
+                            <div class="statistic">
+                                <div class="value allOrders"></div>
+                                <div class="label">Orders</div>
+                            </div>
+                            <div class="statistic">
+                                <div class="value allViews"></div>
+                                <div class="label">Views</div>
+                            </div>
+                            <div class="statistic">
+                                <div class="value allSolds"></div>
+                                <div class="label">Solds</div>
+                            </div>
+                        </div>  
+                    </div>          
+                    <div class="ui segment none padding tab" data-tab="products">  
+                        <span>  
+                            For one page : 
+                            <div id="productsDrop" class="ui compact selection dropdown">
+                                <i class="dropdown icon"></i>
+                                <div class="text"></div>
+                                <div class="menu">
+                                    <div class="item" data-value="10">10</div>
+                                    <div class="item" data-value="25">25</div>
+                                    <div class="item" data-value="50">50</div>
+                                    <div class="item" data-value="100">100</div>
+                                </div>
+                            </div>
+                        </span>
+                        <span id="productsSearch">                          
+                            <div class="ui icon search input">
+                                 <i class="search icon"></i>
+                                <input type="text" placeholder="Search...">                                
+                            </div>  
+                            <div id="productsRefresh">
+                                 <i class="refresh icon"></i>
+                            </div>
+                        </span>
+
+                        <table class="ui celled striped table" id="products">
+                            <thead>
+                               <tr>
+                                 <th data-field="prTitle"> Title</th>                                 
+                                 <th data-field="prStock">In stock</th>
+                                 <th data-field="prCost">Price</th>
+                                 <th data-field="prRating">Rating</th>
+                                 <th data-field="prViews">Views </th>
+                                 <th data-field="prSold"> Sold </th>                                 
+                                 <th data-field="updatedAt">Last action</th>                                
+                                 <th data-field="createdAt">Created</th>
+                               </tr>
+                            </thead>
+                            <tbody></tbody>
+                            <tfoot>
+                               <tr>
+                                <th colspan="10">
+                                <div class="ui left floated menu borderless backgroundless menuer">
+                                    <button id="productsCreate" class="ui green labeled tiny icon button" style="margin-right: 40px;">
+                                        <i class="checkmark icon"></i>
+                                        Create 
+                                    </button>
+                                    <button id="productsDelete" class="ui red small icon button disabled" data-content="Disable">
+                                        <i class="ban icon"></i>                                     
+                                    </button>
+                                    <button id="productsEdit" class="ui blue small icon button disabled" data-content="Edit">
+                                        <i class="edit icon"></i>                                       
+                                    </button>
+                                    <button id="productsOpen" class="ui blue small icon button disabled" data-content="Open">
+                                        <i class="open envelope outline icon"></i>                                       
+                                    </button>
+                                    <button id="productAuction" class="ui teal small icon button disabled" data-content="Auction">
+                                        <i class="wait icon"></i>
+                                    </button>
+                                 </div>
+                                 <div class="ui right tiny floated pagination menu">
+                                    <a class="left icon item">
+                                        <i class="left chevron icon"></i>
+                                    </a>
+                                    <div class="ui left action input">
+                                        <button class="ui button radiusless borderless">                                            
+                                            To
+                                        </button>
+                                        <input class="radiusless borderless" type="text" value="1">
+                                    </div>                                        
+                                    <a class="right icon item">                                                                   
+                                        <i class="right chevron icon"></i>
+                                    </a>
+
+                                 </div>
+                                </th>
+                               </tr>
+                            </tfoot>
+                        </table>
+
+                    </div>  
+                    <div class="ui segment none padding tab" data-tab="disabled">  
+                        <span>  
+                            For one page : 
+                            <div id="disabledDrop" class="ui compact selection dropdown">
+                                <i class="dropdown icon"></i>
+                                <div class="text"></div>
+                                <div class="menu">
+                                    <div class="item" data-value="10">10</div>
+                                    <div class="item" data-value="25">25</div>
+                                    <div class="item" data-value="50">50</div>
+                                    <div class="item" data-value="100">100</div>
+                                </div>
+                            </div>
+                        </span>
+                        <span id="disabledSearch">                          
+                            <div class="ui icon search input">
+                                 <i class="search icon"></i>
+                                <input type="text" placeholder="Search...">                                
+                            </div>  
+                            <div id="disabledRefresh">
+                                 <i class="refresh icon"></i>
+                            </div>
+                        </span>
+
+                        <table class="ui celled striped table" id="disabled">
+                            <thead>
+                               <tr>
+                                 <th data-field="prTitle">Title</th>  
+                                 <th data-field="prRating">Rating</th>
+                                 <th data-field="prViews">Views </th>
+                                 <th data-field="prSold"> Sold </th>                                 
+                                 <th data-field="updatedAt">Disabled at</th>   
+                               </tr>
+                            </thead>
+                            <tbody></tbody>
+                            <tfoot>
+                               <tr>
+                                <th colspan="10">
+                                <div class="ui left floated menu borderless backgroundless menuer">                                    
+                                    <button id="disabledRenew" class="ui green small icon button disabled" data-content="Renew">
+                                        <i class="level up icon"></i>                                     
+                                    </button>  
+                                    <button id="disabledDelete" class="ui red small icon button disabled" data-content="Disable">
+                                        <i class="outline trash icon"></i>                                     
+                                    </button>                                   
+                                 </div>
+                                 <div class="ui right tiny floated pagination menu">
+                                    <a class="left icon item">
+                                        <i class="left chevron icon"></i>
+                                    </a>
+                                    <div class="ui left action input">
+                                        <button class="ui button radiusless borderless">                                            
+                                            To
+                                        </button>
+                                        <input class="radiusless borderless" type="text" value="1">
+                                    </div>                                        
+                                    <a class="right icon item">                                                                   
+                                        <i class="right chevron icon"></i>
+                                    </a>
+
+                                 </div>
+                                </th>
+                               </tr>
+                            </tfoot>
+                        </table>
+                    </div>   
+                    <div class="ui segment none padding tab" data-tab="auctions">
+                        <span>  
+                            For one page : 
+                            <div id="auctionsDrop" class="ui compact selection dropdown">
+                                <i class="dropdown icon"></i>
+                                <div class="text"></div>
+                                <div class="menu">
+                                    <div class="item" data-value="10">10</div>
+                                    <div class="item" data-value="25">25</div>
+                                    <div class="item" data-value="50">50</div>
+                                    <div class="item" data-value="100">100</div>
+                                </div>
+                            </div>
+                        </span>
+                        <span id="auctionsSearch">                          
+                            <div class="ui icon search input">
+                                 <i class="search icon"></i>
+                                <input type="text" placeholder="Search...">                                
+                            </div>  
+                            <div id="auctionsRefresh">
+                                 <i class="refresh icon"></i>
+                            </div>
+                        </span>
+
+                        <table class="ui celled striped table" id="auctions">
+                            <thead>
+                               <tr>
+                                 <th data-field="prTitle">Title</th>  
+                                 <th data-field="uidFee">Fee</th>
+                                 <th data-field="inStock">Stock </th>
+                                 <th data-field="currentBid">Last bid</th>  
+                                 <th data-field="onAuction"> On auction </th>      
+                                 <th data-field="isCompleted"> Completed </th>
+                                 <th data-field="updatedAt">Last action</th>                              
+                                 <th data-field="createdAt">Created At</th>   
+                               </tr>
+                            </thead>
+                            <tbody></tbody>
+                            <tfoot>
+                               <tr>
+                                <th colspan="10">
+                                <div class="ui left floated menu borderless backgroundless menuer">                                    
+                                    <button id="auctionsStock" class="ui green small icon button disabled" data-content="Update stock">
+                                        <i class="shop up icon"></i>                                     
+                                    </button>  
+                                    <button id="auctionsPause" class="ui red small icon button disabled" data-content="Pause/Renew">
+                                        <i class="pause icon"></i>                                     
+                                    </button>                      
+                                 </div>
+                                 <div class="ui right tiny floated pagination menu">
+                                    <a class="left icon item">
+                                        <i class="left chevron icon"></i>
+                                    </a>
+                                    <div class="ui left action input">
+                                        <button class="ui button radiusless borderless">                                            
+                                            To
+                                        </button>
+                                        <input class="radiusless borderless" type="text" value="1">
+                                    </div>                                        
+                                    <a class="right icon item">                                                                   
+                                        <i class="right chevron icon"></i>
+                                    </a>
+
+                                 </div>
+                                </th>
+                               </tr>
+                            </tfoot>
+                        </table>
+                    </div>                   
+                    <div class="ui segment tab" data-tab="messages">Messages</div>                    
+                    <div class="ui segment tab" data-tab="settings"></div>
+                </div>
+              </div>
+            </div>
+
+            <%-include('../Store/modals')%>
+            <%-include('../Common/each', { login :  login ? true : false })%>
+            <%-include('../Common/footer')%>
+        </div>
+    </body>
+
+    <!--Head include!-->
+    <%-include('../Common/scripts')%>   
+
+    <script type="text/javascript" src="../AdminAssets/editor/js/module.min.js"></script>
+    <script type="text/javascript" src="../AdminAssets/editor/js/hotkeys.min.js"></script>
+    <script type="text/javascript" src="../AdminAssets/editor/js/uploader.min.js"></script>
+    <script type="text/javascript" src="../AdminAssets/editor/js/simditor.min.js"></script>
+
+    <script src="../GeneralAssets/js/tabulizer.js"></script>
+    <script src="../AdminAssets/js/table.js"></script>
+    <script src="../ZCompressed/AdminAssets/js/store.js"></script>
+
+</html>

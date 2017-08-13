@@ -1,0 +1,390 @@
+
+<!-- Product page segment !-->
+<div>
+
+    <div id="deleteModal" class="my-modal dashed">
+        <div class="body">
+            <h2 class="ui header main">
+                <div class="content">
+                    Disable product
+                </div>
+            </h2>
+            <h4 class="ui header main wrap">Active orders should be completed</h4>
+            <span class="ui descriptor">
+                You are going to disable product <span class="exact">imac</span>.
+                This changes can be reverted.
+            </span>
+
+            <form class="ui form deleter">
+
+                <div class="field">
+                    <input type="text" placeholder="Confirm product name" />
+                </div>
+
+                <div class="buttons container">
+                    <button type="button" class="ui red button">Disable</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="createModal" class="my-modal page">
+        <div class="body">
+            <div class="closer">
+                <i class="remove icon"></i>
+            </div>
+
+            <h2 class="ui header main">
+                <div class="content">
+                    Create product
+                </div>
+            </h2>
+            <h4 class="ui header main wrap">Create new products for your store</h4>
+
+
+            <form class="ui form deleter">
+                <div class="field fileds-margin">
+                    <div class="field fileds-margin">
+                        <label>General information</label>
+                        <div class="fields">
+                            <div class="eight wide field">
+                                <input type="text" name="title" placeholder="Title">
+                            </div>
+                            <div class="eight wide field">
+                                <div class="ui category search cat">
+                                    <div class="ui icon input">
+                                        <input class="prompt" name="category" type="text" placeholder="Search categories...">
+                                        <i class="search icon"></i>
+                                    </div>
+                                    <div class="results"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="fields">
+                            <div class="four wide field">
+                                <div class="ui left icon input">
+                                    <input type="text" name="cost" placeholder="Price">
+                                    <i class="dollar icon"></i>
+                                </div>
+                            </div>
+                            <div class="four wide field">
+                                <div class="ui left icon input">
+                                    <input type="text" name="shipment" placeholder="Shipment">
+                                    <i class="dollar icon"></i>
+                                </div>
+                            </div>
+                            <div class="four wide field">
+                                <div class="ui left icon input">
+                                    <input type="text" name="stock" placeholder="In Stock">
+                                    <i class="shop icon"></i>
+                                </div>
+                            </div>
+                            <div class="four wide field">
+                                <div class="ui left icon input">
+                                    <input type="text" name="guarantee" placeholder="Guarantee">
+                                    <i class="protect icon"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <textarea placeholder="Short description" name="description" rows="2"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="field fileds-margin" id="typesColorist">
+                        <label>Color</label>
+                        <div class="ui grid nested"></div>
+                        <div class="fields">
+                            <div class="four wide field">
+                                <input type="text" name="titleVR" placeholder="Title">
+                            </div>
+                            <div class="three wide field">
+                                <input type="text" name="valueVR" placeholder="Id">
+                            </div>
+                            <div class="two wide field">
+                                <input type="color" name="color" placeholder="HEX Preview">
+                            </div>
+                            <div class="five wide field">
+                                <input type="text" name="image" placeholder="Image url">
+                            </div>
+                            <div class="two wide field flexer">
+                                <button type="button" class="ui teal tiny button"> Add </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field fileds-margin" id="typesSize">
+                        <label>Size</label>
+                        <div class="ui grid nested"></div>
+                        <div class="fields">
+                            <div class="four wide field">
+                                <input type="text" name="titleVR" placeholder="Title">
+                            </div>
+                            <div class="three wide field">
+                                <input type="text" name="valueVR" placeholder="Id">
+                            </div>
+                            <div class="two wide field flexer">
+                                <button type="button" class="ui teal tiny button"> Add </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field fileds-margin">
+                        <label>Full description</label>
+                        <div class="field">
+                            <textarea class="wwc" placeholder="Full description" name="fldescription"></textarea>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="ui custom error message">
+                    <div class="header">Action Forbidden</div>
+                    <p></p>
+                </div>
+
+                <div class="buttons container">
+                    <button type="submit" class="ui green button">                            
+                                    Create
+                                </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="editModal" class="my-modal dashed">
+        <div class="body">
+            <div class="closer">
+                <i class="remove icon"></i>
+            </div>
+
+            <h2 class="ui header main">
+                <div class="content">
+                    Edit product
+                </div>
+            </h2>
+            <h4 class="ui header main wrap">Change stock and disable types. </h4>
+            
+
+            <div class="field">
+                <label class="ui descriptor">Types for <span class="exact"></span></label>
+                <div class="ui segment scroll" style="overflow-y:scroll; height : 208px;">
+                </div>
+            </div>
+        
+            <form class="ui form deleter" style="margin-top: 26px;">
+                <div class="field">
+                    <label>Stock</label>
+                    <input type="text" name="stock" placeholder="New in stock" />
+                </div>
+
+                <div class="ui message success">
+                    <div class="header">Action Completed</div>
+                    <p> Product's stock was successfully updated </p>
+                </div>
+
+                <div class="ui message error">
+                    <div class="header">Action Forbidden</div>
+                    <p> Ooops... Error occurred </p>
+                </div>
+
+
+                <div class="buttons container">
+                    <button type="submit" class="ui blue button">Update stock</button>
+                </div>
+            </form>
+
+
+        </div>
+    </div>
+
+    <div id="finishModal" class="my-modal dashed">
+        <div class="body">
+            <h2 class="ui header main">
+                <div class="content">
+                    Delete product
+                </div>
+            </h2>
+            <h4 class="ui header main wrap">All related items will be deleted (auctions, orders, wishes)</h4>
+            <span class="ui descriptor">
+                You are going to delete product <span class="exact">imac</span>. 
+                You can perform this action if there are no related orders or/and auctions.
+            </span>
+
+            <form class="ui form deleter">
+
+                <div class="field">
+                    <input type="text" placeholder="Confirm product name" />
+                </div>
+                <div class="ui error message">
+                    <div class="header">Action Forbidden</div>
+                    <p></p>
+                </div>
+
+                <div class="buttons container">
+                    <button type="button" class="ui red button">Delete</button>
+                </div>
+            </form>
+
+
+        </div>
+    </div>
+
+    <div id="renewModal" class="my-modal dashed">
+        <div class="body">
+            <h2 class="ui header main">
+                <div class="content">
+                    Renew product
+                </div>
+            </h2>
+            <h4 class="ui header main wrap">Users will be able to create new orders with this product.</h4>
+            <span class="ui descriptor">
+                You are going to renew product <span class="exact">imac</span>.
+                You can find and edit this product as always.
+            </span>
+
+            <form class="ui form deleter">
+
+                <div class="field">
+                    <input type="text" placeholder="Confirm product name" />
+                </div>
+
+                <div class="buttons container">
+                    <button type="button" class="ui green button">Renew</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="auctionNewModal" class="my-modal dashed big">
+     <div class="body">
+            
+            <h2 class="ui header main">
+                <div class="content">
+                    Add product to auction.
+                </div>
+            </h2>
+            <h4 class="ui header main wrap">Users will be able to win your product via placing bids.</h4>
+            <span class="ui descriptor">
+                You are going to create auction item <span class="exact"></span>.
+                Auction item's stock not depends on product stock, remember it. You will be able update or pause auction item. <br><br>
+                User will be able to choose type (color/size) of product after winning.
+            </span>
+
+            <form class="ui form deleter">
+                <div class="field fileds-margin">
+                    <label>General information</label>                
+                    <div class="fields">                        
+                        <div class="ten wide field">
+                            <select class="ui dropdown" name="type">
+                                <option value="">Auction type</option>
+                                <option value="standard">Standard Listing</option>
+                                <option value="featured">Featured Listing</option>
+                                <option value="small">Standard 20% Percent</option>
+                                <option value="big">Big Percentage 50%</option>
+                            </select>                          
+                        </div>
+                        <div class="six wide field">
+                                <div class="ui left icon input">
+                                    <input type="text" name="stock" placeholder="In Stock (auction)">
+                                    <i class="shop icon"></i>
+                                </div>
+                        </div>           
+                    </div>
+                </div>
+                <div class="field fileds-margin">
+                  <label>Type explanation</label>  
+                  <div class="fields">
+                     <div class="eight wide field partlydisabled">
+                        <input type="text" name="fee" placeholder="Fee">
+                     </div>
+                     <div class="eight wide field partlydisabled">
+                        <input type="text" name="ape" placeholder="Appearence">
+                     </div>
+                  </div>
+                  <div class="fields">
+                     <div class="sixteen wide field partlydisabled">
+                        <input type="text" name="exp" placeholder="Explanation">
+                     </div>                        
+                  </div>
+                </div> 
+
+                <div class="ui message success">
+                    <div class="header">Action Completed</div>
+                    <p> Auction item was successfully published </p>
+                </div>
+
+                <div class="buttons container">
+                    <button type="submit" class="ui green button">Create</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+    <div id="auctionUpdateModal" class="my-modal dashed">
+        <div class="body">
+              <h2 class="ui header main">
+                <div class="content">
+                    Update auction stock
+                </div>
+            </h2>
+            <h4 class="ui header main wrap">Completed auction items will be restarted. Stock will be updated on next auction tick.</h4>
+            <span class="ui descriptor">
+                You are going to update auction item <span class="exact">imac</span>.                
+            </span>
+
+            <form class="ui form deleter">
+
+                <div class="field">
+                    <input type="text" name="stock" placeholder="Stock" />
+                </div>
+
+                <div class="ui message success">
+                    <div class="header">Action Completed</div>
+                    <p> Auction item was successfully updated </p>
+                </div>
+
+                <div class="ui message error">
+                    <div class="header">Action Forbidden</div>
+                    <p> Ooops... Error occurred </p>
+                </div>
+
+                <div class="buttons container">
+                    <button type="submit" class="ui green button">Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="auctionPauseModal" class="my-modal dashed">
+        <div class="body">
+            <h2 class="ui header main">
+                <div class="content">
+                    Pause/Unpause Auction item
+                </div>
+            </h2>
+            <h4 class="ui header main wrap">Change state of your auction item</h4>
+            <span class="ui descriptor">
+                You are going to disable product <span class="exact">imac</span>.
+                This changes can be reverted.
+            </span>
+
+            <form class="ui form deleter">        
+                <div class="ui message success">
+                    <div class="header">Action Completed</div>
+                    <p> Auction item was successfully updated </p>
+                </div>
+
+                <div class="ui message error">
+                    <div class="header">Action Forbidden</div>
+                    <p> Ooops... Error occurred </p>
+                </div>
+                <div class="buttons container">
+                    <button type="submit" class="ui red button">Disable</button>
+                </div>
+            </form>
+        </div>
+        
+    </div>
+</div>

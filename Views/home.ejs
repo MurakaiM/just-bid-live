@@ -1,22 +1,22 @@
-
 <!DOCTYPE html>
 <html>
 
   <!--Head include!-->
-  <%-include('./Common/head')%>
-  <link rel="stylesheet" href="../GeneralAssets/css/responsive.css">
+  <head>  
+    <%-include('./Common/mobile')%>
+    <%-include('./Common/head')%>
+    <link rel="stylesheet" href="../GeneralAssets/css/responsive.css">
+  </head>
 
   <body>
 
     <div class="content">
       <!--Menu include!-->
-      <%-include('./Common/menu', { page : pageName })%>
-     
+     <%-include('./Common/menu', { page : pageName , user : currentUser })%>
       <div class="row products">
-
-        <div class="col-md-4 col-lg-3" >
+          <div class="col-md-4 col-lg-3">
             <div class="stock header">
-               Categories
+              Categories
             </div>
             <div class="ui segment categories stock">
               <div class="list stock_list">
@@ -42,25 +42,45 @@
                 </div>
               </div>
             </div>
-        </div>
+          </div>
 
-        <div class="col-md-8 col-lg-9 row pins">
-          
-        </div>
+          <div class="col-md-8 col-lg-9 row pins">
+            <div class="empty">
+              <div class="loader"></div>
+              <span> Waiting for new auction items... </span>
+            </div>
+          </div>
 
       </div>
+        
+      <div id="waiterModal" class="my-modal mini">
+          <div class="body">
+            <h2 class="ui header main">
+              <div class="content">
+                Are you here ?
+              </div>
+            </h2>
+            <h4 class="ui header main wrap"></h4>          
+            <div>
+                <img class="" src="../GeneralAssets/img/icon/hourglass.png" alt="" />
+            </div>
+            <div class="holder">       
+                <button class="ui submit button"> Yes </button>     
+            </div>  
+          </div>
+      </div>
 
-      <%-include('./Common/each')%>
+      <%-include('./Common/each', { login :  login ? true : false })%>
       <%-include('./Common/footer')%>
     </div>
 
 
   </body>
 
-  <!--Head include!-->  
+  <!--Head include!-->
   <%-include('./Common/scripts')%>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
-  <script src="../UserAssets/js/Auction/auction.js"></script>
-   
+    <script src="../UserAssets/js/Auction/activity.js"></script>
+    <script src="../UserAssets/js/Auction/auction.js"></script>
+
 
 </html>

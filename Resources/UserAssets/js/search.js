@@ -11,10 +11,9 @@ $(function () {
     ];
 
 
-  $('.ui.search') .search({
+  $('.ui.search').search({
     type          : 'category',
-    minCharacters : 3,
-    maxResults : 1,
+    minCharacters : 3,    
     duration : 500,
     apiSettings   : {
       onResponse: function(githubResponse) {

@@ -23,10 +23,11 @@ export default class UserController{
                     {
                         email : data.email,
                         phone : data.phone,
+                        birthday : data.birthday,
                         password : data.password,
                         firstName : data.firstName,
                         lastName : data.lastName,
-                        imgUrl : imageUrl                        
+                        imgUrl : imageUrl                 
                     }
                 )
                     .then( () => resolve({ success : true, reason : "User was successfuly created"}))
@@ -39,8 +40,8 @@ export default class UserController{
         return new Promise((resolve, reject) => {
             var date = new Date().getTime();
             var pwdLink = uuid()+date+uuid();
-            pwdLink = pwdLink.replace(/-/g, '');
-  
+            pwdLink = pwdLink.replace(/-/g, '');          
+
             UserSchema.update(
               {
                 password_date : date + (60 * 60 * 1000),
@@ -60,14 +61,14 @@ export default class UserController{
             UserSchema.findOne({ where : { password_link : data.link }})
                 .then( user => {
                     if(user == null){
-                        reject("There is no such link");
+                        reject("There is no such link. If you made error, request password reset one more time.");
                     }   
 
 
                     var currentUser = new User(user.uid).ForceLoad(user);
                     if(currentUser.Data.email != data.email){
                         currentUser.clearReset();
-                        return reject("Emails are not simmilar");
+                        return reject("Emails are not simillar");
                     }
 
                     if(new Date().getTime() >= currentUser.Data.password_date ){
@@ -84,5 +85,38 @@ export default class UserController{
                 .catch( err => {              
                     reject("There is no such link")});
         });
+    }
+
+    public static ResetVlidate(data) : Promise<any>{
+        return new Promise((resolve, reject) => {    
+            UserSchema.findOne({ where : { password_link : data } })
+            .then( user => {
+                console.log(user)
+                if(user == null){
+                    reject("There is no such link");
+                }   
+
+                var currentUser = new User(user.uid).ForceLoad(user);   
+                if(new Date().getTime() >= currentUser.Data.password_date ){
+                    currentUser.clearReset();
+                    return reject("Too big pause between request and reset");
+                } 
+
+                return resolve();
+            })
+            .catch( err => {              
+                reject("There is no such link")});
+        });
+    }
+
+    public static VerifyUser( uid : string) : Promise<any>{
+        return new Promise((resolve, reject) => {
+            
+            User.LoadByUid(uid)
+            .then( user => user.Verify())
+            .then( result => resolve(result))
+            .catch( err => reject(err));
+
+        });   
     }
 }

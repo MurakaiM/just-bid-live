@@ -1,0 +1,13 @@
+{
+    "type": "service_account",
+    "project_id": "mythical-bazaar-175300",
+    "private_key_id": "6dbace9e310a98a5bb1e1caf9404e39bba1feb77",
+    "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCspHqIZl4KVUMF\nrhNTxWqkiNYj+k1hvjyilW+5PUAnws4S6TYAhBpcDvOB6McRZgN5yE2KLYls3Q+j\n599YNw+P6o+N3Yfju5lw472rcnYHt3/ZLqsa2hnOT1z3mTVXLuVeA8TuMSC4wKTV\n9baU1EzdNpIBPy3++TZhhta2CCrbl8VIxGD6kZsfm8pIB4Up7Bi3Ah937ezMK9YT\n2jWQ8blt7y+i/V15pjVuA20HXGNyDO/L7xR9Zpj98p2Lium8+9M4zIdiac91n/TB\n+EZiVJWpIJ4NT0wC+29xRaVRF2bmrNOjgw1NSDVfANydxfpj/Wpjl1EegoHturua\ncxQFc2pfAgMBAAECggEADx05Mv7PRdVQEEu8mm1imDP4l16+7osykMNHbC6uEq0N\n0H8FQMdP7XZLoDhqUR4euMct7qZs7RBvYZiXp4fuf1l4JuHZlzjhxo3RmZRkO+m3\nMiLRTQECGFs/VtfdYRwUbYYj8/xuEm6fH7IqwV3Sut0frCdFVhioR6J/4qDVa7L5\nVj61Ju/Qh2iFzt7hW7yK4RbUEUbfPPiuGIWRxxA77pDMnR+AlLwz1GxaCcTdAf32\nHgi1m58qW6vxS5b82lAi7TkdIp8AFKHzEF7vv6Y9b7zwnUaia1OfW5coMLCt7k95\nAbiZxjz7nbTDzrWWKqD3RcaE+jie6QjiFDSYxWaL8QKBgQDmXoK895wJavwlcQ+S\nT/lu+3fWA5cKRY/JCNWzzctuyCOZfixs4kMpncfTHAfkUJcTqqLCP6iAujbf3knj\nyqPHzq5rjl3Oj4Bi8lQ2r0Eq4ekklvnkH5p106AUz1ICwrbOvI05wiaIr92Hwz4N\n5lWZ0rZKfjx6M1tRdwFX2xPGjwKBgQC/2cSOf7b4eZGDLf0uXhc5EHwoefyCSknn\npL58mlhgV14ViKU6BfCBx50Bc59VChTgTVg0sFVl124mgc4WglQ9xeWEIu1AkF1h\nS9ZL9AqOc6xy9ejoGhRbQSEOfqdQD/+ZGDyi8EVPIezOh7N0dPLvTCczKsm9JA+4\ncL0HujuHMQKBgQChZVedQrDcXEr5hGOPc15i5eVIWE2Kkb+x7fGiviynmapvUFmZ\nk0/QqU0lV38j815VFfhftS+9uDjX0SndYMwsIV5L1ntcS2d8ayCbC1/RxmKMEwZS\nT93sbO67haCEdJyU7L7Y13Ad1XCUPDKOlHAmi9zRBe4jAzYYNhMH1WHeewKBgCDv\njsnz7QJ9RFjj5Uo3hv8Z8Ga2gn4PqN5mrvkPOkrX1OQXgF4UtPRiw3aDVgAwaeMU\nBCePeimwsU1VDX9ZwoKUXdGweVCTOCTC8zg43jMUcq+Nvf1StNnxtW4amjipdnTe\n71H9s7hhF5lhPJKqnSYtybEEEHwzG6vLVvhjpWKRAoGBAJrsHgGTSXjpPE9QAJgc\nzABF+I58wxzVROpIKnsp0yyjvomVyeR18+u9FpBFDu9V2mo38n+FuNQ7EIsN+jeN\nPJoky9qHb0RjYdsgvqNiKOZ8IN7pQ7ElNnrmk/ojoxj4wLOo03c1ObXJ+unS1zhI\n/JdX4svmRZ0UZsGbSmq8c9p4\n-----END PRIVATE KEY-----\n",
+    "client_email": "writer@mythical-bazaar-175300.iam.gserviceaccount.com",
+    "client_id": "102402227094793255018",
+    "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+    "token_uri": "https://accounts.google.com/o/oauth2/token",
+    "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+    "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/writer%40mythical-bazaar-175300.iam.gserviceaccount.com"
+  }
+  

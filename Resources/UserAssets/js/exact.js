@@ -41,9 +41,7 @@ function addProduct() {
     types: types
   };
 
-  WCart.saveToCart(result);
-
-  console.log(WCart.getFromCart());
+  WCart.saveToCart(result); 
 }
 
 
@@ -77,9 +75,10 @@ function dropdownListen() {
 }
 
 function setSlider() {
-  if (!WProps.isMobile) {
+  if (!window.WProps.isMobile) {
     $('.exactly.aller').sticky({
-      context: '.col-md-4.col-lg-4'
+      context: '.col-md-4.col-lg-4',
+      setSize : false
     });
     var currentHeight = $('.exactly.aller');
   }

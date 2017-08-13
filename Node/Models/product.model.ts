@@ -1,7 +1,9 @@
 import * as uuid from 'uuid/v4'
 
 import ProductInterface from '../Interfaces/product.interfaces'
-import { ProductSchema } from '../Database/database.controller'
+import { ProductSchema, OrderSchema, AuctionSchema } from '../Database/database.controller'
+
+import User from '../Models/user.model'
 
 
 
@@ -34,6 +36,21 @@ export default class Product {
        return this.dbProduct.remove();
     }
 
+    get PublicData() : any {
+        return {
+            prUid : this.dbProduct.prUid,
+            prTitle : this.dbProduct.prTitle,
+            prRating : this.dbProduct.prRating,
+            prCost : this.dbProduct.prCost,
+            prSold : this.dbProduct.prSold,
+            prViews : this.dbProduct.prViews,
+            prWishes : this.dbProduct.prWishes,
+            prStock : this.dbProduct.prStock,
+            createdAt : this.dbProduct.createdAt,
+            updatedAt : this.dbProduct.updatedAt,
+        }  
+    }
+
 
     public IncrementBought() : Promise<any>{
         return this.dbProduct.increment('prSold');
@@ -47,6 +64,9 @@ export default class Product {
         this.dbProduct = data;
     }
     
+    public DecreaseStock(){
+        return this.dbProduct.increment('prStock');
+    }
 
 
 
@@ -61,7 +81,7 @@ export default class Product {
             ProductSchema.find({ 
                 attributes: ['prUid', 'prTitle', 'prDescription', 'prCost', 'prTypes'],
                 where : { 
-                    uid : { $in : data }
+                    prUid    : { $in : data }
                 } 
             })
             .then( products => resolve(products) )
@@ -70,26 +90,121 @@ export default class Product {
         });
     }
 
+    public static ForceCreate(user : User, data : ProductInterface) : Promise<any>{    
+        return new Promise<any>((resolve, reject) => {         
 
-    public static ForceCreate(data : ProductInterface) : Promise<Product>{
-        return new Promise<Product>((resolve, reject) => {
             data.prUid = uuid();         
-            var product = ProductSchema.build(data);
-           
+            data.prSeller = user.Data.uid;
+                      
+            var product = ProductSchema.build(data);           
             product.save()
              .then( () => {
                 var productObject : Product = new Product(data.prUid);
-                productObject.ForceLoad(product);
-                resolve(productObject);
+                productObject.ForceLoad(product);               
+                resolve(productObject.PublicData);
              })
              .catch(err => reject(err));
         });
     }
 
-    public static ForceDelete(uuid : string) : Promise<any>{
-        return ProductSchema.remove({where : { prUid : uuid}});
+    public static ForceDelete(user : User , uuid : string) : Promise<any>{
+        return ProductSchema.remove({where : { prSeller : user.Data.uid, prUid : uuid}});
     }
-   
 
+    public static ForceDisable(user : User, uuid : string) : Promise<any>{
+        return ProductSchema.update({ prDisabled : true },{where : { prSeller : user.Data.uid, prUid : uuid}});
+    }
+
+    public static ForceRenew(user : User, uuid : string) : Promise<any>{
+        return ProductSchema.update({ prDisabled : false },{where : { prSeller : user.Data.uid, prUid : uuid}});
+    }
+
+    public static ForceRemove( user : User, uuid : string) : Promise<any>{
+        return new Promise((resolve, reject) => {            
+            OrderSchema.find({ where : { productId :  uuid } })
+            .then( result => {
+                if(!result){                    
+                    return AuctionSchema.find({ where : { uidProduct :  uuid } })
+                }
+
+                if(result.length  != 0){
+                    return reject("There are orders related to this product.");
+                }
+              
+            })
+            .then ( result => {
+                if(!result){                 
+                    return ProductSchema.destroy({ where: { prUid : uuid } })
+                }
+
+                if(result.length  != 0){
+                    return reject("There are auctions related to this product.");
+                }
+            })
+            .then( result => resolve("Product was deleted"))
+            .catch( error =>  reject("Database error"));   
+        });
+    }
+
+
+    public static ForceFind(uuid : string ) : Promise<any>{
+        return ProductSchema.findOne({ where : { prUid : uuid} });
+    }
+
+    public static ForceTypes(uuid : string) : Promise<any>{
+        return ProductSchema.findOne({ where : { prUid : uuid }, attributes : ["prTypes"] });
+    }
+
+    public static ChangeStock( user : User , uuid : string, stock : number) : Promise<any> {
+        return new Promise((resolve, reject) => {
+           
+            ProductSchema.findOne({
+                where : {
+                    prUid : uuid,
+                    prSeller : user.Data.uid
+                }
+            }).then( product => {
+                if(!product){
+                    return reject("No such product");
+                }
+                product.prStock = stock;
+                return product.save();
+            }).then( product => resolve(product))
+            .catch( err => reject(err));            
+
+        });
+    }
+
+    public static ChangeTypeAvailability( user : User, uuid : string, available : boolean, data : any) : Promise<any>{
+        return new Promise((resolve, reject) => {           
+            ProductSchema.findOne({
+                where : {
+                    prUid : uuid,
+                    prSeller : user.Data.uid
+                }
+            }).then( product => {
+                if(!product){
+                    reject("No such product");
+                }
+
+                if(!product.prTypes[data.group]){
+                   return reject("Wrong type group provided");
+                }
+
+                if(!product.prTypes[data.group][data.name]){
+                   return reject("Wrong type name provided");
+                }
+
+                let JSONData =  product.prTypes;
+                JSONData[data.group][data.name].disable = available;
+
+                product.prTypes = JSONData;              
+                return product.save();
+            }).then( product => resolve("Saved"))
+            .catch(err => reject("Error occurred"));
+        });
+    }
+
+    
 }
 

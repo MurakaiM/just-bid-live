@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <!--Head include!-->
+    <%-include('../Common/mobile')%>
+    <%-include('../Common/head')%>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker3.css"/>
+    <link rel="stylesheet" href="../GeneralAssets/css/responsive.css">
+  </head>
+
+  <body>
+    <div class="content">
+      <!--Menu include!-->
+      <%-include('../Common/minimenu', { page : pageName, user : currentUser  })%>
+
+      <div class="single">
+          <form id="signUp" class="ui form former ">
+                      
+            <h3 class="ui image header"> <img src="../GeneralAssets/img/commericalicons/store-1.png" alt="store"/> Create your store</h3>
+            <div class="field fileds-margin">
+              <label>Personal information</label>
+              <div class="three fields">
+                <div class="field">
+                  <input type="text" name="firstName" placeholder="First Name">
+                </div>
+                <div class="field">
+                  <input type="text" name="lastName" placeholder="Last Name">
+                </div>
+                <div class="field">
+                  <input id="birthday" type="text" name="birthday" placeholder="Birth date">
+                </div>
+              </div>
+            </div>
+            <div class="field fileds-margin">
+              <label>Owner contact information</label>
+              <div class="two fields">
+                <div class="field">
+                  <input type="text" name="email" placeholder="Email">
+                </div>
+                <div class="field">
+                  <input type="text" name="phone" placeholder="Phone">
+                </div>
+              </div>
+
+            </div>
+
+            <div class="field fileds-margin">
+              <label>Store information</label>
+              <div class="two fields">
+                <div class="field">
+                  <input type="text" name="storeName" placeholder="Store Title">
+                </div>
+                <div class="field">
+                  <input type="text" name="storeSubtitle" placeholder="Store Subtitle">
+                </div>
+              </div>
+
+              <div class="field">
+                  <textarea name="storeDescription" rows="5" placeholder="Type store description here..."></textarea>
+              </div>
+            </div>
+
+            <div class="field fileds-margin">
+              <label>Passwords</label>
+              <div class="two fields">
+                <div class="field">
+                  <input type="password" name="password" placeholder="Password">
+                </div>
+                <div class="field">
+                  <input type="password" name="repeated_password" placeholder="Repeat password">
+                </div>
+              </div>
+
+            </div>
+            <div class="field fileds-margin">
+              <label>Additional</label>
+              <div class="two fields">
+                <div class="field avatar_holder">
+                  <img class="ui tiny image" src="../GeneralAssets/img/usericons/user-20.png">
+                  <input id="fileselect1" type="file" style="display : none;" name="userAvatar" accept="image/*">
+                  <label class="ui select file button" for="fileselect1">Select avatar</label>
+                </div>
+
+                <div class="field avatar_holder">
+                  <img class="ui tiny image" src="../GeneralAssets/img/usericons/image.png">
+                  <input id="fileselect2" type="file" style="display : none;" name="storeAvatar" accept="image/*">
+                  <label class="ui select file button" for="fileselect2">Select store avatar</label>
+                </div>
+              </div>
+            </div>
+
+
+
+            <div class="ui custom success message">
+              <div class="header">Action Completed</div>
+              <p>
+                You're successfully signed up. <br> Please check your email for next steps.
+              </p>
+            </div>
+            <div class="ui custom error message">
+              <div class="header">Action Forbidden</div>
+              <p></p>
+            </div>
+         
+
+            <div class="submit_holder">
+              <div class="ui submit button">Submit</div>
+            </div>
+          </form>
+      </div>
+
+      
+      <%-include('../Common/footer')%>
+    </div>
+  </body>
+
+  <!--Head include!-->
+  <%-include('../Common/scripts')%>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/libphonenumber-js/0.4.18/libphonenumber-js.min.js"></script>
+  <script src="../AdminAssets/js/signup.js" charset="utf-8"></script>
+
+</html>

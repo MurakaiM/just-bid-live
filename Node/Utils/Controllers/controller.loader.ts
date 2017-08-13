@@ -16,7 +16,7 @@ export default class ControllersLoader{
     private ReworkPath(information : ControllerInterface){
        
         switch (information.method) {            
-            case RequestType.GET:
+            case RequestType.GET:                
                 this.app.get(information.path,information.fn);
                 break;          
             case RequestType.POST:

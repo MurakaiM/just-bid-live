@@ -9,11 +9,11 @@ export default class FileUploader{
     bucketId : string;
     appId : string;
     
-    constructor( app, appId: string, bucketId:string, credits : JSON){
- 
-        this.initBucket(credits);
+    constructor( app, appId: string, bucketId:string, credits : JSON){ 
+       
         this.appId = appId;
         this.bucketId = bucketId;
+        this.initBucket(credits);
 
         FileUploader.Instance = this;
     }   
@@ -23,9 +23,13 @@ export default class FileUploader{
         return this.uploadFile(fileData,'avatars');
     }
 
-    private uploadFile(fileData : any, directory : string) : Promise<any> {
+    private uploadFile(fileData : any, directory : string) : Promise<any> {       
         return new Promise((resolve, reject) => {
-            const gcsname = directory + this.hashName();
+            if(!fileData){
+                return resolve('');
+            }
+
+            const gcsname = directory+"/"+ this.hashName();
             const file = this.bucket.file(gcsname);
 
             const stream = file.createWriteStream({ metadata: {contentType: fileData.mimetype}});

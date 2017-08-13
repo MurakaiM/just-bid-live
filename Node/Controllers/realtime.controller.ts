@@ -1,5 +1,9 @@
 import * as socketIo from 'socket.io'
+import * as io_passport from 'passport.socketio'
+import * as cookieParser from 'cookie-parser'
+
 import { AuctionStreamData } from '../Interfaces/auction.interfaces'
+import Redis from '../Database/database.redis'
 
 export default class RealtimeSocket{
     public static Instance : RealtimeSocket;
@@ -14,6 +18,19 @@ export default class RealtimeSocket{
 
     constructor(server){
         this.io = socketIo(server);
+
+        this.io.use(io_passport.authorize({ 
+            cookie: {
+                maxAge: 30 * 24 * 60 * 60 * 1000
+            },       
+            store : Redis.Instance._session,
+            cookieParser: cookieParser,
+            secret: 'small kittens',
+            resave: false,
+            saveUninitialized: false,
+            success: (data, accept) => accept(null, true),
+            fail:  (data, message, error, accept) => accept(null,false)
+          }));
 
         RealtimeSocket.Instance = this;
         
@@ -35,8 +52,8 @@ export default class RealtimeSocket{
                 return socket.disconnect(true);
             }
 
-            socket.join(user.uid);
-            socket.on('status',() => this.authNms.to(user.uid).emit('status', buildResponse(socket)));
+            socket.join(user.PublicData.uid);
+            socket.on('status',() => this.authNms.to(user.PublicData.uid).emit('status', buildResponse(socket)));
         });
 
         function buildResponse(socket){
@@ -71,6 +88,11 @@ export default class RealtimeSocket{
 
         
     }   
+
+
+    public emitExit( uid : string){  
+        this.authNms.to(uid).emit('exit',false);
+    }
 
 
     public emitBid( newBid : AuctionStreamData){

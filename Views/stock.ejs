@@ -4,6 +4,7 @@
 
   <head>
     <!--Head include!-->  
+    <%-include('./Common/mobile')%>
     <%-include('./Common/head')%>
     <link rel="stylesheet" href="../GeneralAssets/css/responsive.css">
   </head>
@@ -13,7 +14,7 @@
 
     <div class="content">
       <!--Menu include!-->
-      <%-include('./Common/menu', { page : pageName })%>
+      <%-include('./Common/menu', { page : pageName, user : currentUser })%>
 
       <div class="row products">
         <div class="col-md-4 col-lg-3" >
@@ -22,59 +23,15 @@
             </div>
             <div class="ui segment categories stock">
               <div class="list stock_list">
-                <div class="list_item top_level" data-popup="women_clothing">
-                  <span class="icon"><img src="../UserAssets/img/LinearIcons/dress.png" alt=""></span>
-                  <span class="text">Women's Clothing</span>
-                </div>
-                <div class="list_item top_level" data-popup="men_clothing">
-                  <span class="icon"><img src="../UserAssets/img/LinearIcons/polo.png" alt=""></span>
-                  <span class="text">Men's Clothing</span>
-                </div>
-                <div class="list_item top_level" data-popup="watches">
-                  <span class="icon"><img src="../UserAssets/img/LinearIcons/watch.png" alt=""></span>
-                  <span class="text">Jewelry & Watches</span>
-                </div>
-                <div class="list_item top_level" data-popup="bags">
-                  <span class="icon"><img src="../UserAssets/img/LinearIcons/hand-bag.png" alt=""></span>
-                  <span class="text">Bags & Shoes</span>
-                </div>
-                <div class="list_item top_level" data-popup="health">
-                  <span class="icon"><img src="../UserAssets/img/LinearIcons/purse.png" alt=""></span>
-                  <span class="text">Health & Beauty, Hair</span>
-                </div>
 
-                <div class="list_item down_level" data-popup="health">
-                  <span class="icon"><img src="../UserAssets/img/OtherIcons/smartphone.png" alt=""></span>
-                  <span class="text">Phones & Accessories</span>
-                </div>
-                <div class="list_item down_level" data-popup="health">
-                  <span class="icon"><img src="../UserAssets/img/OtherIcons/monitor.png" alt=""></span>
-                  <span class="text">Computer & Office</span>
-                </div>
-                <div class="list_item down_level" data-popup="health">
-                  <span class="icon"><img src="../UserAssets/img/OtherIcons/quality.png" alt=""></span>
-                  <span class="text">Consumer Electronics</span>
-                </div>
-                <div class="list_item down_level" data-popup="health">
-                  <span class="icon"><img src="../UserAssets/img/OtherIcons/house.png" alt=""></span>
-                  <span class="text">Home & Garden, Furniture</span>
-                </div>
-                <div class="list_item down_level" data-popup="health">
-                  <span class="icon"><img src="../UserAssets/img/OtherIcons/robot.png" alt=""></span>
-                  <span class="text">Toys, Kids & Baby</span>
-                </div>
-                <div class="list_item down_level" data-popup="health">
-                  <span class="icon"><img src="../UserAssets/img/OtherIcons/tent.png" alt=""></span>
-                  <span class="text">Sports & Outdoors</span>
-                </div>
-                <div class="list_item down_level" data-popup="health">
-                  <span class="icon"><img src="../UserAssets/img/OtherIcons/car.png" alt=""></span>
-                  <span class="text">Automobiles & Motorcycles</span>
-                </div>
-                <div class="list_item down_level" data-popup="health">
-                  <span class="icon"><img src="../UserAssets/img/OtherIcons/drawing.png" alt=""></span>
-                  <span class="text">Home Improvement</span>
-                </div>
+                <%popups.forEach((item,i) => {%>
+                  <div class="list_item <%if(item.subcategories.length > 0){%> top_level <%}else{%> down_level <%}%>"
+                    data-popup="<%=item.id%>">
+                    <span class="icon"><img src="<%=item.image%>" alt=""></span>
+                    <span class="text"><%=item.name%></span>
+                  </div>
+                <%})%>
+                
               </div>
             </div>
         </div>
@@ -109,9 +66,9 @@
                 <div class="row">
                   <%item.subcategories.forEach((cat,i)=>{%>
                     <div class="col-lg-4 hoverable_list">
-                      <a class="hoverable_title" href="<%=cat.url%>"><%=cat.title%></a>
+                      <a class="hoverable_title" href="<%=cat.url%>"><%=cat.name%></a>
                       <div class="hoverable_sublist">
-                        <%cat.subtitles.forEach( (subcat,i) => {%>
+                        <%cat.subnames.forEach( (subcat,i) => {%>
                             <a class="hoverable_item" href="<%=subcat.url%>"><%=subcat.name%></a>
                         <%})%>
                       </div>
@@ -356,6 +313,7 @@
 
     <!--Scripts include!-->
     <%-include('./Common/scripts')%>
+    <script src="https://unpkg.com/tilt.js@1.1.21/dest/tilt.jquery.min.js"></script>
     <script src="../UserAssets/js/stock.js" charset="utf-8"></script>
 
   </body>

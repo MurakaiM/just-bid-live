@@ -3,6 +3,7 @@
 
   <head>
     <!--Head include!-->
+    <%-include('./Common/mobile')%>
     <%-include('./Common/head')%>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker3.css"/>
     <link rel="stylesheet" href="../GeneralAssets/css/responsive.css">
@@ -11,11 +12,9 @@
   <body>
     <div class="content">
       <!--Menu include!-->
+      <%-include('./Common/menu', { page : pageName, user : currentUser  })%>
 
-
-      <%-include('./Common/menu', { page : pageName })%>
-
-        <div class="single">
+      <div class="single">
           <form id="signUp" class="ui form former ">
             <h3 class="ui dividing header"><i class="fa fa-user" aria-hidden="true"></i> Sign Up</h3>
             <div class="field fileds-margin">
@@ -28,7 +27,7 @@
                   <input type="text" name="lastName" placeholder="Last Name">
                 </div>
                 <div class="field">
-                  <input id="birthday" type="text" name="date" placeholder="Birth date">
+                  <input id="birthday" type="text" name="birthday" placeholder="Birth date">
                 </div>
               </div>
             </div>
@@ -70,7 +69,7 @@
             <div class="ui custom success message">
               <div class="header">Action Completed</div>
               <p>
-                You're successfully signed up. <br> Please chek your email for next steps.
+                You're successfully signed up. <br> Please check your email for next steps.
               </p>
             </div>
             <div class="ui custom error message">
@@ -83,11 +82,10 @@
               <div class="ui submit button">Submit</div>
             </div>
           </form>
-        </div>
+      </div>
 
-
-        <%-include('./Common/each')%>
-        <%-include('./Common/footer')%>
+      <%-include('./Common/each')%>
+      <%-include('./Common/footer')%>
     </div>
   </body>
 

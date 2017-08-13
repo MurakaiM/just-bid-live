@@ -68,7 +68,7 @@ function setValidation() {
 
 
 
-  var form = new Form("signUp", "/user/signup", validationRules);
+  var form = new Form("signUp", "/user/signup", validationRules, true);
 }
 
 function setDates() {

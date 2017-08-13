@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <!--Head include!-->
+    <%-include('../Common/mobile')%>
+    <%-include('../Common/head', { pageName })%>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker3.css"/>
+    <link rel="stylesheet" href="../GeneralAssets/css/responsive.css">
+  </head>
+
+  <body>
+    <div class="content">
+      <!--Menu include!-->
+      <%-include('../Common/minimenu', { page : pageName  })%>
+
+      <div class="single">
+          <form id="forgot" class="ui form former small">
+              <h3 class="ui image header flexcenter"> <img src="../GeneralAssets/img/commericalicons/safebox-1.png" alt="store"> Forgot password  </h3>
+              <div class="field">
+                <input type="text" placeholder="Email" name="email">
+              </div>
+           
+        
+               <div class="ui success custom message">
+                  <div class="header">Action Completed</div>
+                  <p> Please check your email for next steps.</p>
+              </div>
+
+              <div class="buttons container">
+                  <button type="submit" class="ui submit button">Reset</button>
+                  <a class="ui button original" href="/">Back</a>
+              </div>
+          </form>
+      </div>
+
+      <%-include('../Common/footer')%>
+    </div>
+  </body>
+
+  <!--Head include!-->
+  <%-include('../Common/scripts')%> 
+  <script src="../GeneralAssets/js/forgot.js" charset="utf-8"></script>
+
+</html>

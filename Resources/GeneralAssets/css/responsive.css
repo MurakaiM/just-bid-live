@@ -347,10 +347,14 @@
 
 /*lg*/
 @media (min-width: 992px) and (max-width: 1199px) {
-
+  .ui.modal > .close{
+    display: none;
+  }
 }
 
 /*xl*/
 @media (min-width: 1200px) {
-
+  .ui.modal > .close{
+    display: none;
+  }
  }

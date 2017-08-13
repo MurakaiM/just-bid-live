@@ -14,11 +14,13 @@ import { Response , BuildResponse } from '../Utils/Communication/response'
 import { isAuth, isSeller }  from '../Utils/Communication/rules'
 
 import UserController from '../Controllers/user.controller'
+import ProductController from '../Controllers/product.controller'
+import OrderController from '../Controllers/order.controller'
 import BasicController from '../Utils/Controllers/basic.controller'
 import AuctionController from '../Controllers/auction.controller'
+import RealtimeController from '../Controllers/realtime.controller'
 
 import Product from '../Models/product.model'
-
 
 export default class UserApi extends BasicController{
     constructor() {
@@ -27,18 +29,19 @@ export default class UserApi extends BasicController{
 
     Configure(){
         this.Get('/user/current',this.currentUser);
+        this.Get('/user/verification&id=:uid',this.verify);
+      
+        this.Get('/user/orders/current', this.orders);
+        this.Get('/user/orders/history', this.history)
+        this.Post('/user/orders/cart', this.loadCart)
 
-        
         this.Post('/user/signout', this.signOut);
         this.Post('/user/signup', this.signUp);
         this.Post('/user/signin', this.signIn);
        
+
         this.Post('/user/password/request', this.requestPassword);
         this.Post('/user/password/reset', this.resetPassword);
-
-        this.Post('/user/product/new', this.createProduct);
-
-        this.Post('/user/auction/new', this.createAuction);
     }
 
 
@@ -80,9 +83,22 @@ export default class UserApi extends BasicController{
     }
 
     protected signOut(req,res) : void{
+    
+       if(req.user) 
+            var uid = req.user.PublicData.uid;
+       else 
+            return res.send(BuildResponse(10,"No user for sign out"));
+
        req.session.destroy((err) => {         
+           RealtimeController.Instance.emitExit(uid);
            res.send(BuildResponse(0, "Sign out completed successfully"));
        });
+    }
+
+    protected verify(req,res) : void{
+        UserController.VerifyUser(req.params.uid)
+            .then( user => res.render('Actions/verification',{ user : user }))
+            .catch( err => res.redirect('/'));
     }
 
     protected currentUser(req, res): void {
@@ -113,33 +129,25 @@ export default class UserApi extends BasicController{
 
     }
 
-    protected createProduct(req,res) : void{
-       isSeller(req,res).allowed( () => {
-           
-            Product.ForceCreate({
-                prTitle : 'iphone',
-                prDescription : 'white',
-                prSeller : "0fe98399-b1df-404c-95db-eeebf9e84da0",
-                prCategory : {},
-                prCost : 99           
-            })
-                .then( result => res.send( BuildResponse(0,"Product was successfully created") ))
-                .catch( error => res.send( BuildResponse(10,"Error occurred",error) ))
-
-       });
-    }
-
-    protected createAuction(req,res) : void{
-        isSeller(req,res).allowed( () => {
-            var hasError = validAuction(req.body);
-
-            if(hasError.invalid) return res.send( BuildResponse(11,"Wrong input values"));
-                
-            AuctionController.CreateItem(req.body) 
-                 .then( result => res.send( BuildResponse(0,"Auction item was successfully created") ))
-                 .catch( error => res.send( BuildResponse(10,"Error occurred",error) ))
-                 
+    protected orders(req,res) : void{
+        isAuth(req,res).allowed( user => {
+            OrderController.CustomerOrders(user)
+                .then( orders => res.send(BuildResponse(0,"Orders successfully fetched",orders)) )
+                .catch( err => res.send(BuildResponse(10,"Error occurred")) );
         });
     }
 
+    protected history(req,res) : void{
+        isAuth(req,res).allowed( user => {
+            OrderController.CustomerHistory(user)
+                .then( orders => res.send(BuildResponse(0,"Orders successfully fetched",orders)) )
+                .catch( err => res.send(BuildResponse(10,"Error occurred")) );
+        });
+    }
+
+    protected loadCart(req,res) : void{
+        ProductController.LoadCart(req.body.cart)
+            .then( items => res.send( BuildResponse(0,"Cart was successfully loaded",items) ))
+            .catch( error => {console.log(error); res.send( BuildResponse(10,error) ) })
+    }
 }

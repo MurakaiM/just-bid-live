@@ -4,11 +4,11 @@ import * as passport from "passport"
 import * as psLocal from "passport-local"
 import * as exSession from "express-session"
 import * as cookieParser from "cookie-parser"
-import * as io_passport from 'passport.socketio'
-
 
 import User from '../Models/user.model'
 import RealtimeApi from '../Controllers/realtime.controller'
+import Redis from '../Database/database.redis'
+
 
 export default class Auth {
 
@@ -18,34 +18,23 @@ export default class Auth {
   }
 
   private configure(app) {
-    
     app.use(express_session({
-        cookie: {
-          maxAge: 30 * 24 * 60 * 60 * 1000
-        },       
-        cookieParser: cookieParser,
-        secret: 'small kittens',
-        resave: false,
-        saveUninitialized: false
+      cookie: {
+        maxAge: 30 * 24 * 60 * 60 * 1000
+      },            
+      store : Redis.Instance._session ,
+      cookieParser: cookieParser,
+      secret: 'small kittens',
+      resave: false,
+      saveUninitialized: false
     }));
 
     app.use(passport.initialize());
     app.use(passport.session());
     app.use(flash());
+    app.use(Auth.safeHandle)
 
-   /* RealtimeApi.Instance.Io.use(io_passport.authorize({ 
-        cookieParser: cookieParser,
-        secret: 'keyboard cat',
-        success: (data, accept) => accept(null, true),
-        fail:  (data, message, error, accept) => accept(null,false)
-      }));
-
-  
-
-  */
-}
-
-
+  }
 
 
   private localStrategy() {
@@ -57,11 +46,11 @@ export default class Auth {
         User.LoadByEmail(email)
           .then(user => {
 
-            if (!user) return done("Such user record is empty", false)
-
-            if (!user.isVerified()) return done("User is not veryfied", false);
+            if (!user) return done("Such user record is empty", false)         
 
             if (!user.isPassword(password)) return done("Invalid email or password", false)
+
+            if (!user.isVerified()) return done("User is not veryfied", false);
            
             return done(null, user);
 
@@ -75,12 +64,12 @@ export default class Auth {
 
     passport.deserializeUser((email, done) => 
     {             
-       User.LoadByEmail(email).then(user => done(null, user)).catch(err => done("Error", null)) 
+       User.LoadByEmail(email).then(user => done(null, user)).catch(err => done("No such user record", null)) 
     });
   }
 
 
-  private static safeHandle(err, req, res, next) {
+  private static safeHandle(err, req, res, next) {  
     if (err == 'No such user record') {
       req.logout();
       next();

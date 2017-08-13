@@ -1,0 +1,413 @@
+.pagination.menu .action.input {
+    padding: 0px;
+}
+
+.pagination.menu .action.input input {
+    width: 70px;
+}
+
+.segment.none.padding.tab {
+    padding: 0 25px;
+}
+
+.ui.floated.menu.menuer .ui.button.subbutton {
+    background: #0d5699;
+    transition: .5s ease all;
+    margin: 0;
+    border-radius: 0;
+}
+
+.ui.floated.menu.menuer .ui.button.subbutton:hover {
+    background: #07406f;
+}
+
+#productsDrop,
+#disabledDrop,
+#auctionsDrop {
+    width: 70px;
+}
+
+#productsSearch,
+#disabledSearch,
+#auctionsSearch {
+    float: right;
+}
+
+#productsRefresh,
+#disabledRefresh,
+#auctionsRefresh {
+    display: inline-block;
+    margin-left: 15px;
+    cursor: pointer;
+    color: #ccc;
+    transition: .5s ease color;
+}
+
+#productsRefresh:hover,
+#disabledRefresh:hover,
+#auctionsSearch:hover {
+    color: #b3b3b3;
+}
+
+tr.selected {
+    background: rgba(21, 21, 21, .1)!important;
+}
+
+.ui.table thead th {
+    cursor: pointer;
+    position: relative;
+    user-select: none;
+}
+
+.ui.table thead th .arrows {
+    top: 50%;
+    transform: translateY(calc(-50% - 10px));
+    right: 15px;
+    position: absolute;
+    font-size: 8px;
+    color: #0d5699;
+}
+
+.ui.table thead th .arrows .up,
+.ui.table thead th .arrows .down {
+    position: absolute;
+    top: 0px;
+    visibility: hidden;
+}
+
+.ui.table thead th.up .arrows .up {
+    visibility: visible;
+}
+
+.ui.table thead th.down .arrows .down {
+    visibility: visible;
+}
+
+.ui .table th {
+    position: relative;
+}
+
+.ui.descriptor {
+    margin-bottom: 15px;
+    display: block;
+    font-size: 14px;
+    color: #b3b3b3;
+    text-align: center;
+}
+
+.ui.descriptor .exact {
+    color: #B71C1C;
+    background: #FFF9C4;
+    border-radius: 5px;
+    padding: 2px 10px;
+}
+
+.ui.floated.menu.menuer {
+    display: flex;
+    align-items: center;
+}
+
+.ui.floated.menu.menuer button {
+    margin-right: 20px;
+}
+
+.ui.form input[type="color"] {
+    height: 100%;
+    width: 100%;
+    font-family: 'Lato', 'Helvetica Neue', Arial, Helvetica, sans-serif;
+    margin: 0em;
+    outline: none;
+    -webkit-appearance: none;
+    tap-highlight-color: rgba(255, 255, 255, 0);
+    line-height: 1.21428571em;
+    padding: 0.67857143em 1em;
+    font-size: 1em;
+    background: #FFFFFF;
+    border: 1px solid rgba(34, 36, 38, 0.15);
+    color: rgba(0, 0, 0, 0.87);
+    border-radius: 0.28571429rem;
+    box-shadow: 0em 0em 0em 0em transparent inset;
+    -webkit-transition: color 0.1s ease, border-color 0.1s ease;
+    transition: color 0.1s ease, border-color 0.1s ease;
+}
+
+.flexer {
+    display: flex!important;
+    justify-content: center!important;
+}
+
+.my-modal.page {
+    overflow: auto;
+    padding: 120px 0;
+}
+
+.my-modal.page .body {
+    max-width: 920px;
+}
+
+.my-modal.page.small .body {
+    max-width: 400px;
+}
+
+.my-modal.page .body {
+    position: relative;
+    margin: auto;
+    top: 10%;
+    left: 0;
+    transform: translate3d(0%, 0, 0);
+}
+
+.my-modal.page.opened .body {
+    top: 5%;
+    left: 0;
+    padding-bottom: 25px;
+    padding-top: 25px;
+    transform: translate3d(0%, 0, 0);
+}
+
+.ui.icon.input input {
+    padding-right: 5px!important;
+}
+
+.ui.icon.search.input input {
+    padding-right: 35px!important;
+}
+
+.ui.grid.nested {
+    margin: 1px;
+}
+
+.ui.grid.nested .row button {
+    margin: auto;
+}
+
+.ui.grid.nested .row {
+    margin: auto;
+}
+
+.ui.grid.nested img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.ui.grid.nested .column {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ui[class*="left icon"].input>i.icon {
+    background: transparent;
+    height: 100%;
+    font-size: 16px;
+}
+
+.buttons.container button {
+    height: 100%!important;
+}
+
+.closer {
+    position: absolute;
+    top: 10px;
+    right: 5px;
+    font-size: 18px;
+    color: #b3b3b3;
+    cursor: pointer;
+}
+
+.settings-field input {
+    height: 25px!important;
+}
+
+.settings-field select {
+    display: inline-block!important;
+    width: 200px!important;
+    height: 30px!important;
+}
+
+.ui.category.search>.results .category>.name {
+    padding: 5px;
+    padding-left: 10px;
+    font-size: 12px;
+    width: 120px;
+}
+
+.ui.search>.results>.message .header {
+    width: 100px;
+}
+
+.ui.category.search>.results .category .result {
+    margin-left: 120px;
+}
+
+.ui.search>.results .result .title {
+    color: rgba(0, 0, 0, 0.55);
+}
+
+table .emptypage {
+    text-align: left;
+    padding-left: 25px;
+    height: 50px;
+    line-height: 50px;
+    color: #07406f;
+    opacity: .6;
+}
+
+.my-modal.dashed {
+    transition: .25s ease all;
+}
+
+.my-modal.dashed .body {
+    transition: .25s ease all;
+    transform: translate3d(-50%, -30%, 0);
+}
+
+.my-modal.dashed.big .body {
+    max-width: 500px;
+}
+
+.my-modal.dashed.opened .body {
+    transform: translate3d(-50%, -50%, 0);
+}
+
+.three.column.row.wrap {
+    margin: 1rem auto;
+    align-items: center;
+    padding: 5px!important;
+    padding: 0;
+}
+
+.three.column.row.wrap .column {
+    text-align: center;
+}
+
+.ui.segment.scroll::-webkit-scrollbar-track {
+    border-radius: 2px;
+    background-color: #F5F5F5;
+}
+
+.ui.segment.scroll::-webkit-scrollbar {
+    width: 12px;
+    background-color: #F5F5F5;
+}
+
+.ui.segment.scroll::-webkit-scrollbar-thumb {
+    border-radius: 2px;
+    background-color: #cccccc;
+}
+
+.my-modal .body .header.main {
+    margin-top: 1px;
+}
+
+.ui.popup .content {
+    padding: 0!important;
+}
+
+.nomargin {
+    margin: 0!important;
+}
+
+.ui.segment.padding {
+    padding: 35px;
+    padding-bottom: 45px;
+}
+
+.margin.auto {
+    margin: auto!important;
+}
+
+.flex.center {
+    display: inline-flex!important;
+    align-items: center;
+    justify-content: center;
+}
+
+.ui.grid>.row.w500 {
+    width: 500px!important;
+    margin: auto!important;
+}
+
+#homeData .title {
+    text-align: center;
+    font-size: 25px;
+    color: #0d5699;
+    padding: 5px;
+}
+
+#homeData .description {
+    color: #595959;
+    font-size: 13px;
+    padding: 25px;
+    padding-top: 15px;
+    text-align: left;
+}
+
+#homeData .subtitle {
+    color: #b3b3b3;
+    font-style: italic;
+    text-align: center;
+    font-size: 16px;
+    padding-top: 5px;
+    opacity: .7;
+}
+
+#homeData .ui.avatar.image {
+    display: block;
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border: 1px solid #ccc;
+    box-shadow: 0px 5px 10px 5px rgba(34, 36, 38, 0.15);
+}
+
+#homeData .statistics {
+    margin-top: 25px;
+}
+
+#homeData .ui.four.statistics .statistic .value {
+    color: #07406f!important;
+}
+
+#homeData .ui.four.statistics .statistic .label {
+    color: #b3b3b3!important;
+}
+
+#homeData .ui.horizontal.divider {
+    color: #b3b3b3;
+}
+
+#homeData .ui.statistics .statistic>.value,
+.ui.statistic>.value {
+    text-transform: none;
+    font-size: 45px;
+}
+
+.row.products.admin {
+    max-width: 1200px;
+    margin-top: 15px;
+}
+
+.ui.form .partlydisabled.field {
+    pointer-events: none;
+}
+
+.ui.form .partlydisabled.field input {
+    background: #eee;
+    border: 1px solid #ccc;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+    color: #555;
+}
+
+.dropdescr {
+    font-style: normal!important;
+    font-size: 13px;
+}
+
+.dropdescr .title {
+    color: #b3b3b3;
+    font-style: italic!important;
+    text-decoration: underline;
+}

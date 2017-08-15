@@ -9,3 +9,5 @@ export const GOOGLE_APP = process.env.GOOGLE_APP || 'mythical-bazaar-175300'
 export const DOMAIN = process.env.DOMAIN || 'http://www.justbidlive.com'
 
 export const STORAGE_CREDITNAILS = require('../Keys/storage.json')
+
+export const PORT = process.env.PORT || 8080

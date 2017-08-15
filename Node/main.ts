@@ -138,7 +138,7 @@ export class Server {
     private setStatics() : void { }
 }
 
-var ApplicationServer : Server = new Server(8080);
+var ApplicationServer : Server = new Server(keys.PORT);
 ApplicationServer.startServer();
 
 export default ApplicationServer;

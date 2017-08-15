@@ -45,7 +45,7 @@ export default class SellerController {
                     User.ForceStore(data, userAvatar, storeAvatar)
                         .then(result => resolve("Store was successfuly created"))
                         .catch(error => {
-                            console.log(error);
+                            console.log(error + " SELLER SIGN IN ERROR");                          
                             reject("Opps, error occured")
                         });
                 });

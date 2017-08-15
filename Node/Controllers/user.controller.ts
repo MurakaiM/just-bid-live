@@ -44,13 +44,14 @@ export default class UserController{
 
             UserSchema.update(
               {
-                password_date : date + (60 * 60 * 1000),
+                password_date : date + (24 * 60 * 60 * 1000),
                 password_link : pwdLink
               },
               {
                 where : { email : email}
               })
-                .then( result => resolve(result))
+                .then( result => UserSchema.findOne({ where : { email : email} }))
+                .then( user => resolve(user))
                 .catch( err => reject(err));          
 
         });

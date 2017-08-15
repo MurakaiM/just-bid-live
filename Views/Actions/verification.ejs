@@ -1,24 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<!--Head include!-->
-<%-include('../Common/head')%>
+    <head>
+        <!--Head include!-->
+        <%-include('../Common/head', { pageName : pageName })%>
 
-    <link rel="stylesheet" href="../UserAssets/css/common/index.css" />
-    <link rel="stylesheet" href="../GeneralAssets/css/responsive.css">
+        <link rel="stylesheet" href="../UserAssets/css/common/index.css" />
+        <link rel="stylesheet" href="../GeneralAssets/css/responsive.css">
+    </head>
 
     <body>
-        <div class="top_wrapper gradiental_background"></div>
-        <div class="vrf-wrapper">
-            <a href='/'>
-               <img src="../GeneralAssets/img/logo.png" alt="" />
-            </a>
-        </div>
-        <div>
-            <div class="vrf-text">
-                Hello, Dan ! We are so glad to see your here. Now you're with us.
+
+        <div class="content">
+            <!--Menu include!-->
+            <div class="top_wrapper gradiental_background"></div>
+            <div class="above_menu row">
+                <div class="col-md-12 center">
+                    <a href="/">
+                    <img class="logo" src="../GeneralAssets/img/logo.png">
+                    </a>
+                </div>
+
             </div>
 
+
+            <div class="single">
+                <form action="<%if(!isSeller){%>/signin<%}else{%>/seller/signin<%}%>" method="get" class="ui form former small">
+                    <h3 class="ui image header flexcenter"> <img src="../GeneralAssets/img/commericalicons/check.png" alt="store"> Account Verification</h3>
+                    <p class="inform">
+                        Hello, <%=name%> ! <br>
+                        Thanks so much for joining Just Bid Live !
+                        Your account has been successfully verified.  
+                    </p>
+
+                    <div class="buttons container">
+                        <button type="submit" class="ui submit button">Sign In</button>                       
+                    </div>
+                </form>
+            </div>
+            <%-include('../Common/footer')%>
         </div>
 
     </body>

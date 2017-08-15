@@ -114,7 +114,7 @@ export default class User {
         });        
     } 
 
-    public Verify() : Promise<any>{
+    public Verify() : Promise<User>{
         return new Promise((resolve, reject) => {
             if(this.dbUser.veryfied){
                 reject("User is already veryfied");

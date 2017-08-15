@@ -89,7 +89,7 @@ function Form(id, url, validationRules, ...args) {
       setLoading();
       setTimeout(() => {
         postForm(url, data, args[0] == true ? true : false)
-          .then(data => {  
+          .then(data => {              
             if (data.code >= 10) {
               if(validationRules.failure)
                 validationRules.failure(data.data);
@@ -137,8 +137,7 @@ function Storage(){
 function postForm(url, data, isMultipart) {
   return new Promise((resolve, reject) => {   
     if (isMultipart) {
-      backendPostForm(url, data, (err, answer) => {
-        console.log(answer);
+      backendPostForm(url, data, (err, answer) => {      
         if (err) {
           reject("Request failed");
         } else if (answer.code == 404) {

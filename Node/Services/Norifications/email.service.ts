@@ -6,6 +6,14 @@ interface Verification{
     name : string
 }
 
+interface Password{
+    operating : string,
+    browser : string,
+    name : string,
+    email : string,
+    link : string
+}
+
 export default class Notificator{
     public static Instance : Notificator;
     private sparky : SparkPost;
@@ -42,18 +50,23 @@ export default class Notificator{
         return this.sparky.transmissions.send(transmission,options);         
     }
 
-    public sendPasswordreset(data : any) : Promise<any>{
+    public sendPasswordreset(data : Password) : Promise<any>{
         let options = {
             num_rcpt_errors : 3
         };
         let transmission = {            
             substitution_data : {
+                operating : data.operating,
+                browser : data.browser,
                 name : data.name,
                 email : data.email,
-                linker : "LELLLELLELE"
+                link : this.verificationLink(data.link),
+                dynamic_html : {
+                    button : `<a href="${this.verificationLink(data.link)}" class="href"> Reset Password </a>`
+                }
             },
             content : {
-                template_id : 'verification'                
+                template_id : 'forgot'                
             },            
             recipients: [
                 { address: data.email }

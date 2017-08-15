@@ -5,7 +5,7 @@ import ProductController from '../Controllers/product.controller'
 import { isAuth } from '../Utils/Communication/rules'
 
 export default class Renderer {    
-
+   
     public static live(req,res){        
         var pageInfo = {
             pageName : "Live",

@@ -763,11 +763,11 @@ function SetUpAuction(){
       props.current = currentItem;
 
       if(currentItem.arr[currentItem.i].temporaryDisabled){
-        props.button.text('Enable');
+        props.button.text('Unpause');
         props.button.removeClass('red');
         props.button.addClass('green');
       }else{
-        props.button.text('Disable');
+        props.button.text('Pause');
         props.button.removeClass('green');
         props.button.addClass('red');
       }
@@ -787,7 +787,7 @@ function SetUpAuction(){
           data.temporaryDisabled = !props.current.arr[props.current.i].temporaryDisabled;
           return data;
         },
-        success : data => {
+        success : data => {          
           let current = props.current.arr[props.current.i];
           current.temporaryDisabled =  !current.temporaryDisabled; 
           tableAuctions.forceChange(props.current.i,current);
@@ -823,6 +823,7 @@ function SetUpAuction(){
           <td><i class="dollar icon"></i>${item.currentBid/100}</td>       
           ${reworkBoolean(item.onAuction)}
           ${reworkBoolean(item.isCompleted)}
+          ${reworkBoolean(item.temporaryDisabled)}
           <td>${new Date(item.updatedAt).toLocaleDateString()}</td>
           <td>${new Date(item.createdAt).toLocaleDateString()}</td>   
         </tr>
@@ -915,11 +916,11 @@ function numberRebase( number ){
 
 function redrawButton(props,temporaryDisabled){
   if(temporaryDisabled){
-    props.button.text('Enable');
+    props.button.text('Unpause');
     props.button.removeClass('red');
     props.button.addClass('green');
   }else{
-    props.button.text('Disable');
+    props.button.text('Pause');
     props.button.removeClass('green');
     props.button.addClass('red');
   }

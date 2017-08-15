@@ -41,6 +41,7 @@
     "sequelize": "^4.0.0",
     "socket.io": "^2.0.2",
     "sparkpost": "^2.1.2",
+    "useragent": "^2.2.1",
     "uuid": "^3.1.0"
   },
   "devDependencies": {

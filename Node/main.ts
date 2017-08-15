@@ -71,18 +71,18 @@ export class Server {
 
     private async setAuction() : Promise<any>{
         this.auction = new AuctionLoader();
-        await this.auction.StartLoop();
-        this.auction.HandleExcept();
+        //await this.auction.StartLoop();
+        //this.auction.HandleExcept();
     }
 
     private setEndpoints() : void{
         /* User's endpoints */
 
-        this.app.get('/', Renderer.live);
-        this.app.get('/signin', Renderer.signin);
-        this.app.get('/contact', Renderer.contact);
-        this.app.get('/stock', Renderer.stock);
-        this.app.get('/signup', Renderer.signup);
+       // this.app.get('/', Renderer.live);
+       // this.app.get('/signin', Renderer.signin);
+       // this.app.get('/contact', Renderer.contact);
+       // this.app.get('/stock', Renderer.stock);
+       // this.app.get('/signup', Renderer.signup);
         this.app.get('/forgot', Renderer.forgot);
         this.app.get('/reset/:link', Renderer.restore);
         this.app.get('/product/id?:product', Renderer.product);

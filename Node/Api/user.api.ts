@@ -1,4 +1,5 @@
 import * as passport from 'passport'
+import * as useragent from 'useragent'
 
 import { 
         validSignUp, 
@@ -21,6 +22,7 @@ import AuctionController from '../Controllers/auction.controller'
 import RealtimeController from '../Controllers/realtime.controller'
 
 import Product from '../Models/product.model'
+import Notificatior from '../Services/Norifications/email.service'
 
 export default class UserApi extends BasicController{
     constructor() {
@@ -29,7 +31,7 @@ export default class UserApi extends BasicController{
 
     Configure(){
         this.Get('/user/current',this.currentUser);
-        this.Get('/user/verification&id=:uid',this.verify);
+        this.Get('/verification/:uid',this.verify);
       
         this.Get('/user/orders/current', this.orders);
         this.Get('/user/orders/history', this.history)
@@ -82,8 +84,7 @@ export default class UserApi extends BasicController{
           .catch( msg => res.send(BuildResponse(10,msg.reason)));
     }
 
-    protected signOut(req,res) : void{
-    
+    protected signOut(req,res) : void{    
        if(req.user) 
             var uid = req.user.PublicData.uid;
        else 
@@ -97,7 +98,15 @@ export default class UserApi extends BasicController{
 
     protected verify(req,res) : void{
         UserController.VerifyUser(req.params.uid)
-            .then( user => res.render('Actions/verification',{ user : user }))
+            .then( user => {
+                const pageInfo = {
+                    pageName : "Verification",
+                    name : user.firstName,
+                    isSeller : user.isSeller
+                };
+
+                res.render('Actions/verification', pageInfo)
+            })
             .catch( err => res.redirect('/'));
     }
 
@@ -108,10 +117,20 @@ export default class UserApi extends BasicController{
     protected requestPassword(req,res) : void {
         var values = req.body;
         var hasError : UserError =  validRequestPassword(values);
-
+        var agent = useragent.parse(req.headers['user-agent']);
+        
         if(hasError.invalid) return res.send(BuildResponse(11,"Invalid input values", undefined, hasError.reason));
         UserController.RequestPassword(values.email)
-            .then( result => res.send(BuildResponse(0,"You successfuly requested password rest")))
+            .then( user => {          
+                Notificatior.Instance.sendPasswordreset({
+                    name : user.firstName,
+                    link : user.password_link,
+                    email : user.email,
+                    browser : "",
+                    operating : ""
+                });
+                res.send(BuildResponse(0,"You successfuly requested password rest"))
+            })
             .catch( error => res.send(BuildResponse(11,"Something went wrong")));
         
 

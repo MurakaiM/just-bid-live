@@ -1,12 +1,5 @@
-.vrf-wrapper{
-    width : 100%;
-    max-width: 1070px;
-    margin: auto;
-    text-align: center;
-}
-
-.vrf-wrapper img{    
-    max-width: 285px;
-    user-select: none;
-    margin-top: 125px;
+.ui.form .inform{
+    font-size: 15px;
+    font-weight: 500;
+    color: #999;
 }

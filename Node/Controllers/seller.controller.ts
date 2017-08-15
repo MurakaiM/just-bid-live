@@ -159,7 +159,7 @@ export default class SellerController {
         let hasError = validAuctionPause(params);
 
         return new Promise((resolve, reject) => {
-            if(hasError){
+            if(hasError.invalid){
                 return reject(hasError.reason);
             }
 

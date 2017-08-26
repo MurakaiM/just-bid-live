@@ -16,7 +16,7 @@ export default class Seller {
                 prSeller : user.Data.uid,
                 prDisabled : false
             },
-            attributes : [ 'prUid', 'prTitle','prRating', 'prCost', 'prSold', 'prViews','prWishes', 'prStock', 'createdAt', 'updatedAt' ]
+            attributes : [ 'prUid', 'prTitle','prRating', 'prCost', 'prSold', 'prViews','prWishes', 'prTypes', 'createdAt', 'updatedAt' ]
         });
     }
 

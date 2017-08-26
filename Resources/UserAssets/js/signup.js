@@ -72,6 +72,7 @@ function setValidation() {
 }
 
 function setDates() {
+  
   $("#birthday").datepicker({
     format: 'mm.dd.yyyy',
     endDate: new Date(),

@@ -52,8 +52,8 @@ function reworkRating(rating){
   return template + '</div>'
 }
 
-function reworkStock(stock){
-  if(stock == 0) {
+function reworkStock(stock,empty){
+  if(empty === true) {
     return `
     <td class="stock negative">
       <i class="attention icon"></i>
@@ -89,10 +89,8 @@ function SetUpHome(){
     orders : wrapper.find('.allOrders'),
     products : wrapper.find('.allProducts')
   };
-  
-  
-  function loadData(data,segment){
- 
+    
+  function loadData(data,segment){ 
     dataStats.title.text(data.seller.title);
     dataStats.description.text(data.seller.description);
     dataStats.subtitle.text(data.seller.subtitle),
@@ -108,8 +106,6 @@ function SetUpHome(){
 
     segment.removeClass('loading');
   }
-
-
 }
 
 function SetUpProducts(){
@@ -117,7 +113,7 @@ function SetUpProducts(){
     position   : 'bottom center',
   });
 
-  let currentItem = null;
+  let currentItem = null, currentTemp = null;
   const buttons = {
     open : $("#productsOpen"),
     delete : $("#productsDelete"),
@@ -130,14 +126,7 @@ function SetUpProducts(){
   Simditor.locale = 'en-US';
   toolbar = ['title', 'bold', 'italic', 'underline', 'strikethrough', 'fontScale', 'color', '|', 'ol', 'ul', 'blockquote', 'table', '|', 'link', 'image', 'hr', '|', 'indent', 'outdent', 'alignment'];
  
- 
-  const editor = new Simditor({
-    textarea: $("#createModal .wwc"),
-    toolbar : toolbar,
-    defaultImage : '../../GeneralAssets/img/usericons/image.png'
-  });
-
-  table =  new Table('products', {
+  table = new Table('products', {
     defaultSort : 'updatedAt',
     search : "#productsSearch",
     forPage : "#productsDrop",
@@ -150,10 +139,21 @@ function SetUpProducts(){
       to : ".ui.left.action input" 
     },
     row : item => {
+     let stock = 0;
+     let hasError = false;
+     Object.keys(item.prTypes).forEach( e => {
+       let typedStock = parseInt(item.prTypes[e].stock);
+
+       if(typedStock <= 0)
+          hasError = true;
+
+       stock+=typedStock;
+     });
+
      return $(`
         <tr>
           <td>${item.prTitle}</td>
-          ${reworkStock(item.prStock)}
+          ${reworkStock(stock,hasError)}
           <td><i class="dollar icon"></i>${item.prCost}</td>          
           <td>${reworkRating(item.prRating)}</td>
           <td>${item.prViews}</td>
@@ -169,7 +169,8 @@ function SetUpProducts(){
       buttons.edit.removeClass('disabled');
       buttons.open.removeClass('disabled');
       
-      currentItem = {i,obj,arr}
+      currentItem = {i, obj, arr}
+      currentTemp = {i}
     },
     onFocusLost : () => {
       buttons.auction.addClass('disabled');
@@ -181,6 +182,81 @@ function SetUpProducts(){
     }
   });
 
+  const nestedColor = new NestedList('#typesColorist', {
+    listplace : '.ui.grid',
+    submiter : '.teal',
+    isFiled : {
+     inputName : "image",
+     pathName : "path", 
+     buttonName : "imagebutton"
+    },
+    inputs : [
+      {
+        as : "title",
+        name : 'titleVR',
+        valid : value => {
+          if(value.length == 0) return false;
+          return true;
+        }
+      },
+      {
+        as : "value",
+        name : 'valueVR',
+        valid : value => value.length != 0
+      },
+      {
+        as : "stock",
+        name : "stockVR",
+        valid : value => {       
+          if (Number.isInteger(parseFloat(value, 10)) && (value > 0 && value < 99999))
+            return true;
+          else  
+            return false;
+        }
+      },
+      {
+        name : "path",
+        valid : value => value.length > 0
+      },
+      {
+        name : 'color',
+        valid : obj => true
+      },
+      {
+        name : 'image',
+        valid : value => value.length != 0
+      }
+    ],
+    mockuper : (data,id) => {
+      const placer = data.image ? `<img src="${data.uri}" />` : " - ";      
+
+      let template = $(`   
+        <div class="row">   
+          <div class="four wide column">${data.title}</div>
+          <div class="two wide column">${data.value}</div>
+          <div class="two wide column">${data.stock}</div>
+          <div class="two wide column"><a class="ui circular empty label" style="background : ${data.color}; "></a> </div>
+          <div class="four wide column">${placer}</div>
+          <div class="two wide column">
+            <button class="ui icon button red small"> <i class="trash outline icon"></i> </button>
+          </div>  
+        </div>      
+      `);
+      template.find('button').click( e => {
+        template.remove();
+        nestedColor.forceDelete(id);
+      });
+
+      return $(template);
+    }
+  });
+
+  const editor = new Simditor({
+    textarea: $("#createModal .wwc"),
+    toolbar : toolbar,
+    defaultImage : '../../GeneralAssets/img/usericons/image.png'
+  });
+
   const deleteModal = new Modal({
     id : "#deleteModal",
     onOpen : body => body.find('.exact').text(currentItem.arr[currentItem.i].prTitle),
@@ -189,6 +265,7 @@ function SetUpProducts(){
       body.find('button').addClass('disabled');
     },
     middleware : body => {
+      const form = body.find('form');
       const input = body.find('input');
       const button = body.find('button');
       button.addClass('disabled');
@@ -205,104 +282,18 @@ function SetUpProducts(){
         button.addClass('loading');
         POST('/seller/product/delete', { uid : currentItem.arr[currentItem.i].prUid })
           .then( data => {
-            currentItem.arr.splice(currentItem.i, 1);
-            table.redraw();
-            button.removeClass('loading');
-            deleteModal.toggleState();
+            currentItem.arr.splice(currentItem.i, 1); 
+            deleteModal.toggleState();           
+            button.removeClass('loading'); 
+            table.redraw();          
           })
-          .catch( error => { deleteModal.toggleState(); button.removeClass('loading'); });
+          .catch( error => { 
+            deleteModal.toggleState();
+            button.removeClass('loading'); 
+          });
       });
     }
   }, true);
-
-  const nestedColor = new NestedList('#typesColorist', {
-    listplace : '.ui.grid',
-    submiter : '.teal',
-    inputs : [
-      {
-        as : "title",
-        name : 'titleVR',
-        valid : value => {
-          if(value.length == 0) return false;
-          return true;
-        }
-      },
-      {
-        as : "value",
-        name : 'valueVR',
-        valid : value => value.length != 0
-      },
-      {
-        name : 'color',
-        valid : obj => true
-      },
-      {
-        name : 'image',
-        valid : value => value.length != 0
-      }
-    ],
-    mockuper : (data,id) => {
-      const placer = data.image ? `<img src="${data.image}" />` : " - ";      
-
-      let template = $(`   
-        <div class="row">   
-          <div class="four wide column">${data.title}</div>
-          <div class="three wide column">${data.value}</div>
-          <div class="two wide column"><a class="ui circular empty label" style="background : ${data.color}; "></a> </div>
-          <div class="five wide column">${placer}</div>
-          <div class="two wide column">
-            <button class="ui icon button red small"> <i class="trash outline icon"></i> </button>
-          </div>  
-        </div>      
-      `);
-      template.find('button').click( e => {
-        template.remove();
-        nestedColor.forceDelete(id);
-      });
-
-      return $(template);
-    }
-  });
-
-  const nestedSize = new NestedList('#typesSize', {
-    listplace : '.ui.grid',
-    submiter : '.teal',
-    inputs : [
-      {
-        as : "title",
-        name : 'titleVR',
-        valid : value => {
-          if(value.length == 0) return false;
-          return true;
-        }
-      },
-      {
-        as : "value",
-        name : 'valueVR',
-        valid : value => {
-          if(value.length == 0) return false;
-          return true;
-        }
-      }      
-    ],
-    mockuper : (data,id) => {
-      let template = $(`   
-        <div class="row">   
-          <div class="seven wide column">${data.title}</div>
-          <div class="seven wide column">${data.value}</div>  
-          <div class="two wide column">
-            <button class="ui icon button red small"> <i class="trash outline icon"></i> </button>
-          </div>  
-        </div>      
-      `);
-      template.find('button').click( e => {
-        template.remove();
-        nestedSize.forceDelete(id);
-      });
-
-      return $(template);
-    }
-  });
 
   const createModal = new Modal({
     id : "#createModal",
@@ -311,12 +302,11 @@ function SetUpProducts(){
     overflowed : true,
     onOpen : body => {
       body.find('form').form('reset');
-      nestedColor.forceEmpty();
-      nestedSize.forceEmpty();
+      nestedColor.forceEmpty();    
       editor.setValue('');
     },
     onClose : body => {},
-    middleware : (body,props,createModal) => createForm(createModal,body,nestedColor,nestedSize,editor,table)    
+    middleware : (body,props,createModal) => createForm(createModal,body,nestedColor,editor,table)    
   }, false);
 
   const editModal = new Modal({
@@ -329,42 +319,23 @@ function SetUpProducts(){
       props.name.text(currentItem.arr[currentItem.i].prTitle);
       props.types.addClass('loading');
       props.types.empty();
+      props.stock.addClass('loading');
+      props.stock.empty();
 
       POST('/seller/product/types', { id : currentItem.arr[currentItem.i].prUid })
-        .then( 
-          result => createTypes(props.types,currentItem.arr[currentItem.i].prUid ,result.data), 
-          error => {}
+        .then(  
+          result => {
+              createTypes(props.types, currentItem.arr[currentItem.i].prUid, result.data);
+              createStock(props.stock, currentItem.arr[currentItem.i].prUid, result.data)      
+          }    
         )
     },
     onClose : (body,props) => {},
     middleware : (body,props,modal) => {
       props.input =  body.find('form').find('input'); 
-      props.types = body.find('.ui.segment');     
+      props.types = body.find('.ui.segment.types'); 
+      props.stock = body.find('.ui.segment.stock');    
       props.name = body.find('.exact');    
-      
-      const form = new Form(body.find('form'), '/seller/product/stock', {            
-          on : 'blur',
-          inline: true,
-          rules:{
-            stock : {
-              identifier : 'stock',
-              rules: [{
-                  type: 'integer[1..99999]',
-                  prompt: 'Stock should be positive number (1 - 99999)'
-              }]
-            }
-          },
-          success : data => {              
-            let current = currentItem.arr[currentItem.i];
-            current.prStock = props.input.val();     
-            table.forceChange(currentItem.i,current);                        
-          },
-          dataMiddleware : currentData => {
-            currentData.uid = currentItem.arr[currentItem.i].prUid;
-            return currentData;
-          }
-        });
-
     }
   }, true);
 
@@ -374,6 +345,7 @@ function SetUpProducts(){
     overflowed : true,
     onOpen : (body,props) => {
       props.form.removeClass('success error');
+      props.form.form('reset');
 
       props.dropdown.dropdown('clear');
       props.fee.val('Fee');
@@ -434,7 +406,7 @@ function SetUpProducts(){
 
         props.preparedForm = new Form(props.form,'/seller/auction/create',options);      
     }    
-  },false)
+  }, false)
 
   
   buttons.delete.click( e => deleteModal.toggleState());
@@ -445,7 +417,7 @@ function SetUpProducts(){
 
   buttons.refresh.click( e => table.loadFromCache());
 
-  function createForm(createModal,body,nestedColor,nestedSize,editor,table){
+  function createForm(createModal,body,nestedColor,editor,table){
     $(body.find('.ui.search.cat')).search({
       type          : 'category',
       minCharacters : 2,
@@ -524,10 +496,10 @@ function SetUpProducts(){
          ]
         },
         stock : {
-          identifier : 'stock',
+          identifier : 'material',
           rules: [{
-              type: 'integer[1..99999]',
-              prompt: 'Stock should be positive number (1 - 99999)'
+              type: 'empty',
+              prompt: 'Please enter material title of product'
           }]
         },
         guarantee : {
@@ -540,32 +512,29 @@ function SetUpProducts(){
       },
       success : data => {   
         table.forceRow(data);  
-        nestedColor.forceEmpty();
-        nestedSize.forceEmpty();
+        nestedColor.forceEmpty();    
         editor.setValue('');
         createModal.toggleState();        
       },
-      dataMiddleware : currentData => {
-        currentData.types = {};
-        currentData.full = `${editor.getValue()}`;
-
-        if(Object.keys(nestedColor.getData()).length != 0)
-          currentData.types.color = nestedColor.getData();
-
-        if(Object.keys(nestedSize.getData()).length != 0)
-          currentData.types.size = nestedSize.getData();        
-        
+      dataMiddleware : currentData => {      
+        currentData.append('full',editor.getValue()); 
+        Object.keys(nestedColor.getData()).forEach(e => {
+          currentData.append(e,nestedColor.getData()[e].image)
+          delete nestedColor.getData()[e].image;
+          delete nestedColor.getData()[e].uri;
+        });
+      
+        currentData.append('types', JSON.stringify(nestedColor.getData()));        
         return currentData;
       }
     }
 
-    const form = new Form(body.find('form'), '/seller/product/create', simpleRules);
+    const form = new Form(body.find('form'), '/seller/product/create', simpleRules, true);
   }
 
   function createTypes(placeholder,product,data){    
     placeholder.empty();
-    placeholder.append(generate('color',data.prTypes.color));
-    placeholder.append(generate('size',data.prTypes.size));
+    placeholder.append(generate('color',data.prTypes));
     placeholder.removeClass('loading');
 
     function generate(group,perset){
@@ -578,12 +547,134 @@ function SetUpProducts(){
       }
 
       const readyWrap = $(`<div class='ui grid'></div>`);
-      Object.keys(perset).forEach( element => readyWrap.append(new Row(group,product,perset[element]).template()));
+      Object.keys(perset).forEach( element => readyWrap.append(new RowType(group,product,perset[element]).template()));
       readyWrap.append(`<div class="ui divider fitted"></div>`);
       return readyWrap;
     }
   }
 
+  function createStock(placeholder,product,data){    
+    placeholder.empty();
+    placeholder.append(generate('color',data.prTypes));
+    placeholder.removeClass('loading');
+
+    function generate(group,perset){
+      if(!perset){
+        return;
+      }
+      
+      if(Object.keys(perset).length == 0){
+        return;
+      }
+
+      const readyWrap = $(`<div class='ui grid'></div>`);
+      Object.keys(perset).forEach( element => readyWrap.append( new RowStock(product, perset[element]).template()) );
+      readyWrap.append(`<div class="ui divider fitted"></div>`);
+      return readyWrap;
+    }
+  }
+
+  function RowType(group,product,data){  
+    this.isDisabled = data.disable == true ?  true : false;
+
+    this.generateButton = isDisabled => {
+     let props = {};
+     if(isDisabled == true){
+        props.classes = "ui button tiny green"
+        props.title = "Enable"
+      }else{
+        props.classes = "ui button tiny red"
+        props.title = "Disable"
+      }      
+      return `<button type="button" class="${props.classes}"> ${props.title} </button>`
+    } 
+  
+    this.switchButton = button => {
+        button.toggleClass('loading');
+  
+        if(this.isDisabled){
+          button.removeClass('red');
+          button.addClass('green');
+          button.text("Enable");
+        }else{
+          button.removeClass('green');
+          button.addClass('red');
+          button.text("Disable");
+        }
+    }
+  
+    this.row = $(`<div class="three column row wrap">
+      <div class="column flexfull center">${data.title}</div>
+      <div class="column"> <input type="text" class="partlydisabled" value="${data.value}"/></div>
+      <div class="column flexfull center"> ${this.generateButton(this.isDisabled)} </div>
+    </div>`);
+    
+    this.button  = this.row.find('button');
+    this.button.click( e => {
+        this.button.addClass('loading');
+        this.isDisabled = !this.isDisabled;
+        POST('/seller/product/typesout', {
+          uid : product,
+          available : this.isDisabled,
+          name : data.value
+        }).then( result => this.switchButton(this.button))
+    });
+  
+    this.template = () => this.row;
+    return this;
+  }
+  
+  function RowStock(product,data){
+    this.row = $(`    
+        <div class="row wrap"> 
+          <form class="column ui form">
+              <div class="three fields">        
+                <div class="field flexfull center">${data.title}</div>
+                <div class="field"> <input type="text" name="stock" value="${data.stock}"/> </div>
+                <div class="field flexfull center"> <button type="submit" class="ui button tiny submit" > Update </button> </div>  
+              </div> 
+              <div class="ui message success">
+                  <div class="header">Action Completed</div>
+                  <p> Product's type stock was updated </p>
+              </div>
+              <div class="ui message error">
+                <div class="header">Action Forbidden</div>
+                <p></p>
+              </div>
+          </form>  
+        </div>
+      `
+    );
+   
+    this.form = new Form(this.row.find('form'),'/seller/product/stock', {
+      on : 'blur',
+      inline: true,
+      delay : 250,
+      justbutton : true,
+      rules:{
+        stock :{
+          identifier : 'stock',
+          rules: [{
+              type: 'integer[1..99999]',
+              prompt: 'Please enter valid stock value(1 - 99999)'
+            }]
+        }
+      },
+      dataMiddleware : wrapped => {
+        wrapped.productId = product;
+        wrapped.typeId = data.value;
+        return wrapped;
+      },
+      success : (fetched,form) => {
+        table.forceChange(currentTemp.i,fetched);
+        setTimeout(e => form.removeClass('success'), 3000); 
+      },
+      failure : (fetched,form) => setTimeout(e => form.removeClass('error'), 3000)
+    });
+  
+    this.template = () => this.row;
+    return this;
+  }
 }
 
 function SetUpDisabled(){
@@ -849,56 +940,6 @@ function SetUpAuction(){
 }
 
 
-function Row(group,product,data){  
-  this.isDisabled = data.disable == true ?  true : false;
-  
-  this.generateButton = isDisabled => {
-   let props = {};
-   if(isDisabled == true){
-      props.classes = "ui button tiny green"
-      props.title = "Enable"
-    }else{
-      props.classes = "ui button tiny red"
-      props.title = "Disable"
-    }      
-    return `<button type="button" class="${props.classes}"> ${props.title} </button>`
-  } 
-
-  this.switchButton = button => {
-      button.toggleClass('loading');
-
-      if(this.isDisabled){
-        button.removeClass('red');
-        button.addClass('green');
-        button.text("Enable");
-      }else{
-        button.removeClass('green');
-        button.addClass('red');
-        button.text("Disable");
-      }
-  }
-
-  this.row = $(`<div class="three column row wrap">
-    <div class="column">${data.title}</div>
-    <div class="column">${data.value}</div>
-    <div class="column"> ${this.generateButton(this.isDisabled)} </div>
-  </div>`);
-  
-  this.button  = this.row.find('button');
-  this.button.click( e => {
-      this.button.addClass('loading');
-      this.isDisabled = !this.isDisabled;
-      POST('/seller/product/typesout', {
-        uid : product,
-        available : this.isDisabled,
-        types : { group : group , name : data.value}
-      }).then( result => this.switchButton(this.button))
-  });
-
-  this.template = () => this.row;
-  return this;
-}
-
 function numberRebase( number ){
   if(number < 100){
     return number;
@@ -925,6 +966,8 @@ function redrawButton(props,temporaryDisabled){
     props.button.addClass('red');
   }
 }
+
+
 
 let currentFees = { 
   standard : {

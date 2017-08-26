@@ -1,183 +1,214 @@
 var GOING_OFFSET = 20;
 var GOING_TIMER = 80000;
 
-$(function(){
+$(function () {
     appender = $('.pins');
     ReworkAuction();
     ReworkActivity();
-    
 });
 
-function ReworkActivity(){
+
+
+
+
+function ReworkActivity() {
     var listener = new Listener(GOING_TIMER)
     var popup = new Modal(
-        { 
-           id : '#waiterModal',
-           middleware : body => body.find('button').click( e =>  { listener.ForceAction(); popup.toggleState(); })
+        {
+            id: '#waiterModal',
+            middleware: body => body.find('button').click(e => { listener.ForceAction(); popup.toggleState(); })
         }
     );
 
-    listener.ForceStart( e => { 
-        if(window.WModals.signModal.isOpened()){
+    listener.ForceStart(e => {
+        if (window.WModals.signModal.isOpened()) {
             window.WModals.signModal.toggleState();
         }
 
-        popup.toggleState(); 
+        popup.toggleState();
     });
 }
 
-function ReworkAuction(){
+function ReworkAuction() {
     GET('/auction/current')
-      .then( result => {            
-           if(result.code == 0){
-              new Auction().LoadState(result.data) 
-           }                  
-      }).catch();
+        .then(result => {          
+            if (result.code == 0) {
+                new Auction().LoadState(result.data)
+            }
+        }).catch();
 }
 
 
-function Auction(){
+function Auction() {
     const appender = $('.pins');
     const empty = $('.empty');
     const currentStorage = {};
 
     const AuctionListener = io('/auction');
     AuctionListener.on('connect', () => {
-         
-        AuctionListener.on('bid', bid => currentStorage[bid.uid].ForceChange(bid) );
+        
+        AuctionListener.on('bid', bid => currentStorage[bid.uid].ForceChange(bid));
 
         AuctionListener.on('end', uid => {
             currentStorage[uid].ForceEnding();
 
-            if(Object.keys(currentStorage).length == 0)
+            if (Object.keys(currentStorage).length == 0)
                 empty.show();
         });
 
-        AuctionListener.on('new', bid => {            
+        AuctionListener.on('new', element => {
             empty.hide();
 
-            if(!currentStorage[bid[0]])
-                 currentStorage[bid[0]] = new Item( bid[1]);
+            if (!currentStorage[element.data.uidRecord])
+                currentStorage[element.data.uidRecord] = new Item(element);
         });
 
-        AuctionListener.on('stock', bid => currentStorage[bid[0]].ForceStock( bid[1] ));
+        AuctionListener.on('stock', element => { console.log(element); currentStorage[element.data.uidRecord].ForceStock(element) });
     });
-   
 
-    this.LoadState =  data  => {
-        if(data.length > 0)
-            empty.hide();        
 
-        data.forEach(element => currentStorage[element[0]] = new Item(element[1]) );
+    this.LoadState = data => {
+        if (data.length > 0)
+            empty.hide();
+
+        data.forEach(element => currentStorage[element.data.uidRecord] = new Item(element));
     }
-    
+
     this.LoadNext = next => currentStorage[data.uid] = new Item(data);
 
-    this.ForceChange = (uid,data) => currentStorage[uid].ForceChange(data);
+    this.ForceChange = (uid, data) => currentStorage[uid].ForceChange(data);
 
 }
-    
 
-function Item(data){
-    var offsetTimeout, staticInterval;
+
+function Item(object) {    
+    let data = object.data;
+    let name = object.name;
    
-    var readyDom = $(render(data));
+    var offsetTimeout, staticInterval, progressInterval;
+    var readyDom = $(render(data,name));
+
     var main = {
-        currentTimer : readyDom.find('.timer'),
-        currentGoing : readyDom.find('.placer'),
+        currentTimer: readyDom.find('.timer'),
+        currentGoing: readyDom.find('.placer'),
     }
-    var props = {
-        currentId : data.uidRecord,
-        currentProduct :  data.uidProduct,
-        currentButton :  readyDom.find(".ui.button"),
-        currentTimer : main.currentTimer.find('span'),
-        currentGoing : main.currentGoing.find('span'),
-        currentBid : readyDom.find('.bigger span'),
-        currentName : readyDom.find('.name'),
-        currentProgress : readyDom.find('.ui.progress'),
-        currentDifference :  new Date().getTime() - new Date(data.auctionEnds).getTime()
-    }
-       
-    
-    if(data.currentUser == undefined) {
-        props.currentTimer.text('Waiting for the first bid');
-    }else{
-        LoadTimer(data, Math.abs( new Date().getTime() - new Date(data.auctionEnds).getTime() ));
-    }
-   
-    props.currentButton.click( event => POST('/auction/bid', { uidAuction : props.currentId }));
 
-    this.ForceChange = data =>  LoadTimer(data, Math.abs( new Date().getTime() - new Date(data.ending).getTime() ));
-            
-    
+    var props = {
+        currentId: data.uidRecord,
+        currentProduct: data.uidProduct,
+        currentButton: readyDom.find(".ui.button"),
+        currentTimer: main.currentTimer.find('span'),
+        currentGoing: main.currentGoing.find('span'),
+        currentBid: readyDom.find('.bigger span'),
+        currentName: readyDom.find('.name'),
+        currentProgress: readyDom.find('.ui.progress'),
+        currentDifference: new Date().getTime() - new Date(data.auctionEnds).getTime()
+    }
+
+    var doms = {
+        awaiter : $(`<i class="fa fa-cog fa-spin" style=""></i>`)
+    }
+
+    if (data.currentUser == undefined) {
+        props.currentTimer.text('Waiting for the first bid');
+        props.currentName.text('');
+        props.currentName.append(doms.awaiter);
+        props.currentName.addClass('waiting');
+    } else {
+        LoadTimer(data, Math.abs(new Date().getTime() - new Date(data.auctionEnds).getTime()));
+    }
+
+    props.currentButton.click(event => POST('/auction/bid', { uidAuction: props.currentId }));
+
+
+    this.ForceChange = data => LoadTimer(data, Math.abs(new Date().getTime() - new Date(data.ending).getTime()),true);
+
+
     this.ForceEnding = uid => readyDom.remove();
 
-   
-    this.ForceStock = data =>  {  
+
+    this.ForceStock = data => {
         props.currentProgress.progress({ percent: 0 });
 
         clearTimeout(offsetTimeout);
         clearInterval(staticInterval);
 
         main.currentGoing.hide();
-        main.currentTimer.show();   
-             
-       props.currentTimer.text('Waiting for the first bid');    
+        main.currentTimer.show();
+
+        props.currentBid.text(data.data.currentBid/100);
+        props.currentName.text('');
+        props.currentName.addClass('waiting');
+        props.currentName.append(doms.awaiter);
+        props.currentTimer.text('Waiting for the first bid');
     }
 
-   
-    function LoadTimer(data,difference){   
-        var offset = difference % 1000;
-        var seconds = (difference - offset) / 1000;
-        var total = seconds - GOING_OFFSET;
+
+    function LoadTimer(data, difference, changed = false) {  
+        props.currentName.removeClass('waiting');
+        doms.awaiter.remove();
         
+     
+        let offset = difference % 1000;
+        let seconds = (difference - offset) / 1000;
+        let total = seconds - GOING_OFFSET;
+
         clearTimeout(offsetTimeout);
         clearInterval(staticInterval);
 
-        props.currentName.transition('bounce');
-        props.currentBid.text(data.price/100);
-        props.currentName.text(data.name);
+        props.currentName.transition('bounce', { silent : true ,duration : 800});
 
-        offsetTimeout = setTimeout( e => {  
-            SetDate(total,seconds,getTime(seconds - GOING_OFFSET));
-            seconds--;     
+        changed ? props.currentName.text(data.name) :   props.currentName.text(object.name)
+        
+        
+        if(changed && data.uid == window.WAuth.getData().uuid){
+            props.currentName.addClass("my");
+        }else{
+            props.currentName.removeClass("my")
+        }
 
-            staticInterval = setInterval( () => {
-                if(seconds==0) {
+        props.currentBid.text(data.currentBid / 100);
+
+        SetDate(total, seconds, getTime(seconds - GOING_OFFSET));
+        offsetTimeout = setTimeout(e => {
+            seconds--;
+
+            staticInterval = setInterval(() => {
+                if (seconds == 0) {
                     clearInterval(staticInterval);
-                } 
-                
-                SetDate(total,seconds,getTime(seconds - GOING_OFFSET));            
-                seconds--; 
-            }, 1000 )
+                }
+
+                SetDate(total, seconds, getTime(seconds - GOING_OFFSET));
+                seconds--;
+            }, 1000)
         }, offset)
     }
 
-    function SetTimer(json,total,seconds){
-        
+    function SetTimer(json, total, seconds) {
+
         main.currentGoing.hide();
         main.currentTimer.show();
 
-        props.currentProgress.progress({ percent: calculatePer(total,seconds - GOING_OFFSET) });
-        props.currentTimer.text(json.minutes+':'+( json.seconds ));
+        props.currentProgress.progress({ percent: calculatePer(total, seconds - GOING_OFFSET) });
+        props.currentTimer.text(json.minutes + ':' + (json.seconds));
     }
 
-    function SetText(once,seconds){
+    function SetText(once, seconds) {
         main.currentTimer.hide();
         main.currentGoing.show();
 
-        props.currentProgress.progress({ percent: calculatePer(10,seconds - ((once == 'once') ? 10 : 0 )) });
+        props.currentProgress.progress({ percent: calculatePer(10, seconds - ((once == 'once') ? 10 : 0)) });
         props.currentGoing.text(once);
     }
 
-    function SetDate(total,seconds,data){
-        if(seconds > GOING_OFFSET){
-            SetTimer(data,total,seconds);  
-        }else{
-            if(seconds <= GOING_OFFSET && seconds > GOING_OFFSET/2 )
-                SetText('once',seconds);
+    function SetDate(total, seconds, data) {
+        if (seconds > GOING_OFFSET) {
+            SetTimer(data, total, seconds);
+        } else {
+            if (seconds <= GOING_OFFSET && seconds > GOING_OFFSET / 2)
+                SetText('once', seconds);
             else
-                SetText('twice',seconds);                          
+                SetText('twice', seconds);
         }
     }
 
@@ -188,16 +219,20 @@ function Item(data){
 
 
 
-function render(data){   
+
+function render(data,name) {
+    let currentBid = parseInt(data.currentBid) / 100;
     return `<div class="col-md-6 col-lg-4">
-        <div class="product">
+      <div class="product">
           <div class="product-content">          
-            <div class="image">  <img src="${data.mainImage}" alt=""> </div>
+            <div class="image">  
+               <a href="/product/id${data.uidProduct}"> <img src="${data.mainImage}" alt=""> </a>
+            </div>
             <div class="titile">
                 ${data.product.prTitle}
             </div>
             <div class="name">
-                Adam is Winning
+                <span>${name}</span>
             </div>
             <div class="numbers">
                 <span class="price">
@@ -208,7 +243,7 @@ function render(data){
             </div>
 
             <button class="ui button blue_button">
-                <div class="bigger">BID $<span>${data.currentBid/100}</span></div>
+                <div class="bigger">BID $<span>${data.currentBid / 100}</span></div>
                 <div class="smaller">+$${data.offShipment} Shipping</div>
             </button>
 
@@ -226,28 +261,28 @@ function render(data){
                 <div class="bar"></div>        
             </div>
           </div>
-       </div>`;
+     </div>`;
 }
 
-function calculatePer(total,current){
+function calculatePer(total, current) {
     return (current * 100) / total;
 }
 
-function getTime(seconds){
-    var minutes  = Math.floor( seconds/60 );
+function getTime(seconds) {
+    var minutes = Math.floor(seconds / 60);
     var second = seconds % 60
 
-    if(!seconds) seconds = 0;
-    if(!minutes) minutes = 0;
+    if (!seconds) seconds = 0;
+    if (!minutes) minutes = 0;
 
     return {
-        minutes : (minutes < 10 ? '0' : '')+minutes,
-        seconds : (second < 10 ? '0' : '') + second
+        minutes: (minutes < 10 ? '0' : '') + minutes,
+        seconds: (second < 10 ? '0' : '') + second
     }
 }
 
 
-function waiter(){
+function waiter() {
     return $(`
      <div class="empty">
         <div class="loader"></div>

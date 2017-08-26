@@ -2,6 +2,15 @@
   font-family: 'Work Sans', sans-serif;
 */
 
+
+input.success{
+
+}
+
+input.error{
+  
+}
+
 a {
   cursor: pointer;
 }
@@ -19,6 +28,15 @@ body.stopscroll {
 
 .radiusless {
   border-radius: 0!important;
+}
+
+.semantic.label{
+  display: block;
+  margin: 0em 0em 0.28571429rem 0em;
+  font-weight: 600;
+  color: #07406f;
+  font-size: 0.92857143em; 
+  text-transform: none;
 }
 
 .backgroundless {
@@ -347,6 +365,7 @@ nav input:focus~i {}
   -moz-transition: all .4s ease;
   transition: all .4s ease;
   filter: none;
+  text-align: center;
 }
 
 .product.loading .product-content {
@@ -436,7 +455,6 @@ nav input:focus~i {}
 }
 
 .product .titile {
-  border-top: 1px solid rgba(0, 0, 0, 0.125);
   font-weight: 500;
   font-size: 15px;
   text-align: center;
@@ -457,13 +475,30 @@ nav input:focus~i {}
 .product .name {
   z-index: 20;
   position: relative;
-  font-size: 13px;
-  width: 100%;
-  text-align: center;
-  color: #222;
+  font-size: 13px;   
   font-weight: 500;
-  letter-spacing: -.5px;
-  padding: 10px 0px;
+  letter-spacing: 0.5px;
+  padding: 7px 15px;
+  font-family: 'Mukta', sans-serif;
+  display: inline-block;
+  background: #b3b3b3;
+  border-radius: 25px;
+  color: white;
+  -webkit-transform: translateZ(0px);
+  transform: translateZ(0px);
+  -webkit-box-shadow: 0px 0px 19px 0px rgba(0, 0, 0, 0.15);
+  -moz-box-shadow: 0px 0px 19px 0px rgba(0, 0, 0, 0.15);
+  box-shadow: 0px 3px 19px 0px rgba(0, 0, 0, 0.45);
+  border-radius: 7px 7px 18px 18px;
+  margin-bottom: 15px;
+}
+
+.product .name.waiting{
+  opacity: .8;
+}
+
+.product .name.my{
+  background: #21BA45;
 }
 
 .product .price {
@@ -475,7 +510,7 @@ nav input:focus~i {}
 
 .product .ui.progress {
   margin: 0em 0em 0em;
-  background: white;
+  background: #fafafa;
   border-radius: 0px;
 }
 
@@ -564,10 +599,18 @@ button span {
 .going {
   width: 100%;
   color: #0d5699;
+  background: #fafafa;
   font-weight: 600;
-  padding: 10px 0;
-  padding-bottom: 15px;
+  padding: 15px 0;
+  padding-bottom: 9px;
   text-align: center;
+  min-height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top:15px;
+  /*box-shadow: inset 0 4px 3px -1px rgba(0,0,0,.1);*/
+  box-shadow: inset 0 4px 5px -3px rgba(0,0,0,.1);
 }
 
 .going img {
@@ -1146,6 +1189,12 @@ nav .mobile_nav a {
 
 .center {
   text-align: center!important;
+}
+
+.flexfull.center{
+  justify-content: center!important;
+  align-items: center!important;
+  display: inline-flex!important;
 }
 
 .flexcenter {

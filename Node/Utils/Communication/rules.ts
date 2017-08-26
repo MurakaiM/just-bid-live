@@ -12,7 +12,7 @@ export function isAuth(req, res): RuleController {
 }
 
 export function isSeller(req,res) {
-    return new RuleController((resolve) => {
+    return new RuleController((resolve) => {        
         if (req.isAuthenticated() && req.user.isVerified() && req.user.isSeller()) {           
             return resolve(req.user);
         } else {

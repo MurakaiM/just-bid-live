@@ -206,12 +206,12 @@ export function validProduct ( incoming : any) : UserError{
     }
 
 
-    if(!incoming.stock){
-        return buildError(true, "No stock provided")
+    if(!incoming.material){
+        return buildError(true, "No material title provided")
     }
 
-    if(incoming.stock <= 0){
-        return buildError(true, "Wrong stock provided")
+    if(incoming.material.length == 0){
+        return buildError(true, "Too short material title provided")
     }
 
     if(!incoming.guarantee){
@@ -260,11 +260,18 @@ export function validProduct ( incoming : any) : UserError{
 }
 
 export function validStock (incoming : any) : UserError{
-    if(!incoming.uid){
+    if(!incoming.productId){
         return buildError(true, "No product id provided")
     }
-    if(incoming.uid.length == 0){
+    if(incoming.productId.length == 0){
         return buildError(true, "Product id is wrong")
+    }
+
+    if(!incoming.typeId){
+        return buildError(true, "No type id provided")
+    }
+    if(incoming.typeId.length == 0){
+        return buildError(true, "Type id is wrong")
     }
 
     if(!incoming.stock){
@@ -344,42 +351,19 @@ function validateType(type : any) : boolean{
     let verified : boolean = true;
     let name : string = "";
 
-    if(!type){        
-        return false;
-    }
-
-    if(!type.color && !type.size){
-        return false;
-    }
-
-    if(type.color){
-        Object.keys(type.color).forEach( e => {
-            if(type.color[e].value === undefined || 
-               type.color[e].image === undefined || 
-               type.color[e].title === undefined ||
-               type.color[e].color === undefined)    
+    if(type){
+        Object.keys(type).forEach( e => {
+            if(type[e].value === undefined ||               
+               type[e].title === undefined ||
+               type[e].path === undefined ||
+               type[e].stock === undefined ||
+               type[e].color === undefined)    
                  verified = false;
-               
-            Object.keys(type.color[e]).forEach( val => {                
-                if(!validateKeys(val))
-                     verified = false;
-            }); 
         });
+    }else{
+        verified = false;
     }
-
-    if(type.size){
-        Object.keys(type.size).forEach( e => {
-            if(type.size[e].value === undefined ||                
-               type.size[e].title === undefined)    
-                 verified = false;    
-
-            Object.keys(type.size[e]).forEach( val => {
-                if(!validateKeys(val))
-                    verified = false;
-            });
-        });
-    }
-        
+   
     return verified;
 }
 

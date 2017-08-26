@@ -17,8 +17,11 @@ export default class AuctionItem{
     private dbAution : any; //Database model representation
     private timeout : any;  //Timeout for auction
     private number : number;
+    private name : string;
 
-    constructor(){}
+    constructor(){
+        this.name = "";
+    }
 
     
     public ForceLoad( data : any ) : AuctionItem{
@@ -34,21 +37,26 @@ export default class AuctionItem{
         return this.dbAution.save();
     }
 
-    public finish() : void{  
-        this.dbAution.reload().then( e => {
-            this.dbAution.inStock = this.dbAution.inStock - 1;
+    public async finish() : Promise<any>{  
+        await this.dbAution.reload();
 
-            if(this.dbAution.inStock == 0){
-                this.dbAution.isCompleted = true;
+        this.dbAution.inStock = this.dbAution.inStock - 1;
+        this.dbAution.currentUser = null;
+        this.name = "";
+
+        if(this.dbAution.inStock == 0){
+           this.dbAution.isCompleted = true;
             
-                RealtimeController.Instance.emitEnd(this.dbAution.uidRecord);
-                AuctionLoader.Instace.FinishTrigger(this.dbAution.uidRecord);
+           RealtimeController.Instance.emitEnd(this.dbAution.uidRecord);
+           AuctionLoader.Instace.FinishTrigger(this.dbAution.uidRecord);
                 
-                this.dbAution.save();
-            }else{          
-                this.ForceStart().then( saved => RealtimeController.Instance.emitStock([ this.dbAution.uidRecord,this.dbAution ]) );
-            }
-        });
+           await this.dbAution.save();
+        }else{          
+           this.dbAution.currentBid = Fees[this.dbAution.uidFee].begin;
+           await this.dbAution.save();
+
+           this.ForceStart().then( saved => RealtimeController.Instance.emitStock(this.getPublic) );
+        }        
     }
 
     public placeBid(user : User) : Promise<any> {
@@ -72,6 +80,7 @@ export default class AuctionItem{
             this.dbAution.save()
              .then( result => {
                 //Refresh timeout and emit to stream
+                this.name = user.PublicData.firstName;
                 RealtimeController.Instance.emitBid(this.StreamData)
                 this.setTimer(AuctionItem.goingTimer + this.number);   
                 resolve("Updated");             
@@ -86,13 +95,17 @@ export default class AuctionItem{
     }
 
     public get getPublic(){
-        return this.dbAution;
+        return { 
+            data : this.dbAution.dataValues,
+            name : this.name
+        };
     }
 
     public get StreamData() : AuctionStreamData {
         return {
             uid : this.dbAution.uidRecord,
-            price : this.dbAution.currentBid,
+            name : this.name,
+            currentBid : this.dbAution.currentBid,
             ending : this.dbAution.auctionEnds           
         }
     }    
@@ -112,8 +125,11 @@ export default class AuctionItem{
                     isCompleted : false,       
                     onAuction : false,                    
                     inStock : { $gt : 0 }                        
-                },
-                include: [{ model : ProductSchema}]
+                },                
+                include: [{ 
+                    model : ProductSchema,
+                    attributes : ['prTitle','prCost']
+                }]
             })
                 .then( items => resolve(items))
                 .catch( error => resolve([]));
@@ -130,7 +146,10 @@ export default class AuctionItem{
                     onAuction :{ $or : [false,true] },                    
                     inStock : { $gt : 0 }                        
                 },
-                include: [{ model : ProductSchema}]
+                include: [{ 
+                    model : ProductSchema,
+                    attributes : ['prTitle','prCost']
+                }]
             })
                 .then( items => resolve(items))
                 .catch( error => resolve([]));
@@ -166,19 +185,19 @@ export default class AuctionItem{
         return new Promise((resolve, reject) => {
 
             if(product){
-              const firstColor = Object.keys(product.prTypes.color)[0];  
+              const firstColor = Object.keys(product.prTypes)[0];  
 
               data.currentBid = AuctionItem.getFees(data.type).begin;             
               data.offCost = AuctionItem.getOff(data.currentBid, product.prCost);
               data.offShipment = product.prShipment;
-              data.mainImage = product.prTypes.color[firstColor].image;
+              data.mainImage = product.prTypes[firstColor].image;
               data.inStock = data.stock;
               
             
               newItem = AuctionSchema.build(data);             
               newItem.save()
                 .then( result => resolve("Successfuly saved"))
-                .catch( error => reject(error));
+                .catch( error =>  reject(error));
                 
             }else reject("There is no product with such id"); 
 
@@ -210,6 +229,7 @@ export default class AuctionItem{
     }
 
     private static getOff( part : number, original : number) : number{
+        part*=100;
         let chunk : number =  100 - ( (part*100) / original );
         console.log(chunk);
         return parseInt(chunk.toFixed(2));

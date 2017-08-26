@@ -60,7 +60,7 @@ export default class RealtimeSocket{
             if(socket.request.user.logged_in)
                 return {
                     signedIn : true,
-                    user: socket.request.user
+                    user: socket.request.user.PublicData
                 }
             else
                 return {

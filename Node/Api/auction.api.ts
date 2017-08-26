@@ -14,7 +14,7 @@ export default class AuctionApi extends BasicController{
     }
 
     protected CurrentItems(req,res){        
-        res.send( BuildResponse( 0, "Items successfuly fetched", [...AuctionLoader.Instace.GetStore()] ));
+        res.send( BuildResponse( 0, "Items successfuly fetched", AuctionLoader.Instace.GetStore() ));
     }
 
     protected PostBid(req,res){

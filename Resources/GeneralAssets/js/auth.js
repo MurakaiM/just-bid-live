@@ -9,7 +9,10 @@ function AuthController(){
     this.userData = {};
 
     socket.on('connect', () => {    
-        socket.on('status', data => clearInterval(connectInterval));
+        socket.on('status', data => { 
+            this.userData = data; 
+            clearInterval(connectInterval); 
+        });
 
         socket.on('exit', () => {  
             this.switchAuth(false);
@@ -19,6 +22,7 @@ function AuthController(){
         });
 
         socket.on('disconnect', () => {});
+
         socket.emit('status');
     });
 
@@ -33,6 +37,14 @@ function AuthController(){
         if(this.listener['auth'])
             this.listener['auth'](this.isSigned, this.userData);
     }  
+
+    this.loadUser = data =>{
+        localStorage.setItem('')
+    }
+
+    this.getUser = () =>{
+
+    }
 
     this.forceLoad = (data,fn) => { 
         if(!data)
@@ -64,4 +76,6 @@ function AuthController(){
             user.css('display','none');
         }
     }
+
+    this.getData = () => this.userData;
 }

@@ -84,11 +84,16 @@ export default class SellerApi extends BasicController{
         });
     }
 
-    protected createProduct(req,res) : void{
-        isSeller(req,res).allowed( user => {     
-            ProductController.CreateProduct(user, req.body)
-                .then( result => res.send( BuildResponse(0,"Product was successfully created",result)) )
-                .catch( error => res.send( BuildResponse(10,error)) ); 
+    protected createProduct(req,res) : void{       
+        isSeller(req,res).allowed( user => {  
+            ProductController.CreateProduct(user, req.body,req.files)
+                .then( result =>{
+                        console.log(result);
+                        if(result.succ)
+                            return res.send( BuildResponse(0,"Product was successfully created",result.product)) 
+                        else
+                            return res.send( BuildResponse(10,result.err))
+                })                
         });
     }
  
@@ -100,15 +105,15 @@ export default class SellerApi extends BasicController{
                  
              AuctionController.CreateItem(user, req.body) 
                   .then( result => res.send( BuildResponse(0,"Auction item was successfully created") ))
-                  .catch( error => res.send( BuildResponse(10,"Error occurred",error) ))
+                  .catch( error => res.send( BuildResponse(10,"Error occurred",error)))
                   
          });
     }
 
-    protected updateStock(req,res) : void{
+    protected updateStock(req,res) : void{    
         isSeller(req,res).allowed( user => {
             ProductController.UpdateStock(user, req.body)
-                .then( result => res.send(BuildResponse(0,"Product stock number was successfully updated")) )
+                .then( product => res.send(BuildResponse(0,"Product stock number was successfully updated",product)) )
                 .catch( error => res.send(BuildResponse(10,error)) );
         });
     }

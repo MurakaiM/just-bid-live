@@ -18,8 +18,10 @@
 
 .stock_list .list_item .icon {
   margin-left: 5px;
+  top: 4px;
   width: 20px;
 }
+
 
 .stock_list .list_item .text {
   line-height: 40px;

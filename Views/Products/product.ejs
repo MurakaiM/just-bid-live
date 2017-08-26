@@ -32,10 +32,10 @@
               <div class="exactly image">
                   <div class="ui text shape">
                     <div class="sides">
-                      <%if(product.prTypes.color){%>                       
-                        <% Object.keys(product.prTypes.color).forEach( (e,i) => { %>
-                            <div id="<%=product.prTypes.color[e].value%>" class="ui header side <%if(i == 0){%>active<%}%>">
-                              <img src="<%=product.prTypes.color[e].image%>" alt="">
+                      <%if(product.prTypes){%>                       
+                        <% Object.keys(product.prTypes).forEach( (e,i) => { %>
+                            <div id="<%=product.prTypes[e].value%>" class="ui header side <%if(i == 0){%>active<%}%>">
+                              <img src="<%=product.prTypes[e].image%>" alt="">
                             </div>                            
                         <%})%>                                       
                       <%}%>
@@ -74,17 +74,17 @@
             <h4 class="ui fitted divider widther "></h4>       
             <div class="exactly options">
               <div class="types">                            
-                <%if(product.prTypes.color){%>
+                <%if(product.prTypes){%>
                   <div class="option">
-                    <span class="labeler">  <i class="paint brush icon"></i> Color :</span>
+                    <span class="labeler">  <i class="paint brush icon"></i> Type :</span>
                     <div id="color" class="ui fluid selection dropdown ">
                     <span class="default text">Select color</span>
                     <div class="menu">
                       <div class="scrolling menu">
-                        <% Object.keys(product.prTypes.color).forEach( e => { %>
-                            <div class="item"  data-value="<%=product.prTypes.color[e].value%>">
-                                  <div class="ui empty circular label" style="background : <%=product.prTypes.color[e].color%>;!imporant"></div>
-                                  <%=product.prTypes.color[e].title%>
+                        <% Object.keys(product.prTypes).forEach( e => { %>
+                            <div class="item <%if(product.prTypes[e].disable){%> disabled <%}%>"  data-value="<%=product.prTypes[e].value%>">                          
+                                  <div class="ui empty circular label" style="background : <%=product.prTypes[e].color%>;!imporant"></div>
+                                  <%=product.prTypes[e].title%>
                             </div>
                         <%})%> 
                       </div>
@@ -93,23 +93,7 @@
                   </div>             
                 <%}%>
               
-                <%if(product.prTypes.size){%>
-                  <div class="option">
-                  <span class="labeler">  <i class="compress icon"></i> Size :</span>
-                  <div id="size" class="ui fluid selection dropdown">
-                    <div class="default text">Select size</div>
-                    <div class="menu">
-                      <div class="scrolling menu">
-                        <% Object.keys(product.prTypes.size).forEach( e => { %>
-                            <div class="item"  data-value="<%=product.prTypes.size[e].value%>">                                 
-                                  <%=product.prTypes.size[e].title%>
-                            </div>
-                        <%})%> 
-                      </div>                      
-                    </div>
-                  </div>
-                </div>             
-                <%}%>               
+                           
               </div>
               <div class="option">
                   <span class="labeler">  <i class="hashtag icon"></i> Quantity :</span>

@@ -1,3 +1,11 @@
+.iconholder{
+    width:100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .pagination.menu .action.input {
     padding: 0px;
 }
@@ -120,7 +128,7 @@ tr.selected {
     -webkit-appearance: none;
     tap-highlight-color: rgba(255, 255, 255, 0);
     line-height: 1.21428571em;
-    padding: 0.67857143em 1em;
+    padding: 5px;
     font-size: 1em;
     background: #FFFFFF;
     border: 1px solid rgba(34, 36, 38, 0.15);
@@ -129,6 +137,11 @@ tr.selected {
     box-shadow: 0em 0em 0em 0em transparent inset;
     -webkit-transition: color 0.1s ease, border-color 0.1s ease;
     transition: color 0.1s ease, border-color 0.1s ease;
+    cursor: pointer;
+}
+
+.ui.select.file.inliner.button{
+    margin: auto;
 }
 
 .flexer {
@@ -139,6 +152,7 @@ tr.selected {
 .my-modal.page {
     overflow: auto;
     padding: 120px 0;
+    transition: .3s ease all;
 }
 
 .my-modal.page .body {
@@ -272,11 +286,15 @@ table .emptypage {
     transform: translate3d(-50%, -50%, 0);
 }
 
-.three.column.row.wrap {
+.row.wrap {
     margin: 1rem auto;
     align-items: center;
     padding: 5px!important;
     padding: 0;
+}
+
+.column.ui.form .fields{
+    margin: 0 auto;
 }
 
 .three.column.row.wrap .column {
@@ -392,6 +410,14 @@ table .emptypage {
 
 .ui.form .partlydisabled.field {
     pointer-events: none;
+}
+
+input.partlydisabled{
+    background: #eee!important;
+    border: 1px solid #ccc!important;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075)!important;
+    color: #555!important;
+    pointer-events: none!important;  
 }
 
 .ui.form .partlydisabled.field input {

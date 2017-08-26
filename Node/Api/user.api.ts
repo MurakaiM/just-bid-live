@@ -13,6 +13,7 @@ import {
 
 import { Response , BuildResponse } from '../Utils/Communication/response'
 import { isAuth, isSeller }  from '../Utils/Communication/rules'
+import { Database } from '../Database/database.controller'
 
 import UserController from '../Controllers/user.controller'
 import ProductController from '../Controllers/product.controller'
@@ -32,6 +33,7 @@ export default class UserApi extends BasicController{
     Configure(){
         this.Get('/user/current',this.currentUser);
         this.Get('/verification/:uid',this.verify);
+        this.Get('/user/products/search=:query', this.productSearch);
       
         this.Get('/user/orders/current', this.orders);
         this.Get('/user/orders/history', this.history)
@@ -46,6 +48,12 @@ export default class UserApi extends BasicController{
         this.Post('/user/password/reset', this.resetPassword);
     }
 
+
+    protected productSearch(req,res) : void{
+        Database.Instance.productSearch.search(["prTitle","prCategory","prDescription"], req.params.query)
+            .then( result => res.send( BuildResponse(0,"Search successfully finished",result) ))
+            .catch( error => res.send( BuildResponse(0,"Search finished with warnings",[]) ))
+    }
 
     protected signIn(req, res, next): void {
         var hasError : UserError   = validSingIn(req.body);

@@ -114,7 +114,7 @@ function Table(id, options) {
         $(options.input.to).val(this.currentPage);
     }
 
-    this.loadData = data => {        
+    this.loadData = data => {         
         this.data.current = data;
         this.recalculatePages();
     }
@@ -161,7 +161,7 @@ function Table(id, options) {
         this.currentPage = page;
     }
 
-    this.sortBy = (key, way = false) => {
+    this.sortBy = (key, way = false) => {        
         if (this.searched) {
             sortPragma(this.searched, key, way);
             this.displayPage(this.currentPage, this.searched);
@@ -187,8 +187,12 @@ function Table(id, options) {
                 if(key == 'createdAt' || key == 'updatedAt'){
                     return (new Date(row[key]).toLocaleDateString().toLowerCase().indexOf(text) > -1)
                 }
+               
+                if( typeof(row[key]) === 'object' && row[key]){              
+                   Object.keys(row[key]).some(downkey => String(row[key][downkey]).toLowerCase().indexOf(text.toLowerCase()) > -1 );           
+                }              
 
-                return ( String(row[key]).toLowerCase().indexOf(text) > -1 )
+                return ( String(row[key]).toLowerCase().indexOf(text.toLowerCase()) > -1 )
             }
         ));
         this.sortBy(this.currentSortableId, this.currentSortableBool);
@@ -250,10 +254,7 @@ function Table(id, options) {
         });
 
         $(options.forPage).dropdown('set selected', 10);
-        $(options.forPage).dropdown({
-            onChange: () => this.changeFor($(options.forPage).dropdown('get value'))
-        });
-
+        $(options.forPage).dropdown({ onChange: () => this.changeFor($(options.forPage).dropdown('get value')) });
         $(options.buttons.next).click(e => this.bNext());
         $(options.buttons.previous).click(e => this.bPrevious());
 
@@ -266,13 +267,13 @@ function Table(id, options) {
             this.pagination(val);
         });
 
-        this.table.find('thead th').each((i, elem) => this.createSortable($(elem)));
+        this.table.find('thead th[data-field]').each((i, elem) => this.createSortable($(elem)));
     }
 
     this.loadInSegment = (url, head,segment,callback) => {
         this.hashed = { url , head, segment }
         LoadSegment(url, head, segment)
-            .then( answer => { console.log(answer); segment.toggleClass('loading'); this.forceLoad(answer.result.data); });
+            .then( answer => {segment.toggleClass('loading'); this.forceLoad(answer.result.data); });
     }
 
     this.loadFromCache = () => {
@@ -317,8 +318,17 @@ function NestedList(id, options) {
     this.place = this.body.find(options.listplace);
     this.submiter =  this.body.find(options.submiter);
     this.result = {};
+    this.files = {};
     this.current = 0;
     
+    if(options.isFiled){
+        this.files.path = this.body.find(`input[name=${options.isFiled.pathName}]`);
+        this.files.input = this.body.find(`input[name=${options.isFiled.inputName}]`);
+        this.files.button = this.body.find(`button[name=${options.isFiled.buttonName}]`);
+
+        this.files.button.click( e => this.files.input.click());
+        this.files.input.on('change', e => this.readFile(this.files.input,this.files.path, this.loadUri ))
+    }
  
 
     this.validate = () => {
@@ -340,6 +350,11 @@ function NestedList(id, options) {
 
         if(valid == true){
             options.inputs.forEach(obj => $(this.body.find(`input[name=${obj.name}]`).val('')));
+        }
+
+        if(options.isFiled){
+            result.image =  this.files.currentFile;
+            result.uri = this.files.currentUrl;
         }
 
         return { valid : valid, data : result};
@@ -367,4 +382,18 @@ function NestedList(id, options) {
         this.result = {};
         this.place.empty();
     }
+
+    this.readFile = (input,placeholder,callback) => {   
+       var reader = new FileReader();        
+       this.files.currentFile = input[0].files[0];
+
+       if (input[0].files[0]) {  
+         placeholder.val(input[0].files[0].name)
+        
+         reader.onload = e => callback(e.target.result);   
+         reader.readAsDataURL(input[0].files[0]);
+       }
+    }
+
+    this.loadUri = uri => this.files.currentUrl = uri ;
 }

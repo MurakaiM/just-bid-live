@@ -1,4 +1,7 @@
 import * as  Sequelize from 'sequelize'
+
+import Search from '../Utils/Controllers/search'
+
 import { DATABASE_URL } from '../keys'
 
 
@@ -12,11 +15,21 @@ export class Database{
    public static Instance : Database;
    private sequelize; 
 
+   public productSearch : Search;
+
    constructor(connectionString){
       this.sequelize = globalSequlize;
 
       Database.Instance = this;
-      this.initConnection();
+     
+      this.productSearch = new Search(ProductSchema, {
+        sequelize : this.sequelize,
+        weights : {
+          prTitle : 'A',
+          prDescription : 'B',
+          prFull : 'C'
+        }
+      });
    }
 
 
@@ -32,16 +45,19 @@ export class Database{
       }); 
    }
 
-   private async initSchemas() : Promise<any> {
-      
+
+
+   private async initSchemas() : Promise<any> {   
+
       await UserSchema.sync();
       await ProductSchema.sync();
+      await WinningSchema.sync();
       await WishSchema.sync();
       await AuctionSchema.sync();
       await SellerSchema.sync();
       await OrderSchema.sync();
-
-   }
+      await this.productSearch.setUp();
+    }
    
 
 }
@@ -51,6 +67,81 @@ export function initDatabase() : Promise<any>{
   return dbController.initConnection();
 }
 
+
+/*Notification schema*/
+export const NotificationSchema = globalSequlize.define('notification', {
+  recordId : {
+    type: Sequelize.UUID,
+    primaryKey : true
+  },
+  userId : {
+    type : Sequelize.UUID,
+    allowNull : false
+  },
+  text : {
+    type : Sequelize.TEXT
+  },
+  type : {
+    type : Sequelize.STRING,
+    allowNull : false,
+    defaultValue : "Message"
+  },
+  isViewed : {
+    type : Sequelize.BOOLEAN,
+    defaultValue : false
+  }
+});
+
+
+/*Auction winning schema*/
+export const WinningSchema = globalSequlize.define('winning', {
+  winningId : {
+    type : Sequelize.UUID,
+    primaryKey : true
+  },
+  winnerId : {
+    type : Sequelize.UUID,
+    allowNull : false
+  },
+  auctionId : {
+    type : Sequelize.UUID,
+    allowNull : false
+  },
+  productId :{
+    type : Sequelize.UUID,
+    allowNull : false
+  },
+  sellerId : {
+    type : Sequelize.UUID,
+    allowNull : false
+  },
+  selectedType : {
+    type : Sequelize.STRING,
+    defaultValue : "not selected",
+    allowNull : false
+  },
+  lastBid : {
+    type : Sequelize.INTEGER,
+    defaultValue : 0,
+    allowNull : false
+  },
+  productTrack : {
+    type : Sequelize.STRING,
+    defaultValue : "No track number represented",
+    allowNull : false
+  },  
+  status : {
+    type : Sequelize.STRING
+  },
+  customerAddress : {
+    type : Sequelize.STRING,
+    allowNull : true
+  },
+  isFinished : {
+    type : Sequelize.BOOLEAN,
+    defaultValue : false
+  }
+})
 
 /*Product schema*/
 export const ProductSchema = globalSequlize.define('product', {
@@ -93,9 +184,9 @@ export const ProductSchema = globalSequlize.define('product', {
       type : Sequelize.INTEGER,
       defaultValue : 0
     },
-    prStock : {
-      type : Sequelize.INTEGER,
-      defaultValue : 1,
+    prMaterial : {
+      type : Sequelize.STRING,
+      defaultValue : "Undefined",
       allowNull : false
     },
     prCategory : {
@@ -121,6 +212,7 @@ export const ProductSchema = globalSequlize.define('product', {
       defaultValue : false
     }    
 });
+
 
 /* User schema*/
 export const UserSchema = globalSequlize.define('user', {

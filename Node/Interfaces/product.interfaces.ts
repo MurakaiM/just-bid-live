@@ -38,7 +38,7 @@ interface ProductInterface{
     prTypes : any,
     prShipment : number,
     prCategory : any,
-    prStock : number,
+    prMaterial : string,
     prGuarantee : number
 } 
 

@@ -1,6 +1,7 @@
 
 import * as GCStorage from '@google-cloud/storage'
 import * as crypto from 'crypto'
+import * as fileType from 'file-type'
 
 export default class FileUploader{
     public static Instance : FileUploader;    
@@ -21,6 +22,10 @@ export default class FileUploader{
 
     public uploadAvatar(fileData : any) : Promise<any>{
         return this.uploadFile(fileData,'avatars');
+    }
+
+    public uploadType(fileData : any) : Promise<any>{     
+        return this.uploadFile(fileData, 'products')
     }
 
     private uploadFile(fileData : any, directory : string) : Promise<any> {       

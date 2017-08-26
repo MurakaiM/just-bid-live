@@ -21,6 +21,16 @@
                     <input type="text" placeholder="Confirm product name" />
                 </div>
 
+                <div class="ui message success">
+                    <div class="header">Action Completed</div>
+                    <p>Product was successfully disabled.</p>
+                </div>
+
+                <div class="ui message error">
+                    <div class="header">Action Forbidden</div>
+                    <p></p>
+                </div>
+
                 <div class="buttons container">
                     <button type="button" class="ui red button">Disable</button>
                 </div>
@@ -40,7 +50,6 @@
                 </div>
             </h2>
             <h4 class="ui header main wrap">Create new products for your store</h4>
-
 
             <form class="ui form deleter">
                 <div class="field fileds-margin">
@@ -75,8 +84,8 @@
                             </div>
                             <div class="four wide field">
                                 <div class="ui left icon input">
-                                    <input type="text" name="stock" placeholder="In Stock">
-                                    <i class="shop icon"></i>
+                                    <input type="text" name="material" placeholder="Material">
+                                    <i class="archive icon"></i>
                                 </div>
                             </div>
                             <div class="four wide field">
@@ -92,37 +101,28 @@
                     </div>
 
                     <div class="field fileds-margin" id="typesColorist">
-                        <label>Color</label>
+                        <label>Types</label>
                         <div class="ui grid nested"></div>
                         <div class="fields">
-                            <div class="four wide field">
+                            <div class="five wide field">
                                 <input type="text" name="titleVR" placeholder="Title">
                             </div>
-                            <div class="three wide field">
+                            <div class="two wide field">
                                 <input type="text" name="valueVR" placeholder="Id">
                             </div>
                             <div class="two wide field">
+                                <input type="text" name="stockVR" placeholder="In Stock">
+                            </div>
+                            <div class="one wide field">
                                 <input type="color" name="color" placeholder="HEX Preview">
                             </div>
-                            <div class="five wide field">
-                                <input type="text" name="image" placeholder="Image url">
-                            </div>
-                            <div class="two wide field flexer">
-                                <button type="button" class="ui teal tiny button"> Add </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="field fileds-margin" id="typesSize">
-                        <label>Size</label>
-                        <div class="ui grid nested"></div>
-                        <div class="fields">
-                            <div class="four wide field">
-                                <input type="text" name="titleVR" placeholder="Title">
-                            </div>
-                            <div class="three wide field">
-                                <input type="text" name="valueVR" placeholder="Id">
-                            </div>
+                            <div class="five wide field">        
+                                <div class="ui action input">
+                                    <input type="file" style="display:none;" name="image" accept="image/*">
+                                    <input type="text" name="path" placeholder="Image" disabled>
+                                    <button type="button" class="ui button" name="imagebutton">Select</button>
+                                </div> 
+                            </div>                          
                             <div class="two wide field flexer">
                                 <button type="button" class="ui teal tiny button"> Add </button>
                             </div>
@@ -152,7 +152,7 @@
         </div>
     </div>
 
-    <div id="editModal" class="my-modal dashed">
+    <div id="editModal" class="my-modal page">
         <div class="body">
             <div class="closer">
                 <i class="remove icon"></i>
@@ -164,36 +164,25 @@
                 </div>
             </h2>
             <h4 class="ui header main wrap">Change stock and disable types. </h4>
+            <div class="ui descriptor"> For product <span class="exact"></span>.</div>
             
-
-            <div class="field">
-                <label class="ui descriptor">Types for <span class="exact"></span></label>
-                <div class="ui segment scroll" style="overflow-y:scroll; height : 208px;">
+            <div class="ui form">
+                <div class="two fields">
+                     <div class="field">
+                        <label class="semantic label">Types</label>
+                        <div class="ui segment scroll types" style="overflow-y:scroll; height : 400px;">
+                        </div>
+                    </div>
+                
+                    <div class="field">
+                        <label class="semantic label">Stock</label>
+                        <div class="ui segment scroll stock" style="overflow-y:scroll; height : 400px;">
+                        </div>
+                    </div>
                 </div>
             </div>
-        
-            <form class="ui form deleter" style="margin-top: 26px;">
-                <div class="field">
-                    <label>Stock</label>
-                    <input type="text" name="stock" placeholder="New in stock" />
-                </div>
 
-                <div class="ui message success">
-                    <div class="header">Action Completed</div>
-                    <p> Product's stock was successfully updated </p>
-                </div>
-
-                <div class="ui message error">
-                    <div class="header">Action Forbidden</div>
-                    <p> Ooops... Error occurred </p>
-                </div>
-
-
-                <div class="buttons container">
-                    <button type="submit" class="ui blue button">Update stock</button>
-                </div>
-            </form>
-
+                
 
         </div>
     </div>
@@ -252,6 +241,17 @@
                 <div class="buttons container">
                     <button type="button" class="ui green button">Renew</button>
                 </div>
+
+                <div class="ui message success">
+                    <div class="header">Action Completed</div>
+                    <p>Product was successfully renewed.</p>
+                </div>
+
+                <div class="ui message error">
+                    <div class="header">Action Forbidden</div>
+                    <p></p>
+                </div>
+
             </form>
         </div>
     </div>

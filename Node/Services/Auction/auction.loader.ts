@@ -32,9 +32,11 @@ export default class AuctionLoader{
 
         this.CurrentItems += auctionItems.length;
         auctionItems.forEach( async element => { 
-            await this.Store.AddItem(element).ForceStart() 
+            const item = await this.Store.AddItem(element);
+            item.ForceStart();
+            
             if(!firstLoad){
-                Realtime.Instance.emitNew( [element.uidRecord,element] );
+                Realtime.Instance.emitNew(item.getPublic);
             }
         });
         return true;
@@ -57,10 +59,9 @@ export default class AuctionLoader{
     }
 
 
-    public GetStore() : Map<any,any> {
-        var map : Map<string,any> = new Map<string,any>();
-        this.Store.getItems().forEach( (value,key) => map.set(key,value.getPublic.dataValues ));     
-
+    public GetStore() : Array<any> {
+        let map : Array<any> = [];
+        this.Store.getItems().forEach( (item) => map.push(item.getPublic));    
         return map;
     }
 

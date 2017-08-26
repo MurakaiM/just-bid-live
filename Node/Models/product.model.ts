@@ -101,7 +101,7 @@ export default class Product {
              .then( () => {
                 var productObject : Product = new Product(data.prUid);
                 productObject.ForceLoad(product);               
-                resolve(productObject.PublicData);
+                resolve(productObject);
              })
              .catch(err => reject(err));
         });
@@ -155,7 +155,7 @@ export default class Product {
         return ProductSchema.findOne({ where : { prUid : uuid }, attributes : ["prTypes"] });
     }
 
-    public static ChangeStock( user : User , uuid : string, stock : number) : Promise<any> {
+    public static ChangeStock( user : User , uuid : string, type: string , stock : number) : Promise<any> {
         return new Promise((resolve, reject) => {
            
             ProductSchema.findOne({
@@ -167,7 +167,15 @@ export default class Product {
                 if(!product){
                     return reject("No such product");
                 }
-                product.prStock = stock;
+
+                if(!product.prTypes[type]){
+                    return reject("Wrong type name provided");
+                }
+
+                let JSONData = product.prTypes;
+                JSONData[type].stock = stock;
+                product.prTypes = JSONData;
+                
                 return product.save();
             }).then( product => resolve(product))
             .catch( err => reject(err));            
@@ -187,16 +195,12 @@ export default class Product {
                     reject("No such product");
                 }
 
-                if(!product.prTypes[data.group]){
-                   return reject("Wrong type group provided");
-                }
-
-                if(!product.prTypes[data.group][data.name]){
+                if(!product.prTypes[data]){
                    return reject("Wrong type name provided");
                 }
 
                 let JSONData =  product.prTypes;
-                JSONData[data.group][data.name].disable = available;
+                JSONData[data].disable = available;
 
                 product.prTypes = JSONData;              
                 return product.save();

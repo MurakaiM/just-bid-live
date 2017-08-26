@@ -24,8 +24,9 @@ function createPrompt(text) {
 
 
 function Form(id, url, validationRules, ...args) {
-
+  var isSubmited = false;
   var $form = (id instanceof jQuery) ? id : $("#" + id);
+  var delay = ( validationRules.delay !== undefined || validationRules.delay != null)  ? validationRules.delay : 1000;
 
   var $messages = {
     success: $form.find(".success p"),
@@ -40,8 +41,12 @@ function Form(id, url, validationRules, ...args) {
     on: validationRules.on
   });
 
-  $form.submit(e => {
+  $form.submit(e => {    
+    if(isSubmited)
+        return false;
+
     e.preventDefault();
+    isSubmited = true;
     postThis(url);
     return false;
   });
@@ -52,8 +57,14 @@ function Form(id, url, validationRules, ...args) {
 
 
   function setLoading() {
-    $form.addClass('loading');
     $form.removeClass('overall error success');
+    
+    if(validationRules.justbutton){
+      $form.find('button:submit').addClass('loading');
+      return;
+    }
+
+    $form.addClass('loading');   
   }
 
   function setError(value) {   
@@ -89,32 +100,37 @@ function Form(id, url, validationRules, ...args) {
       setLoading();
       setTimeout(() => {
         postForm(url, data, args[0] == true ? true : false)
-          .then(data => {              
+          .then(data => {   
+            if(validationRules.justbutton){
+              $form.find('button:submit').removeClass('loading');
+            }
+            
             if (data.code >= 10) {
               if(validationRules.failure)
-                validationRules.failure(data.data);
+                validationRules.failure(data.data,$form);
              
               setError(data.message);
             } else {            
               if(validationRules.success)
-                validationRules.success(data.data);
+                validationRules.success(data.data,$form);
 
               if(validationRules.notSuccess == true)
                 return;
 
               setSuccess();
             }
+            
+            isSubmited = false;
           })
-          .catch(err => setError(err.message));
-      }, 1000);
-
+          .catch(err => { isSubmited = true; setError(err.message); });
+      }, delay);
     }
-
   }
 
   function getFormData() {
     return $form.form('get values');
   }
+  
 }
 
 function Storage(){
@@ -402,6 +418,7 @@ function SignIn(modal) {
     },
     on : 'submit',
     success : user => {
+    
       modal.toggleState();
       window.WAuth.signIn(user);
     },

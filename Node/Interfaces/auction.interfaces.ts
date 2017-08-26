@@ -1,6 +1,7 @@
 export interface AuctionStreamData{
     uid : string,
-    price : number,
+    currentBid : number,
+    name : string,
     ending : Date //Timestamp of ending as number representation  
 }
 

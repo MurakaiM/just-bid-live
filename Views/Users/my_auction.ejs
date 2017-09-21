@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <!--Head include!-->
+        <%-include('../Common/mobile')%>
+        <%-include('../Common/head', { domain })%>
+        
+        <link rel="stylesheet" href="<%=domain%>/u.assets/css/user.css" />
+        <link rel="stylesheet" href="<%=domain%>/g.assets/css/orders.css" />
+        <link rel="stylesheet" href="<%=domain%>/g.assets/css/responsive.css"/>
+    </head>
+    <body>
+        <div class="content">
+            <!--Menu include!-->
+            <%-include('../Common/menu', { page : pageName , user : currentUser })%>
+            <div class="row products">
+              <div class="col-md-2">
+                <%-include('./my_menu', { active : 1 })%>
+              </div>
+              <div class="col-md-10">                           
+                    <div class="ui segment none">           
+                        <div class="row">
+                            <%winnings.forEach( winning =>{%>                          
+                                <div class="col-sm-6 col-md-6 col-lg-4">
+                                    <div class="product auction">
+                                        <div class="ui label won">WON</div>
+                                        <div class="first">
+                                            <div class="collapsing image">
+                                                <img src="https://s-media-cache-ak0.pinimg.com/736x/fb/60/90/fb6090f6808037dd4aedb50f0cfbc7d8.jpg" alt="" />
+                                            </div>
+                                        </div>
+                                        <div class="second">
+                                            <div class="information">
+                                                <div class="title">Dress</div>
+                                                <div class="types">
+                                                    Small, XS
+                                                </div>
+                                                <div class="cost">
+                                                    <div class="option">                                          
+                                                        <span class="labeler">  <i class="legal icon"></i> Winning bid : </span>
+                                                        <span class="info">   <i class="fa fa-usd" aria-hidden="true"></i> 25</span>
+                                                    </div>                                            
+                                                    <div class="option">                                          
+                                                        <span class="labeler">  <i class="shipping icon"></i> Delivery : </span>
+                                                        <span class="info">   <i class="fa fa-usd" aria-hidden="true"></i> 25</span>
+                                                    </div>
+                                                    <div class="option">                                          
+                                                        <span class="labeler">  <i class="wait icon"></i> Won at : </span>
+                                                        <span class="info"> 29.09.2017 </span>
+                                                    </div>
+                                                    <div class="option">                                          
+                                                        <span class="labeler">  <i class="history icon"></i> Disappear after: </span>
+                                                        <span class="info"> 7 days </span>
+                                                    </div>
+                                                </div>                                       
+                                            </div> 
+                                        </div>
+                                        <div class="third">                                       
+                                            <button class="ui button">
+                                                <i class="checkmark icon"></i>
+                                                Checkout
+                                            </button>                                                                             
+                                        </div>
+                                    </div>  
+                                </div>
+                            <%})%> 
+                        </div>       
+                    </div>
+              </div>
+            </div>
+
+            <%-include('../Common/each')%>
+            <%-include('../Common/footer')%>
+        </div>
+    </body>
+
+    <!--Scripts include!-->
+    <%-include('../Common/scripts')%>
+    <script src="<%=domain%>/g.assets/js/tabulizer.js"></script>
+    <script src="<%=domain%>/u.assets/js/My/user.js"></script>
+
+</html>

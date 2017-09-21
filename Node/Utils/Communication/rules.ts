@@ -1,12 +1,15 @@
 import { BuildResponse, RuleController } from "./response"
 
 
-export function isAuth(req, res): RuleController {
+export function isAuth(req, res, render = false): RuleController {
     return new RuleController((resolve) => {
         if (req.isAuthenticated() && req.user.isVerified()) {
             return resolve(req.user);
         } else {
-            return res.send(BuildResponse(10, "You are not authenticated to call this api"));
+            if(render)
+                return res.redirect('/');
+            else    
+                return res.send(BuildResponse(10, "You are not authenticated to call this api"));
         }
     });
 }
@@ -24,3 +27,4 @@ export function isSeller(req,res) {
 export function isAdmin() {
 
 }
+

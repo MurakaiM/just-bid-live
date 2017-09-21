@@ -6,7 +6,7 @@ export const REDIS_URL = process.env.REDIS_URL ||  'redis://h:p4dd2c2e81c10aeebe
 
 export const GOOGLE_APP = process.env.GOOGLE_APP || 'mythical-bazaar-175300'
 
-export const DOMAIN = process.env.DOMAIN || 'http://www.justbidlive.com'
+export const DOMAIN = process.env.DOMAIN || 'http://localhost:8080'
 
 export const STORAGE_CREDITNAILS = require('../Keys/storage.json')
 

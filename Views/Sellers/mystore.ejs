@@ -4,13 +4,13 @@
     <head>
         <!--Head include!-->
         <%-include('../Common/head', { pageName : pageName })%>
-        <link rel="stylesheet" type="text/css" href="../AdminAssets/editor/css/simditor.css" />
+        <link rel="stylesheet" type="text/css" href="<%=domain%>/a.assets/editor/css/simditor.css" />
 
-        <link rel="stylesheet" type="text/css" href="../UserAssets/css/user.css" />
-        <link rel="stylesheet" type="text/css" href="../GeneralAssets/css/orders.css" />
-        <link rel="stylesheet" type="text/css" href="../AdminAssets/css/table.css" />
+        <link rel="stylesheet" type="text/css" href="<%=domain%>/u.assets/css/user.css" />
+        <link rel="stylesheet" type="text/css" href="<%=domain%>/g.assets/css/orders.css" />
+        <link rel="stylesheet" type="text/css" href="<%=domain%>/a.assets/css/table.css" />
 
-        <link rel="stylesheet" type="text/css" href="../GeneralAssets/css/responsive.css">
+        <link rel="stylesheet" type="text/css" href="<%=domain%>/g.assets/css/responsive.css">
     </head>
     <body>
         <div class="content">
@@ -36,7 +36,7 @@
                         <div class="ui grid nomargin">
                             <div class="row margin auto">
                                 <div class="four wide column"> 
-                                    <img class="ui small image margin auto" src="../GeneralAssets/img/usericons/image.png"> 
+                                    <img class="ui small image margin auto" src="<%=domain%>/g.assets/img/usericons/image.png"> 
                                 </div>
                                 <div class="twelve wide column flex center"> 
                                     <div>
@@ -103,7 +103,7 @@
                             <thead>
                                <tr>
                                  <th data-field="prTitle"> Title</th>                                 
-                                 <th>In stock</th>
+                                 <th data-field="prStock">In stock</th>
                                  <th data-field="prCost">Price</th>
                                  <th data-field="prRating">Rating</th>
                                  <th data-field="prViews">Views </th>
@@ -306,13 +306,13 @@
     <!--Head include!-->
     <%-include('../Common/scripts')%>   
 
-    <script type="text/javascript" src="../AdminAssets/editor/js/module.min.js"></script>
-    <script type="text/javascript" src="../AdminAssets/editor/js/hotkeys.min.js"></script>
-    <script type="text/javascript" src="../AdminAssets/editor/js/uploader.min.js"></script>
-    <script type="text/javascript" src="../AdminAssets/editor/js/simditor.min.js"></script>
+    <script type="text/javascript" src="<%=domain%>/a.assets/editor/js/module.min.js"></script>
+    <script type="text/javascript" src="<%=domain%>/a.assets/editor/js/hotkeys.min.js"></script>
+    <script type="text/javascript" src="<%=domain%>/a.assets/editor/js/uploader.min.js"></script>
+    <script type="text/javascript" src="<%=domain%>/a.assets/editor/js/simditor.min.js"></script>
 
-    <script src="../GeneralAssets/js/tabulizer.js"></script>
-    <script src="../AdminAssets/js/table.js"></script>
-    <script src="../AdminAssets/js/store.js"></script>
+    <script src="<%=domain%>/g.assets/js/tabulizer.js"></script>
+    <script src="<%=domain%>/a.assets/js/table.js"></script>
+    <script src="<%=domain%>/a.assets/js/store.js"></script>
 
 </html>

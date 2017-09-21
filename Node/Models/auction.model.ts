@@ -11,7 +11,7 @@ import { AuctionSchema, ProductSchema } from '../Database/database.controller'
 import { AuctionStreamData } from '../Interfaces/auction.interfaces'
 
 import User from './user.model'
-
+import Winning from './winning.model'
 
 export default class AuctionItem{
     private dbAution : any; //Database model representation
@@ -39,10 +39,12 @@ export default class AuctionItem{
 
     public async finish() : Promise<any>{  
         await this.dbAution.reload();
-
+        await this.registerWinning();
+        
         this.dbAution.inStock = this.dbAution.inStock - 1;
         this.dbAution.currentUser = null;
         this.name = "";
+
 
         if(this.dbAution.inStock == 0){
            this.dbAution.isCompleted = true;
@@ -53,6 +55,7 @@ export default class AuctionItem{
            await this.dbAution.save();
         }else{          
            this.dbAution.currentBid = Fees[this.dbAution.uidFee].begin;
+           this.number = AuctionItem.startTimer;
            await this.dbAution.save();
 
            this.ForceStart().then( saved => RealtimeController.Instance.emitStock(this.getPublic) );
@@ -104,6 +107,7 @@ export default class AuctionItem{
     public get StreamData() : AuctionStreamData {
         return {
             uid : this.dbAution.uidRecord,
+            user : this.dbAution.currentUser,
             name : this.name,
             currentBid : this.dbAution.currentBid,
             ending : this.dbAution.auctionEnds           
@@ -114,6 +118,54 @@ export default class AuctionItem{
         clearTimeout(this.timeout);
         this.timeout = setTimeout( () => this.finish(), time);
     }
+
+    private registerWinning() : Promise<any>{
+        return Winning.GenerateWinning({
+            auctionId : this.dbAution.uidRecord,
+            lastBid : this.dbAution.currentBid,
+            producId : this.dbAution.uidProduct,
+            seller : this.dbAution.uidSeller,
+            winner : this.dbAution.currentUser
+        });
+    }
+
+    public static async ForceCreate( user : User ,data : any ) : Promise<any>{         
+        delete data.currentUser;
+
+        data.onAuction = false;
+        data.uidSeller = user.PublicData.uid;
+        data.uidRecord = uuid();
+        data.isCompleted = false;
+        data.uidFee = data.type;
+        data.auctionStart = new Date();
+        data.auctionEnds = new Date(data.auctionStart.getTime() + AuctionItem.startTimer + AuctionItem.goingTimer );
+
+        var product = await ProductSchema.findOne({ where : { prUid : data.uidProduct } });
+        var newItem;
+
+        return new Promise((resolve, reject) => {
+
+            if(product){
+              const firstColor = Object.keys(product.prTypes.colors)[0];  
+
+              data.currentBid = AuctionItem.getFees(data.type).begin;             
+              data.offCost = AuctionItem.getOff(data.currentBid, product.prCost);
+              data.offShipment = product.prShipment;
+              data.mainImage = product.prTypes.colors[firstColor].image;
+              data.inStock = data.stock;
+     
+              newItem = AuctionSchema.build(data);             
+              newItem.save()
+                .then( result => resolve("Successfuly saved"))
+                .catch( error =>  reject(error));
+                
+            }else{ 
+              return reject("There is no product with such id"); 
+            }    
+
+        });
+    }
+
 
     public static LoadState(number : number) : Promise<any>{
         return new Promise((resolve, reject) => {         
@@ -168,44 +220,6 @@ export default class AuctionItem{
         });
     }
 
-    public static async ForceCreate( user : User ,data : any ) : Promise<any>{         
-        delete data.currentUser;
-
-        data.onAuction = false;
-        data.uidSeller = user.PublicData.uid;
-        data.uidRecord = uuid();
-        data.isCompleted = false;
-        data.uidFee = data.type;
-        data.auctionStart = new Date();
-        data.auctionEnds = new Date(data.auctionStart.getTime() + AuctionItem.startTimer + AuctionItem.goingTimer );
-
-        var product = await ProductSchema.findOne({ where : { prUid : data.uidProduct } });
-        var newItem;
-
-        return new Promise((resolve, reject) => {
-
-            if(product){
-              const firstColor = Object.keys(product.prTypes)[0];  
-
-              data.currentBid = AuctionItem.getFees(data.type).begin;             
-              data.offCost = AuctionItem.getOff(data.currentBid, product.prCost);
-              data.offShipment = product.prShipment;
-              data.mainImage = product.prTypes[firstColor].image;
-              data.inStock = data.stock;
-              
-            
-              newItem = AuctionSchema.build(data);             
-              newItem.save()
-                .then( result => resolve("Successfuly saved"))
-                .catch( error =>  reject(error));
-                
-            }else reject("There is no product with such id"); 
-
-
-        });
-    }
-
-
     public static ForceStock( user : User, data : any ){
         return AuctionSchema.update(
             {
@@ -228,10 +242,13 @@ export default class AuctionItem{
         )
     }
 
-    private static getOff( part : number, original : number) : number{
-        part*=100;
-        let chunk : number =  100 - ( (part*100) / original );
-        console.log(chunk);
+
+    
+
+    private static getOff( part : number, original : number) : number{    
+        original*=100;
+
+        let chunk : number =  100 - ( (part*100) / original );      
         return parseInt(chunk.toFixed(2));
     }
 
@@ -243,6 +260,7 @@ export default class AuctionItem{
         return parseFloat(value.toFixed(0));
     }
 
-    private static startTimer : number = 25000; //Default start timer value in ms
+
+    private static startTimer : number = 22000; //Default start timer value in ms
     private static goingTimer : number = 20000; //Default end timer value in ms
 }

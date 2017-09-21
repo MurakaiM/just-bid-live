@@ -1,7 +1,13 @@
 import * as uuid from 'uuid/v4'
 
 import ProductInterface from '../Interfaces/product.interfaces'
-import { ProductSchema, OrderSchema, AuctionSchema } from '../Database/database.controller'
+import { 
+    Database,
+    ProductSchema, 
+    OrderSchema,
+    AuctionSchema,
+    TypesSchema 
+} from '../Database/database.controller'
 
 import User from '../Models/user.model'
 
@@ -67,7 +73,6 @@ export default class Product {
     public DecreaseStock(){
         return this.dbProduct.increment('prStock');
     }
-
 
 
     get Data() { 
@@ -146,6 +151,24 @@ export default class Product {
         });
     }
 
+    public static ForceForSeller( user : User, uuid : string) : Promise<any>{
+        let attributes: Array < any > = ['prUid', 'prTitle', 'prRating', 'prCost', 'prSold', 'prViews', 'prWishes', 'prTypes', 'createdAt', 'updatedAt'];
+        attributes.push([
+            Database.Instance.Sequelize.literal(`(select sum("types"."inStock") from "types" where "types"."productId"="product"."prUid")`), 'prStock'
+        ]);
+
+        return ProductSchema.findOne({
+            where: {
+                prSeller: user.Data.uid,
+                prUid: uuid
+            },
+            include: [{
+                model: TypesSchema,
+                as: "Type"
+            }],
+            attributes
+        })
+    }
 
     public static ForceFind(uuid : string ) : Promise<any>{
         return ProductSchema.findOne({ where : { prUid : uuid} });
@@ -155,35 +178,30 @@ export default class Product {
         return ProductSchema.findOne({ where : { prUid : uuid }, attributes : ["prTypes"] });
     }
 
-    public static ChangeStock( user : User , uuid : string, type: string , stock : number) : Promise<any> {
-        return new Promise((resolve, reject) => {
-           
-            ProductSchema.findOne({
+    public static async ChangeStock( user : User , uuid : string, type: string , stock : number) : Promise<any> {
+        try{
+            await TypesSchema.update({
+                inStock : stock
+            },{ 
                 where : {
-                    prUid : uuid,
-                    prSeller : user.Data.uid
+                    productId : uuid,
+                    sellerId : user.PublicData.uid,
+                    typeId : type
                 }
-            }).then( product => {
-                if(!product){
-                    return reject("No such product");
-                }
+            })
 
-                if(!product.prTypes[type]){
-                    return reject("Wrong type name provided");
-                }
-
-                let JSONData = product.prTypes;
-                JSONData[type].stock = stock;
-                product.prTypes = JSONData;
-                
-                return product.save();
-            }).then( product => resolve(product))
-            .catch( err => reject(err));            
-
-        });
+            let product = await  Product.ForceForSeller(user, uuid);
+            return {
+                success : true,
+                product
+            }
+        }catch(error){
+            return { success : false, error}
+        }
+        
     }
 
-    public static ChangeTypeAvailability( user : User, uuid : string, available : boolean, data : any) : Promise<any>{
+    public static ChangeTypeAvailability( user : User, uuid : string, available : boolean, data : any, group : string) : Promise<any>{
         return new Promise((resolve, reject) => {           
             ProductSchema.findOne({
                 where : {
@@ -195,12 +213,17 @@ export default class Product {
                     reject("No such product");
                 }
 
-                if(!product.prTypes[data]){
+        
+                if(!product.prTypes[group]){
+                   return reject("Wrong group name provided");
+                }
+
+                if(!product.prTypes[group][data]){
                    return reject("Wrong type name provided");
                 }
 
                 let JSONData =  product.prTypes;
-                JSONData[data].disable = available;
+                JSONData[group][data].disable = available;
 
                 product.prTypes = JSONData;              
                 return product.save();

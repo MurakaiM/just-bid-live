@@ -4,11 +4,16 @@ import TimeModule from '../Utils/Others/time'
 
 import {
     ProductSchema,
-    OrderSchema
+    OrderSchema,
+    TypesSchema,
+    Database
 } from '../Database/database.controller'
 import {
     IncomingOrder
 } from '../Interfaces/order.interfaces'
+import {
+    AwaitResult
+} from '../Utils/Communication/async'
 
 import User from './user.model'
 
@@ -29,156 +34,176 @@ export default class Order {
         return this;
     }
 
-    public static Create(user: User, data: IncomingOrder): Promise <any> {
-        return new Promise((resolve, reject) => {
-            ProductSchema.findOne({
-                    where: {
-                        prUid: data.product
-                    }
-                }).then(product => {
-                    if(product.inStock < 0)
-                        return reject("Empty stock for product")
+    public static Create(user: User, data: IncomingOrder): Promise < any > {
+        return new Promise(async(resolve, reject) => {
+            let TR = await Database.Instance.Sequelize.transaction({ autocommit: false });
 
-                    if(!this.checkType(product.prTypes, data.type))
-                        return reject("Invalid types of incoming order");
+            try {
+                let product = await ProductSchema.findOne({ where: { prUid: data.product }});
 
-                    product.inStock = product.inStock -1;                
-                    return product.save()
-                })
-                .then( product => {
-                    let order = OrderSchema.build({
-                        orderId: uuid(),
-                        customerId: user.Data.uuid,
-                        productId: product.prUid,
-                        sellerId: product.prSeller,
-                        productQuantity: data.product,
-                        productType: data.type,
-                        productTrack: "No track available for now",
-                        status: "Waiting for review",
-                        customerAddress: data.address
-                    });
-                    return order.save()
-                })
-                .then(order => resolve( new Order().ForceLoad(order) ))
-                .catch(error => reject(error));
+                if (!product)
+                    return reject(`No product with id (${data.product})`);
+                    
+
+                let type = await TypesSchema.findOne({ where: { productId: product.prUid, typeId: data.type }});
+
+                if (!type || type.inStock == 0)
+                    return reject(`No type/out of stock id provided`);
+                    
+
+                let orderId = uuid();
+
+                await OrderSchema.create({
+                    orderId: orderId,
+                    customerId: user.PublicData.uid,
+                    productId: product.prUid,
+                    sellerId: product.prSeller,
+                    productType: data.type,
+                    productQuantity: data.quantity,
+                    customerAddress: data.address
+                }, { transaction: TR });
+
+                await type.decrement('inStock', { by: 1, transaction: TR });
+
+                TR.commit();
+                return resolve(orderId)
+            } catch (error) {
+                TR.rollback();
+                return reject(error)
+            }
         });
     }
 
 
     public static UpdateStatus(user: User, orderId: string, status: string): Promise < any > {
         return new Promise((resolve, reject) => {
-            
+
             OrderSchema.findOne({
-                where: {
-                    sellerId: user.Data.uid,
-                    orderId : orderId
-                }
-            })
-            .then( order => {
-                if(!order){
-                    return reject("No such order");
-                }
-                order.status = status;
-                return order.save();
-            })
-            .then( order => resolve("Successfully updated"))
-            .catch( error => reject(error));
+                    where: {
+                        sellerId: user.Data.uid,
+                        orderId: orderId
+                    }
+                })
+                .then(order => {
+                    if (!order) {
+                        return reject("No such order");
+                    }
+                    order.status = status;
+                    return order.save();
+                })
+                .then(order => resolve("Successfully updated"))
+                .catch(error => reject(error));
 
         });
     }
 
-    public static UpdateTrack( user : User, orderId : string, track : string) : Promise<any>{
+    public static UpdateTrack(user: User, orderId: string, track: string): Promise < any > {
         return new Promise((resolve, reject) => {
-            
+
             OrderSchema.findOne({
-                where: {
-                    sellerId: user.Data.uid,
-                    orderId : orderId
-                }
-            })
-            .then( order => {
-                if(!order){
-                    return reject("No such order");
-                }
-                order.productTrack = track;
-                return order.save();
-            })
-            .then( order => resolve("Successfully updated"))
-            .catch( error => reject(error));
+                    where: {
+                        sellerId: user.Data.uid,
+                        orderId: orderId
+                    }
+                })
+                .then(order => {
+                    if (!order) {
+                        return reject("No such order");
+                    }
+                    order.productTrack = track;
+                    return order.save();
+                })
+                .then(order => resolve("Successfully updated"))
+                .catch(error => reject(error));
 
         });
     }
 
-    public static FinishOrder( user : User, orderId : string) : Promise<any>{
+    public static FinishOrder(user: User, orderId: string): Promise < any > {
         return new Promise((resolve, reject) => {
-            
+
             OrderSchema.findOne({
-                where: {
-                    customerId: user.Data.uid,
-                    orderId : orderId
-                }
-            })
-            .then( order => {
-                if(!order){
-                    return reject("No such order");
-                }
-                order.isFinished = true;
-                return order.save();
-            })
-            .then( order => resolve("Successfully updated"))
-            .catch( error => reject(error));
+                    where: {
+                        customerId: user.Data.uid,
+                        orderId: orderId
+                    }
+                })
+                .then(order => {
+                    if (!order) {
+                        return reject("No such order");
+                    }
+                    order.isFinished = true;
+                    return order.save();
+                })
+                .then(order => resolve("Successfully updated"))
+                .catch(error => reject(error));
 
         });
     }
 
 
-    public static CurrentCustomers( user : User) : Promise<any>{
+    public static CurrentCustomers(user: User): Promise < any > {
         return user.Data.getOrders({
-            order : [ ['createdAt'] ],
-            where : { isFinished : false },
-            include: [ ProductSchema ]
+            order: [
+                ['createdAt']
+            ],
+            where: {
+                isFinished: false
+            },
+            include: [ProductSchema]
         });
     }
 
-    public static CurrentSeller( user : User) : Promise<any>{
+    public static CurrentSeller(user: User): Promise < any > {
         return user.Data.getSellings({
-            order : [ ['createdAt'] ],
-            where : { isFinished : false },
-            include: [ ProductSchema ]
+            order: [
+                ['createdAt']
+            ],
+            where: {
+                isFinished: false
+            },
+            include: [ProductSchema]
         });
     }
 
-    public static HistoryCustomers( user : User ) : Promise<any>{
+    public static HistoryCustomers(user: User): Promise < any > {
         return user.Data.getOrders({
-            order : [ ['createdAt'] ],
-            where : { isFinished : false },
-            include: [ ProductSchema ]
+            order: [
+                ['createdAt']
+            ],
+            where: {
+                isFinished: false
+            },
+            include: [ProductSchema]
         });
-    } 
+    }
 
-    public static HistorySeller( user : User) : Promise<any>{
+    public static HistorySeller(user: User): Promise < any > {
         return user.Data.getSellings({
-            order : [ ['createdAt'] ],
-            where : { isFinished : false },
-            include: [ ProductSchema ]
+            order: [
+                ['createdAt']
+            ],
+            where: {
+                isFinished: false
+            },
+            include: [ProductSchema]
         });
     }
 
 
-    private static checkType( types : any , incoming : any ){
+    private static checkType(types: any, incoming: any) {
         let checked = true;
 
-        Object.keys(incoming).forEach( key => {
-            if( !types[key][incoming[key]] ) 
-                checked =  false
+        Object.keys(incoming).forEach(key => {
+            if (!types[key][incoming[key]])
+                checked = false
 
-            if( types[key][incoming[key]].disabled)
+            if (types[key][incoming[key]].disabled)
                 checked = false;
 
         });
-        
+
         return checked;
     }
 
 }
-

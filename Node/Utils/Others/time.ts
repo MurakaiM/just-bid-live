@@ -16,4 +16,13 @@ export default class TimeModule{
         return TimeModule.getHours(hours) + TimeModule.getMinutes(minutes) + TimeModule.getSeconds(seconds);
     }
 
+    public static convertTime( date : any){
+        const dt = new Date(date);
+        const data = {
+            day : dt.getDate() < 10 ? 0+""+dt.getDate() : dt.getDate(),
+            month : (dt.getMonth() + 1) < 10 ? 0+""+(dt.getMonth()+1) : dt.getMonth()
+        };
+
+        return `${data.day}.${data.month}.${dt.getFullYear()}`
+    }
 }

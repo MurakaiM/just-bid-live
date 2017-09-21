@@ -32,6 +32,7 @@ export default class SellerApi extends BasicController{
         this.Post('/seller/signup', this.signUp);
 
         this.Post('/seller/product/types', this.getType);
+        this.Post('/seller/product/stocks', this.getStock)
         this.Post('/seller/product/typesout', this.disableType);
         this.Post('/seller/product/create', this.createProduct);
         this.Post('/seller/product/stock', this.updateStock);        
@@ -50,6 +51,13 @@ export default class SellerApi extends BasicController{
         isSeller(req,res).allowed( user => res.send(Fees));
     }
 
+    protected getStock(req,res) : void{        
+        isSeller(req,res).allowed( user => 
+            ProductController.GetStock(user,req.body)
+                .then( result => { console.log(result); res.send( BuildResponse(0,"Product stocks were successfully fetched",result)) })
+                .catch( error => res.send( BuildResponse(10,error)))
+        );
+    }
 
     protected stockAuction(req,res) : void {
         isSeller(req,res).allowed( user => {     
@@ -84,7 +92,7 @@ export default class SellerApi extends BasicController{
         });
     }
 
-    protected createProduct(req,res) : void{       
+    protected createProduct(req,res) : void{         
         isSeller(req,res).allowed( user => {  
             ProductController.CreateProduct(user, req.body,req.files)
                 .then( result =>{
@@ -130,7 +138,7 @@ export default class SellerApi extends BasicController{
         isSeller(req,res).allowed( user => {
             ProductController.DisableType(user, req.body)
                 .then( result => res.send( BuildResponse(0,"Successfully updated")) )
-                .catch( error => res.send( BuildResponse(10,"Error occurred")))
+                .catch( error => res.send( BuildResponse(10,error)))
         });      
     }
 

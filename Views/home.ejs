@@ -4,16 +4,17 @@
   <!--Head include!-->
   <head>  
     <link href="https://fonts.googleapis.com/css?family=Mukta:400,500,600,700,800&amp;subset=latin-ext" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Gloria+Hallelujah" rel="stylesheet">
     <%-include('./Common/mobile')%>
     <%-include('./Common/head')%>
-    <link rel="stylesheet" href="../GeneralAssets/css/responsive.css">
+    <link rel="stylesheet" href="<%=domain%>/g.assets/css/responsive.css">
   </head>
 
   <body>
 
     <div class="content">
       <!--Menu include!-->
-     <%-include('./Common/menu', { page : pageName , user : currentUser })%>
+      <%-include('./Common/menu', { page : pageName , user : currentUser })%>
       <div class="row products">
           <div class="col-md-4 col-lg-3">
             <div class="stock header">
@@ -22,23 +23,23 @@
             <div class="ui segment categories stock">
               <div class="list stock_list">
                 <div class="list_item top_level" data-popup="women_clothing">
-                  <span class="icon"><img src="../UserAssets/img/LinearIcons/dress.png" alt=""></span>
+                  <span class="icon"><img src="<%=domain%>/u.assets/img/LinearIcons/dress.png" alt=""></span>
                   <span class="text">Women's Clothing</span>
                 </div>
                 <div class="list_item top_level" data-popup="men_clothing">
-                  <span class="icon"><img src="../UserAssets/img/LinearIcons/polo.png" alt=""></span>
+                  <span class="icon"><img src="<%=domain%>/u.assets/img/LinearIcons/polo.png" alt=""></span>
                   <span class="text">Men's Clothing</span>
                 </div>
                 <div class="list_item top_level" data-popup="watches">
-                  <span class="icon"><img src="../UserAssets/img/LinearIcons/watch.png" alt=""></span>
+                  <span class="icon"><img src="<%=domain%>/u.assets/img/LinearIcons/watch.png" alt=""></span>
                   <span class="text">Jewelry & Watches</span>
                 </div>
                 <div class="list_item top_level" data-popup="bags">
-                  <span class="icon"><img src="../UserAssets/img/LinearIcons/hand-bag.png" alt=""></span>
+                  <span class="icon"><img src="<%=domain%>/u.assets/img/LinearIcons/hand-bag.png" alt=""></span>
                   <span class="text">Bags & Shoes</span>
                 </div>
                 <div class="list_item top_level" data-popup="health">
-                  <span class="icon"><img src="../UserAssets/img/LinearIcons/purse.png" alt=""></span>
+                  <span class="icon"><img src="<%=domain%>/u.assets/img/LinearIcons/purse.png" alt=""></span>
                   <span class="text">Health & Beauty, Hair</span>
                 </div>
               </div>
@@ -63,7 +64,7 @@
             </h2>
             <h4 class="ui header main wrap"></h4>          
             <div>
-                <img class="" src="../GeneralAssets/img/icon/hourglass.png" alt="" />
+                <img class="" src="<%=domain%>/g.assets/img/icon/hourglass.png" alt="" />
             </div>
             <div class="holder">       
                 <button class="ui submit button"> Yes </button>     
@@ -80,8 +81,8 @@
 
   <!--Head include!-->
   <%-include('./Common/scripts')%>
-    <script src="../UserAssets/js/Auction/activity.js"></script>
-    <script src="../UserAssets/js/Auction/auction.js"></script>
+  <script src="<%=domain%>/u.assets/js/Auction/activity.js"></script>
+  <script src="<%=domain%>/u.assets/js/Auction/auction.js"></script>
 
 
 </html>

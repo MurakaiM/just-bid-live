@@ -3,10 +3,10 @@
 <html>
 
   <head>
-    <!--Head include!-->  
+    <!--Head include!--> 
     <%-include('./Common/mobile')%>
     <%-include('./Common/head')%>
-    <link rel="stylesheet" href="../GeneralAssets/css/responsive.css">
+    <link rel="stylesheet" href="<%=domain%>/g.assets/css/responsive.css">
   </head>
 
 
@@ -69,7 +69,9 @@
                       <a class="hoverable_title" href="<%=cat.url%>"><%=cat.name%></a>
                       <div class="hoverable_sublist">
                         <%cat.subnames.forEach( (subcat,i) => {%>
-                            <a class="hoverable_item" href="<%=subcat.url%>"><%=subcat.name%></a>
+                            <div>
+                              <a class="hoverable_item" href="<%=subcat.url%>"><%=subcat.name%></a>
+                            </div>
                         <%})%>
                       </div>
                     </div>
@@ -163,7 +165,7 @@
 
                 </div>
               </div>
-            </div>
+      </div>
       <div class="row products">
               <div class="col-12 prerow">
                  Popular products
@@ -246,9 +248,8 @@
 
                 </div>
               </div>
-            </div>
-
-
+      </div>
+  
       <%-include('./Common/each')%>
       <%-include('./Common/footer')%>
     </div>
@@ -314,7 +315,7 @@
     <!--Scripts include!-->
     <%-include('./Common/scripts')%>
     <script src="https://unpkg.com/tilt.js@1.1.21/dest/tilt.jquery.min.js"></script>
-    <script src="../UserAssets/js/stock.js" charset="utf-8"></script>
+    <script src="<%=domain%>/u.assets/js/stock.js" charset="utf-8"></script>
 
   </body>
 

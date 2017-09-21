@@ -251,8 +251,12 @@ export function validProduct ( incoming : any) : UserError{
         return buildError(true, "Wrong category provided")
     }
 
-    if(!validateType(incoming.types)){
+    if(!validateType(incoming.colors, incoming.sizes)){
         return buildError(true, "Wrong types was passed")
+    }
+
+    if(!validateStock(incoming,incoming.colors, incoming.sizes)){
+        return buildError(true, "Wrong stock values provided")
     }
 
     return buildError(false, "Everything is okay")
@@ -299,12 +303,43 @@ export function validDisable( incoming : any) : UserError{
     return buildError(false, "Everything is valid")
 }
 
+export function validDisableType( incoming : any) : UserError{
+    if(!incoming.uid){
+        return buildError(true, "No product id provided")
+    }
+    if(incoming.uid.length == 0){
+        return buildError(true, "Product id is wrong")
+    }
+
+    if(!incoming.group){
+        return buildError(true, "No group id provided")
+    }
+
+    if(!incoming.name){
+        return buildError(true, "No name id provided")
+    }
+
+    return buildError(false, "Everything is valid")
+}
+
 export function validDelete (incoming : any ) : UserError{
     if(!incoming.uid){
         return buildError(true, "No product id provided")
     }
 
     if(incoming.uid.length != 36){
+        return buildError(true, "Product id is not valid")
+    }
+
+    return buildError(false, "Everything is valid")
+}
+
+export function validId(incoming : any) : UserError{
+    if(!incoming.id){
+        return buildError(true, "No product id provided")
+    }
+
+    if(incoming.id.length != 36){
         return buildError(true, "Product id is not valid")
     }
 
@@ -347,23 +382,77 @@ export function validAuctionPause( incoming : any) : UserError{
     return buildError(false, "Everything is valid")
 }
 
-function validateType(type : any) : boolean{
+export function validAuctionPay(incoming : any) : UserError{
+    if(!incoming.auctionId) return buildError(true, "No auction id provided")
+
+    if(incoming.auctionId.length !== 36) return buildError(true, "Wrong auction id format was provided")
+
+
+    if(!incoming.winningId) return buildError(true, "No winning id provided")
+            
+    if(incoming.winningId.length !== 36) return buildError(true, "Wrong winning id format was provided")
+
+
+    if(!incoming.nonce) return buildError(true, "No payment nonce is provided")    
+        
+
+    return buildError(false, "Everything is valid")
+}
+
+
+function validateType(colors : any, sizes : any) : boolean{
     let verified : boolean = true;
     let name : string = "";
 
-    if(type){
-        Object.keys(type).forEach( e => {
-            if(type[e].value === undefined ||               
-               type[e].title === undefined ||
-               type[e].path === undefined ||
-               type[e].stock === undefined ||
-               type[e].color === undefined)    
+    if(!colors){
+        return false;
+    }
+
+    if(Object.keys(colors).length == 0){
+        return false;
+    }
+
+  
+    Object.keys(colors).forEach( e => {
+        if(colors[e].value === undefined ||               
+           colors[e].title === undefined ||
+           colors[e].path === undefined ||      
+           colors[e].color === undefined)    
+             verified = false;
+    });
+    
+    if(sizes){
+        Object.keys(sizes).forEach( e => {
+            if(sizes[e].value === undefined ||               
+               sizes[e].title === undefined)              
                  verified = false;
         });
-    }else{
-        verified = false;
     }
    
+    return verified;
+}
+
+function validateStock(params : any, colors : any , sizes : any) : boolean{
+    let verified : boolean = true;
+
+    if(sizes.length == 0){
+        Object.keys(colors).forEach(e => {
+            console.log(params[e])
+            if(!params[e] || params[e] == 0 || params[e] < 0){
+                verified = false;
+            }
+        })
+    }else{
+        for( var f of Object.keys(colors) ){
+            for( var s of Object.keys(sizes) ){            
+                if(!params[f+s] || params[f+s] == 0 || params[f+s] < 0){
+                    verified = false;
+                    return false;
+                }
+            }
+        }
+    }
+
     return verified;
 }
 

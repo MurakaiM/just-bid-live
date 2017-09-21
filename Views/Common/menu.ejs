@@ -2,24 +2,68 @@
 <div class="above_menu row">
   <div class="col-md-6 left">
     <a href="/">
-      <img class="logo" src='../GeneralAssets/img/tinylogo.png' />
+      <img class="logo" src='<%=domain%>/g.assets/img/tinylogo.png' />
     </a>
   </div>
   <div class="col-md-6 right links">
 
     <a id="account" style="<%if(user){%> display:none; <%}%>">My Account</a>
     <a id="user" href="/my" style="<%if(!user){%> display:none; <%}%>"> Hello, <%if(user){%> <%=user.PublicData.firstName%> <%}%> </a>
-       
-       
-    <a href="#" class="ui large">
+              
+    <button id="btn_notification" class="ui large">
         <i class="alarm icon"></i>
-        <span></span>
-    </a>
+        <span id="count_notificator"></span>
+
+        <div class="custom dropdown">     
+          <div class="wrapper"> 
+            <div class="ui segment none content"> 
+                <a class="notification">
+                    <div class="image">
+                      <img src="<%=domain%>/g.assets/img/commericalicons/atm-1.png" alt="">
+                    </div>
+                    <div class="data">
+                        <div class="titles">
+                          <span class="title">Auction winning !</span>
+                          <span class="date">03.05.2016</span>
+                        </div>
+                        <div class="message"> You won "iPhone" on auction ! Click to continue.</div>
+                    </div>
+                </a>
+                <a class="notification">
+                    <div class="image">
+                      <img src="<%=domain%>/g.assets/img/commericalicons/atm-1.png" alt="">
+                    </div>
+                    <div class="data">
+                        <div class="titles">
+                          <span class="title">Auction winning !</span>
+                          <span class="date">03.05.2016</span>
+                        </div>
+                        <div class="message"> You won "iPhone" on auction ! Click to continue.</div>
+                    </div>
+                </a>
+                <a class="notification">
+                    <div class="image">
+                      <img src="<%=domain%>/g.assets/img/commericalicons/atm-1.png" alt="">
+                    </div>
+                    <div class="data">
+                        <div class="titles">
+                          <span class="title">Auction winning !</span>
+                          <span class="date">03.05.2016</span>
+                        </div>
+                        <div class="message"> You won "iPhone" on auction ! Click to continue.</div>
+                    </div>
+                </a>
+            </div>      
+            <div class="footer"> 
+               <a href="/my/notifications" class="notification_link">Last notifications</a>
+            </div> 
+          </div>     
+        </div>
+    </button>
     <a href="#" class="ui large">
         <i class="mail icon"></i>        
     </a>
     
-
 
     <%if(user){
        if(!user.isSeller()){

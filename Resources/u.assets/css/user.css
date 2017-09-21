@@ -1,0 +1,278 @@
+.tabs.body h3 {
+    padding-left: 20px;
+    color: #07406f;
+}
+
+.tabs.body h3 i {
+    position: relative;
+    top: -2px;
+    padding-right: 25px;
+}
+
+.product .information {
+    padding: 20px;
+}
+
+.product .information .title {
+    font-size: 18px;
+    color: #0d5699;
+    font-weight: 500;
+}
+
+.product .information .types {
+    margin-top: 1px;
+    color: #b3b3b3;
+    text-transform: uppercase;
+    font-size: 13px;
+    margin-right: 5px;
+    line-height: 20px;
+}
+
+.product .information .prefix {
+    margin-top: 1px;
+    color: #07406f;
+    font-style: italic;
+    margin-right: 5px;
+}
+
+.product .information .cost {
+    margin-top: 35px;
+}
+
+
+.product.auction .ui.button{
+    opacity: .9;
+    border-radius: 0;
+    border-radius: 0 0 25px 25px;
+    position: relative;
+    top: 1px;
+    width:100%;
+}
+
+.product.product.auction .information .cost {
+    margin-top: 25px;
+}
+
+.product .information .cost .option .labeler,
+.product .information .cost .option .info {
+    display: inline-block;
+    line-height: 20px;
+    font-size: 14px;
+    opacity: 0.8;
+    margin: 2px auto;
+}
+
+.product .information .cost .option .labeler {
+    color: #0d5699;
+}
+
+.product .information .cost .option .info {
+    color: #d12998;
+}
+
+.product .information .seller {
+    margin-top: 30px;
+}
+
+.product .information .seller a {
+    text-decoration: underline!important;
+    color: #808080!important;
+    left: 5px;
+    position: relative;
+}
+
+.product .current {
+    padding: 20px;
+    vertical-align: middle;
+}
+
+.product .current .title {
+    font-size: 18px;
+    color: #0d5699;
+    font-weight: 500;
+    opacity: .5;
+}
+
+.product .current .option {
+    margin: 20px auto;
+}
+
+.product .current .option.first {
+    margin-top: 20px;
+}
+
+.product .current .option .labeler {
+    position: relative;
+    color: #b3b3b3;
+    font-size: 14px;
+    margin-right: 5px;
+    line-height: 20px;
+}
+
+.product .current .option .info {
+    color: #0d5699;
+    font-weight: 500;
+    opacity: .85;
+    display: block;
+}
+
+.product .current .types {
+    margin-top: 1px;
+    color: #b3b3b3;
+    text-transform: uppercase;
+    font-size: 13px;
+    margin-right: 5px;
+    line-height: 20px;
+}
+
+tbody tr:last-child {
+    border: none!important;
+}
+
+.product .collapsing.image {
+    margin: auto;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    background: #f9f9f9;
+    border-radius: 25px 25px 0 0;
+}
+
+.product .collapsing.image:before{
+    content: "";
+    padding-top: 100%;
+}
+
+.collapsing.image img {
+    width: 100%;
+    border-radius: 5px;
+    box-shadow: 0 0 15px 0px rgba(21, 21, 21, 0.2);
+}
+
+.product.auction{
+    overflow: visible;
+}
+
+.product.auction .collapsing.image img {
+    border-radius: 25px 25px 0 0;
+}
+
+.product.auction .ui.label.won{
+    background: #AD1457!important;
+    border-color: #880E4F!important;
+}
+
+
+.user_menu {
+    width: calc(100% + 30px);
+    position: relative;
+    left: -15px;
+}
+
+.user_menu a {
+    display: block;
+    height: 35px;
+    margin: auto;
+    margin-bottom: 25px;
+    line-height: 35px;
+    font-weight: 500;
+    font-size: 14px;
+    position: relative;
+    color: #b3b3b3;
+    padding-left: 45px;
+    border-left: 2px solid transparent;
+    transition: .4s ease all;
+}
+
+.user_menu a:hover {
+    color: #0d5699;
+}
+
+.user_menu a.active {
+    color: #07406f;
+    border-left: 2px solid #07406f;
+}
+
+.user_menu a i {
+    font-size: 20px;
+    left: 10px;
+    position: absolute;
+    image-rendering: -webkit-optimize-contrast;
+}
+
+
+.item.auction .image{
+    width: 250px!important;
+    height: 250px!important;
+    border-radius: 5px;
+}
+
+.item.auction .flexwrap{
+    display: flex;
+    align-items: center;
+}
+
+.item.auction .flexwrap .content{
+    padding-left: 30px;
+}
+
+.item.auction .flexwrap .content a{
+    font-size: 25px;
+    color: #0d5699!important;
+    text-decoration: none!important;
+}
+
+.item.auction .flexwrap .content .meta{
+    color: #b3b3b3;
+}
+
+.item.auction .flexwrap .content .description{
+    padding: 15px 0px;
+    color: #595959;
+    font-size: 13px;
+}
+
+.winning.divider{
+    margin-top: 55px;
+    color : #b3b3b3;
+}
+
+.ui.form.none{
+    padding : 10px 50px 50px 50px;
+}
+
+@media (max-width:768px) {
+    .user_menu {
+        width: 100%;
+        left: 0;
+    }
+    .user_menu a {
+        display: inline-block;
+        width: 33%;
+        float: left;
+        box-sizing: border-box;
+    }
+
+    .item.auction image{
+        width: 250px;
+        height: 250px;
+        border-radius: 5px;
+    }
+
+    .item.auction .flexwrap .content{
+        padding-top: 50px;
+    }
+}
+
+@media (max-width:625px) {
+    .user_menu {
+        width: 100%;
+        left: 0;
+    }
+    .user_menu a {
+        display: inline-block;
+        width: 50%;
+        float: left;
+        box-sizing: border-box;
+    }
+}

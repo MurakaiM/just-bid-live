@@ -1,12 +1,10 @@
+import * as uuid from 'uuid/v4'
+
 import User from '../Models/user.model'
 import { OrderSchema, BillingSchema } from '../Database/database.controller'
 
 
 export default class Billing{
-
-    constructor(){
-
-    }
 
     public static ForceLoad(uuid : string) : Promise<any>{
         return BillingSchema.findOne({ where : { billingId : uuid} });
@@ -35,5 +33,19 @@ export default class Billing{
             
         });
     }
+
+    public static CreateAuctionBilling(item : string, seller : string, user : string,  transation : any ) : Promise<any>{
+        return BillingSchema.create({
+            billingId : uuid(),
+            itemId : item,
+            sellerId : seller,
+            customerId : user,
+            paymentId : transation.id,
+            paymentStatus : transation.status,
+            amount : parseFloat( parseFloat(transation.amount).toFixed(2) ), 
+            status : 'created',
+            type : 'auction winning'
+        });
+    } 
 
 }

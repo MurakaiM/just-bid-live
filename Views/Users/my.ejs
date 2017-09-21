@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <!--Head include!-->
+        <%-include('../Common/mobile')%>
+        <%-include('../Common/head')%>
+        <link rel="stylesheet" href="<%=domain%>/u.assets/css/user.css" />
+        <link rel="stylesheet" href="<%=domain%>/g.assets/css/orders.css" />
+        <link rel="stylesheet" href="<%=domain%>/g.assets/css/responsive.css">
+    </head>
+    <body>
+        <div class="content">
+            <!--Menu include!-->
+            <%-include('../Common/menu', { page : pageName , user : currentUser })%>
+            <div class="row products">
+              <div class="col-md-2">
+                <%-include('./my_menu', { active : 2 })%>
+              </div>
+              <div class="col-md-10">                     
+                    <div class="ui segment none">           
+                        <div class="row">                           
+                            <div class="col-sm-6 col-md-6 col-lg-4">
+                                 <div class="product ui flex orders order">
+                                    <div class="first">
+                                        <div class="collapsing image">
+                                            <img src="https://s-media-cache-ak0.pinimg.com/736x/fb/60/90/fb6090f6808037dd4aedb50f0cfbc7d8.jpg" alt="" />
+                                        </div>
+                                    </div>
+                                    <div class="second">
+                                        <div class="information">
+                                            <div class="title">Dress</div>
+                                            <div class="types">
+                                                Small, XS
+                                            </div>
+                                            <div class="cost">
+                                                <div class="option">                                          
+                                                    <span class="labeler">  <i class="shopping basket icon"></i> Price : </span>
+                                                    <span class="info">   <i class="fa fa-usd" aria-hidden="true"></i> 25</span>
+                                                </div>                                            
+                                                <div class="option">                                          
+                                                    <span class="labeler">  <i class="shipping icon"></i> Shipping : </span>
+                                                    <span class="info">   <i class="fa fa-usd" aria-hidden="true"></i> 25</span>
+                                                </div>
+                                                <div class="option">                                          
+                                                    <span class="labeler">  <i class="hashtag icon"></i> Qunatity : </span>
+                                                    <span class="info"> 1</span>
+                                                </div>
+                                            </div>                                       
+                                        </div> 
+                                    </div>
+                                    <div class="third">
+                                        <div class="current">
+                                            <div class="title">Information :</div>                                        
+                                            <div class="option first">                                          
+                                                <span class="labeler"><i class="help icon"></i> Status </span>
+                                                <span class="info">Waiting for review</span>
+                                            </div>
+                                            <div class="option">                                          
+                                                <span class="labeler"><i class="time icon"></i> Created </span>
+                                                <span class="info">10.08.2017</span>
+                                            </div>
+                                            <div class="option">                                          
+                                                <span class="labeler"><i class="barcode icon"></i> Track </span>
+                                                <span class="info"> 79493028565287</span>
+                                            </div> 
+                                        </div> 
+                                    </div>
+                                </div>  
+                            </div>
+                        </div>                                        
+                    </div>               
+              </div>
+            </div>
+
+            <%-include('../Common/each')%>
+            <%-include('../Common/footer')%>
+        </div>
+    </body>
+
+    <!--Head include!-->
+    <%-include('../Common/scripts')%>
+    <script src="<%=domain%>/g.assets/js/tabulizer.js"></script>
+    <script src="<%=domain%>/u.assets/js/My/user.js"></script>
+
+</html>

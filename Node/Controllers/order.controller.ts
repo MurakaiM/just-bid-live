@@ -1,31 +1,33 @@
 import {validOrder, validOrderUpdate} from '../Utils/Others/validator'
+import { AwaitResult } from '../Utils/Communication/async'
 
 import Order from '../Models/order.model'
 import User from '../Models/user.model'
 
 export default class OrderController {
 
-    public static CreateOrder(user: User, params: any) {
-        let errors = [];
+    public static async CreateOrder(user: User, params: any): Promise<any> {        
+        let valid = validOrder(params);
+        if (valid.invalid) {
+            return 
+        }
+        
+        const onSuccess = [];
+        const onErrors = [];
 
-        return new Promise((resolve, reject) => {
-            let valid = validOrder(params);
-            if (valid.invalid) {
-                return reject(valid.reason);
+        for( let key of Object.keys(params.order )){
+            try{
+               let result = await Order.Create(user, params.order[key])
+               onSuccess.push(result)
+            }catch(error){
+               onErrors.push(key) 
             }
-            
-            params.orders.forEach( async elem => {
-                try{
-                    await Order.Create(user, elem)
-                }catch( error ){
-                    errors.push({
-                        uid : elem.uid
-                    });
-                }                
-            });
+        }
 
-            resolve( errors );
-        });
+        return {
+            successOrders : onSuccess,
+            failureOrders : onErrors
+        }       
     }
 
     public static UpdateStatus(user : User, params : any){
@@ -64,6 +66,6 @@ export default class OrderController {
     public static CustomerHistory( user : User ) : Promise<any>{
         return Order.HistoryCustomers(user);
     }
-
+    
 
 }

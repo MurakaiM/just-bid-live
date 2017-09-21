@@ -3,7 +3,11 @@ import * as io_passport from 'passport.socketio'
 import * as cookieParser from 'cookie-parser'
 
 import { AuctionStreamData } from '../Interfaces/auction.interfaces'
+
+import NotificationController from '../Controllers/notification.controller'
+
 import Redis from '../Database/database.redis'
+import User from '../Models/user.model'
 
 export default class RealtimeSocket{
     public static Instance : RealtimeSocket;
@@ -47,13 +51,17 @@ export default class RealtimeSocket{
 
     private configureAuth(){
         this.authNms.on('connection', socket => {
-            var user = this.socketUser(socket);
-            if(user.logged_in == false){
-                return socket.disconnect(true);
+            let user = this.socketUser(socket);
+            
+            if(user.logged_in == false){                
+                return socket.disconnect();
             }
 
             socket.join(user.PublicData.uid);
-            socket.on('status',() => this.authNms.to(user.PublicData.uid).emit('status', buildResponse(socket)));
+
+            socket.on('status', e => this.authNms.to(user.PublicData.uid).emit('status', buildResponse(socket)));
+
+            socket.on('count', e => this.NotificationCount(user))
         });
 
         function buildResponse(socket){
@@ -112,10 +120,18 @@ export default class RealtimeSocket{
     }
 
     
+    private NotificationCount(user : User){
+        NotificationController.CountNotifications(user)
+            .then( 
+                count => this.authNms.to(user.PublicData.uid).emit('count',count),
+                error => this.authNms.to(user.PublicData.uid).emit('count',0)
+            )
+    }
+
+
     private socketUser(socket : any) { return socket.request.user; }
 
     get Io() {
         return this.io;
     }
-
 }

@@ -76,16 +76,21 @@ export class Server {
 
     private setEndpoints() : void{
         /* User's endpoints */
-
         this.app.get('/', Renderer.live);
         this.app.get('/signin', Renderer.signin);
+        this.app.get('/signup', Renderer.signup);
+
         this.app.get('/contact', Renderer.contact);
         this.app.get('/stock', Renderer.stock);
-        this.app.get('/signup', Renderer.signup);
+        this.app.get('/help/category', Renderer.helpCategory);      
+
         this.app.get('/forgot', Renderer.forgot);
         this.app.get('/reset/:link', Renderer.restore);
         this.app.get('/product/id?:product', Renderer.product);
+
         this.app.get('/my', Renderer.profile)
+        this.app.get('/my/auction', Renderer.profileAuction)
+        this.app.get('/my/winning/:id', Renderer.winningCheckout)
 
         /* Seller's endpoints */ 
         this.app.get('/seller/signin', Renderer.sellerSignin);

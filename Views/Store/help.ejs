@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+
+  <!--Head include!-->
+  <head>  
+    <link href="https://fonts.googleapis.com/css?family=Mukta:400,500,600,700,800&amp;subset=latin-ext" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Gloria+Hallelujah" rel="stylesheet">
+    <%-include('../Common/mobile')%>
+    <%-include('../Common/head')%>
+    <link rel="stylesheet" href="<%=domain%>/g.assets/css/responsive.css">
+
+    <style>
+        .helplist{
+            display : flex;
+            align-items : center;
+            margin-top: 25px;
+            margin-bottom : 10px;
+        }
+
+        .helplist .text{
+            color : #0d5699;
+            font-weight : 600; 
+            font-size : 18px;
+            padding-left : 15px;
+        }
+
+        .helplist .icon{
+            width : 50px;
+        }
+
+        .helplist .icon img{
+            width : 100%;
+        }
+
+    </style>
+
+  </head>
+
+  <body>
+
+    <div class="content">
+      <!--Menu include!-->
+      <%-include('../Common/menu', { page : pageName , user : currentUser })%>    
+      <div class="row products">
+         
+            <%popups.forEach((item,i) => {%>
+            <div class="<%if(item.subcategories.length > 0){%> col-md-12 <%}else{%> col-md-6 <%}%>">
+                <div class="helplist">
+                    <span class="icon"><img src="<%=item.image%>" alt=""></span>
+                    <a class="text"><%=item.name%></a>
+                </div>
+                
+                <%if(item.subcategories.length > 0){%>
+                    <div class="ui fitted divider"></div>
+                <%}%>
+            </div>          
+
+            <%if(item.subcategories.length > 0){%>  
+                <div id="<%=item.id%>" class="col-md-12">
+                    <div class="row">
+                    <%item.subcategories.forEach((cat,i)=>{%>
+                        <div class="col-lg-4 hoverable_list">
+                        <a class="hoverable_title" href="<%=cat.url%>"><%=cat.name%></a>
+                        <div class="hoverable_sublist">
+                            <%cat.subnames.forEach( (subcat,i) => {%>
+                                <div>
+                                    <a class="hoverable_item" href="<%=subcat.url%>"><%=subcat.name%></a>
+                                </div>                            
+                            <%})%>
+                        </div>
+                        </div>
+                    <%})%>
+                    </div>
+                </div>
+            <%}%>
+
+          <%})%>
+                
+      </div>    
+
+
+      <%-include('../Common/each', { login :  login ? true : false })%>
+      <%-include('../Common/footer')%>
+    </div>
+
+
+  </body>
+
+  <!--Head include!-->
+  <%-include('../Common/scripts')%>
+  <script src="<%=domain%>/u.assets/js/Auction/activity.js"></script>
+  <script src="<%=domain%>/u.assets/js/Auction/auction.js"></script>
+
+
+</html>

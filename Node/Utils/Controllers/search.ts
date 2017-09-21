@@ -1,4 +1,6 @@
 import * as Sequelize from 'sequelize'
+import { AwaitResult } from '../Communication/async'
+import { compiled } from '../../Database/database.categories'
 
 interface SearchOptions{
     sequelize : any,
@@ -37,8 +39,10 @@ export default class Search{
         return SQLStatment;
     }
     
-    public search(attributes : [string], text : string) : Promise<any>{
-        let tsvectorSQL : string = text.match(/\b(\w+)\b/g).join('|');       
+    public async search(attributes : [string], text : string) : Promise<AwaitResult>{
+        let words : Array<string> = text.match(/\b(\w+)\b/g);
+
+        let tsvectorSQL : string = words.length == 1 ? words[0]+":*" : words.join(':*|') 
         let attributesSQL : string = '';
         
         attributes.forEach( (attr,i) => {
@@ -50,16 +54,27 @@ export default class Search{
             attributesSQL+= this.tableName+`."${attr}", `
         });
 
-        console.log(tsvectorSQL);
+        try{
+ 
+            let result = await this.sequelize.query(`
+                SELECT ${attributesSQL}, ts_rank_cd(tsv, to_tsquery(:query)) AS rank
+                FROM ${this.tableName}
+                WHERE tsv @@ to_tsquery(:query)
+                ORDER BY rank DESC
+                LIMIT 15;
+            `,{ replacements: { query: tsvectorSQL },
+                type: this.sequelize.QueryTypes.SELECT 
+            })   
 
-        return this.sequelize.query(`
-            SELECT ${attributesSQL}, ts_rank_cd(tsv, to_tsquery(:query)) AS rank
-            FROM ${this.tableName}
-            WHERE tsv @@ to_tsquery(:query)
-            ORDER BY rank DESC;
-        `,{ replacements: { query: tsvectorSQL },
-            type: this.sequelize.QueryTypes.SELECT 
-        })        
+            let category =  result.map( element => {
+                element.prCategory = compiled[element.prCategory]
+                return element;
+            })
+
+            return { success : true, result : category }
+        }catch(error){
+            return { success : false, error : "Database error occurred" }
+        }     
     }
 
     public setUp(){ 

@@ -3,9 +3,9 @@
 <html>
 
   <!--Head include!-->
-  <%-include('../Common/head')%>
-  <link rel="stylesheet" href="../UserAssets/css/product.css">
-  <link rel="stylesheet" href="../GeneralAssets/css/responsive.css">
+ <%-include('../Common/head')%>
+  <link rel="stylesheet" href="<%=domain%>/u.assets/css/product.css">
+  <link rel="stylesheet" href="<%=domain%>/g.assets/css/responsive.css">
 
   <body>
 
@@ -33,9 +33,9 @@
                   <div class="ui text shape">
                     <div class="sides">
                       <%if(product.prTypes){%>                       
-                        <% Object.keys(product.prTypes).forEach( (e,i) => { %>
-                            <div id="<%=product.prTypes[e].value%>" class="ui header side <%if(i == 0){%>active<%}%>">
-                              <img src="<%=product.prTypes[e].image%>" alt="">
+                        <% Object.keys(product.prTypes.colors).forEach( (e,i) => { %>
+                            <div id="<%=product.prTypes.colors[e].value%>" class="ui header side <%if(i == 0){%>active<%}%>">
+                              <img src="<%=product.prTypes.colors[e].image%>" alt="">
                             </div>                            
                         <%})%>                                       
                       <%}%>
@@ -73,18 +73,19 @@
 
             <h4 class="ui fitted divider widther "></h4>       
             <div class="exactly options">
+            
               <div class="types">                            
-                <%if(product.prTypes){%>
+                <%if(product.prTypes.colors){%>
                   <div class="option">
-                    <span class="labeler">  <i class="paint brush icon"></i> Type :</span>
+                    <span class="labeler">  <i class="paint brush icon"></i> Color :</span>
                     <div id="color" class="ui fluid selection dropdown ">
                     <span class="default text">Select color</span>
                     <div class="menu">
                       <div class="scrolling menu">
-                        <% Object.keys(product.prTypes).forEach( e => { %>
-                            <div class="item <%if(product.prTypes[e].disable){%> disabled <%}%>"  data-value="<%=product.prTypes[e].value%>">                          
-                                  <div class="ui empty circular label" style="background : <%=product.prTypes[e].color%>;!imporant"></div>
-                                  <%=product.prTypes[e].title%>
+                        <% Object.keys(product.prTypes.colors).forEach( e => { %>
+                            <div class="item <%if(product.prTypes.colors[e].disable){%> disabled  <%}%>"  data-value="<%=product.prTypes.colors[e].value%>">
+                                  <div class="ui empty circular label" style="background : <%=product.prTypes.colors[e].color%>;!imporant"></div>
+                                  <%=product.prTypes.colors[e].title%>
                             </div>
                         <%})%> 
                       </div>
@@ -93,8 +94,25 @@
                   </div>             
                 <%}%>
               
-                           
+                <%if(product.prTypes.sizes){%>
+                  <div class="option">
+                    <span class="labeler">  <i class="compress icon"></i> Size :</span>
+                    <div id="size" class="ui fluid selection dropdown">
+                      <div class="default text">Select size</div>
+                      <div class="menu">
+                        <div class="scrolling menu">
+                          <% Object.keys(product.prTypes.sizes).forEach( e => { %>
+                              <div class="item <%if(product.prTypes.sizes[e].disable){%> disabled  <%}%>"  data-value="<%=product.prTypes.sizes[e].value%>">                                 
+                                    <%=product.prTypes.sizes[e].title%>
+                              </div>
+                          <%})%> 
+                        </div>                      
+                      </div>
+                    </div>
+                  </div>             
+                <%}%>               
               </div>
+
               <div class="option">
                   <span class="labeler">  <i class="hashtag icon"></i> Quantity :</span>
                   <div class="ui input">
@@ -233,8 +251,8 @@
 
     <!--Scripts include!-->
     <%-include('../Common/scripts')%>
-    <script src="../UserAssets/js/search.js" charset="utf-8"></script>
-    <script src="../UserAssets/js/exact.js" charset="utf-8"></script>
+    <script src="<%=domain%>/u.assets/js/search.js" charset="utf-8"></script>
+    <script src="<%=domain%>/u.assets/js/exact.js" charset="utf-8"></script>
 
   </body>
 

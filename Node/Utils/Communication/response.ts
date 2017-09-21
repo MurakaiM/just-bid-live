@@ -15,37 +15,35 @@ export function BuildResponse(code,message,...args) : Response{
     };
 }
 
-
-
 enum RCState{ 
     Pedning,
     Resolved,
-    Rejected,
     Finished
 }
 
 export class RuleController {    
-    private currentState;
-    private resolveCallback;
-    private answerableParams;
+    private currentState : RCState;
+    private resolveCallback : Function;
+    private answerableParams : any;
 
-    constructor(fn) {
+    constructor(fn : Function) {
+        this.currentState = RCState.Pedning;
         fn(this.resolve);  
     }
 
-    public allowed(fn) {          
+    public allowed = (fn : Function) => {         
         
         if (this.currentState == RCState.Resolved) {          
             fn(this.answerableParams[0])
+            this.setProp(RCState.Finished)
         } else { 
             this.resolveCallback = fn;
         }
 
     }
 
-    public setProp (prop){
-        this.currentState = prop;
-    }
+    public setProp = prop => this.currentState = prop;
+    
 
     public resolve = (...args) => {
 
@@ -54,6 +52,7 @@ export class RuleController {
         }
         else { 
             this.resolveCallback(args);
+            this.setProp(RCState.Finished)
         }
 
         this.setProp(RCState.Resolved);

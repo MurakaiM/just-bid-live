@@ -1,0 +1,3 @@
+$( e => {
+    $('.ui.dropdown').dropdown();
+})

@@ -10,6 +10,7 @@ import {
 } from '../Database/database.categories'
 
 import {
+    validId,
     validStore,
     validSignUp,
     validDelete,
@@ -59,7 +60,7 @@ export default class SellerController {
                 .then(products => {
                     resolve(products)
                 })
-                .catch(error => {
+                .catch(error => {                    
                     resolve([])
                 });
         });

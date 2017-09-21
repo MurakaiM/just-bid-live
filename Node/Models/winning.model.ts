@@ -2,7 +2,7 @@ import  * as uuid from 'uuid/v4'
 
 import User from './user.model'
 
-import { WinningSchema,ProductSchema } from '../Database/database.controller' 
+import { WinningSchema, ProductSchema, TypesSchema } from '../Database/database.controller' 
 
 interface NewWinning{
     winner : string,
@@ -26,16 +26,42 @@ export default class Winning{
 
     get Data(){ return this.dbWinning; }
 
-    public static GenerateWinning(data : NewWinning) : Promise<any>{
-        let winning = WinningSchema.build({
+    public static GenerateWinning(data : NewWinning) : Promise<any>{    
+        return WinningSchema.create({
             winningId : uuid(),
             winnerId : data.winner,
             sellerId : data.seller,
             auctionId : data.auctionId,
-            producId : data.producId,
+            productId : data.producId,
             lastBid : data.lastBid
-        });       
-        return winning.save() 
+        });
+    }
+
+    public static FindWinning( id : string ) : Promise<any> {
+        return WinningSchema.findOne({ where : { winningId : id }});
+    }
+
+    public static FindWinnings( user : User ) : Promise<any> {
+        return WinningSchema.findAll({ 
+            where : { 
+                winnerId : user.PublicData.uid,
+                status : 'new' 
+            },
+            order : [['createdAt','DESC']]
+        });
+    }
+
+
+    public static FindRender(id : string) : Promise<any>{
+        return WinningSchema.findOne({
+            attributes : ['lastBid','winnerId','createdAt'],
+            where : { winningId : id },
+            include: [{
+                attributes : ['prUid','prTitle', 'prDescription', 'prTypes', 'prShipment', 'prRating'],
+                model: ProductSchema, 
+                as : 'product',    
+            }]
+        });
     }
 
     public static UpdateTrack( seller : User, track : string): Promise<any>{

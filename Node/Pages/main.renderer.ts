@@ -1,14 +1,25 @@
+import TimeModule from '../Utils/Others/time'
+
 import categoriesPopups from '../Database/database.categories'
 
 import UserController from '../Controllers/user.controller'
 import ProductController from '../Controllers/product.controller'
+import WinningController from '../Controllers/winning.controller'
+
 import { isAuth } from '../Utils/Communication/rules'
+import { DOMAIN } from '../keys'
+
+interface Redirector{   
+    render : string,
+    info : any
+}
 
 export default class Renderer {    
    
     public static live(req,res){        
         var pageInfo = {
             pageName : "Live",
+            domain : DOMAIN,
             currentUser : req.user,
             login : false        
         };
@@ -18,7 +29,8 @@ export default class Renderer {
 
     public static signin(req,res){
         var pageInfo = {
-            pageName : "Live",
+            pageName : "Sign In",
+            domain : DOMAIN,
             currentUser : req.user,
             login : true 
         };
@@ -29,6 +41,7 @@ export default class Renderer {
     public static contact(req,res){
         var pageInfo = {
             pageName : "Contact",
+            domain : DOMAIN,
             currentUser : req.user,
             login : false
         };
@@ -39,6 +52,7 @@ export default class Renderer {
     public static stock(req,res){
         var pageInfo = {
             pageName : "Stock",
+            domain : DOMAIN,
             currentUser : req.user,
             login : false,
             popups : categoriesPopups.popups
@@ -48,52 +62,83 @@ export default class Renderer {
     }
 
     public static product(req,res){
+        let pageInfo = {
+            pageName : "Product",
+            currentUser : req.user,
+            domain : DOMAIN,           
+            login : false
+        };
+
         ProductController.GetProduct(req.params.product)
             .then( product => {
-                if(!product){
-                    return res.redirect('/');
-                }
-
+                if(!product) return res.redirect('/');
+                
                 product.increment('prViews');
-                var pageInfo = {
-                    pageName : "Product",
-                    currentUser : req.user,
-                    product : product,
-                    login : false
-                };
+                pageInfo['product'] = product;
                        
-               return res.render('Products/product', pageInfo);
+                return res.render('Products/product', pageInfo);
             })
             .catch( error => res.redirect('/'));
     }
 
     public static signup(req,res){
         var pageInfo = {
-          pageName : "Sign up",       
+          domain : DOMAIN,   
+          pageName : "Sign Up",       
           currentUser : req.user
         };
 
         res.render('signup', pageInfo);
     }
 
+
+    public static helpCategory(req,res){
+        var pageInfo = {
+            pageName : "Categories list",
+            domain : DOMAIN,
+            currentUser : req.user,
+            login : false,
+            popups : categoriesPopups.popups
+        };
+
+        return res.render('Store/help', pageInfo);
+    }
+
+
     public static profile(req,res){
         var pageInfo = {
-            pageName : "Sign up",
+            pageName : "My orders & winnings",
             currentUser : req.user,
+            domain : DOMAIN,   
             login : false        
         };
 
-        if(req.isAuthenticated() && req.user.isSeller())
-            return res.redirect('/seller/mystore');           
-        else if(req.isAuthenticated())
-            return res.render('my', pageInfo);
-        else            
-            return res.redirect('/');
+        Renderer.AccountRedirect(req, res, {          
+            render : "Users/my",
+            info : pageInfo
+        });   
     }
+
+    public static profileAuction(req,res){
+        var pageInfo = {
+            pageName : "My auction",
+            currentUser : req.user,
+            domain : DOMAIN,   
+            login : false        
+        };
+
+        Renderer.AccountRedirect(req, res, {          
+            render : "Users/my_auction",
+            info : pageInfo
+        }); 
+    }
+
+
 
     public static forgot(req,res){
         var pageInfo = {
-            pageName : "Forgot",                
+            pageName : "Forgot", 
+            domain : DOMAIN               
         };
 
         return res.render('Users/forgot', pageInfo);
@@ -101,14 +146,17 @@ export default class Renderer {
     
     public static restore(req,res){    
         UserController.ResetVlidate(req.params.link)
-            .then( result => res.render('Users/reset',{ pageName : "Reset password", link : req.params.link }))
+            .then( result => res.render('Users/reset',{ pageName : "Reset password", link : req.params.link, domain : DOMAIN }))
             .catch( error => res.redirect('/'))
     }
+
+
 
     public static sellerSignup(req,res){
         var pageInfo = {
             pageName : "Sign up",
-            currentUser : req.user            
+            currentUser : req.user,
+            domain : DOMAIN            
         };
             
         return res.render('Sellers/signup', pageInfo);
@@ -117,7 +165,8 @@ export default class Renderer {
     public static sellerSignin(req,res){
         var pageInfo = {
             pageName : "Sign in",
-            currentUser : req.user            
+            currentUser : req.user,
+            domain : DOMAIN            
         };
 
         if(req.isAuthenticated()){
@@ -131,14 +180,56 @@ export default class Renderer {
         var pageInfo = {
             pageName : "My store",
             currentUser : req.user,
+            domain : DOMAIN, 
             login : false         
         };        
 
+        Renderer.SellerRedirect(req,res, {
+            render : 'Sellers/mystore',
+            info : pageInfo
+        });
+    }
+
+
+    public static winningCheckout(req,res){
+        let wngId = req.params.id;
+        let pageInfo = {
+            pageName : "Winning checkout",
+            currentUser : req.user,
+            domain : DOMAIN,   
+            login : false,
+            winning : null
+        };         
+  
+        isAuth(req,res,true).allowed( user => 
+            WinningController.WinningRender(user, wngId).then( answer => {   
+                if(!answer.success) return res.redirect('/');
+                                                           
+                pageInfo.winning = answer.result;
+                pageInfo.winning.dataValues.createdAt = TimeModule.convertTime(answer.result.createdAt);       
+                pageInfo.winning.image = answer.result.product.prTypes.colors[Object.keys(answer.result.product.prTypes.colors)[0]].image;
+                            
+                return res.render('Users/my_checkout', pageInfo)
+            })
+        );        
+    }
+    
+
+    private static AccountRedirect(req,res, data : Redirector ){
         if(req.isAuthenticated() && req.user.isSeller())
-           return res.render('Sellers/mystore',pageInfo);            
+            return res.redirect('/seller/mystore');           
         else if(req.isAuthenticated())
-            return res.redirect('/my');
-        else
-           return res.redirect('/seller/signin');
+            return res.render(data.render, data.info);
+        else            
+            return res.redirect('/');
+    }
+
+    private static SellerRedirect(req,res, data : Redirector){
+        if(req.isAuthenticated() && req.user.isSeller())
+            return res.render(data.render, data.info);            
+         else if(req.isAuthenticated())
+             return res.redirect('/my');
+         else
+            return res.redirect('/seller/signin');
     }
 }

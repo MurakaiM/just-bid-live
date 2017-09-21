@@ -114,6 +114,20 @@ export default class User {
         });        
     } 
 
+    public setMerchant(id : string, masterId : string, status : string, masterStatus : string): Promise<any>{
+        return SellerSchema.update(
+            {
+                merchantId : id,
+                merchantStatus : status,
+                masterMerchantId : masterId,
+                masterMerchantStatus : masterStatus
+            },
+            {
+               where : { userId : this.PublicData.uid }
+            }
+        );
+    }
+
     public Verify() : Promise<User>{
         return new Promise((resolve, reject) => {
             if(this.dbUser.veryfied){
@@ -304,6 +318,36 @@ export default class User {
     }
 
 
+    public static SetMerchantApproved(id : string, masterId : string, status : string, masterStatus : string): Promise<any>{
+        return SellerSchema.update(
+            {               
+                merchantStatus : status,              
+                masterMerchantStatus : masterStatus
+            },
+            {
+               where : {                    
+                   merchantId : id,
+                   masterMerchantId : masterId                
+               }
+            }
+        );  
+    }
+
+    public static SetMerchantDeclined(id : string, masterId : string, status : string, masterStatus : string, message : string): Promise<any>{
+        return SellerSchema.update(
+            {               
+                merchantStatus : status,              
+                masterMerchantStatus : masterStatus,
+                merchantMessage : message
+            },
+            {
+               where : {                    
+                   merchantId : id,
+                   masterMerchantId : masterId                
+               }
+            }
+        ); 
+    }
 
 
     private static getRandomString(length : number) : string{

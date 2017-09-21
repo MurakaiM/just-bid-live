@@ -60,10 +60,11 @@
                                 <input type="text" name="title" placeholder="Title">
                             </div>
                             <div class="eight wide field">
-                                <div class="ui category search cat">
-                                    <div class="ui icon input">
+                                <div class="ui category  search cat">
+                                    <div class="ui left icon action input">
                                         <input class="prompt" name="category" type="text" placeholder="Search categories...">
                                         <i class="search icon"></i>
+                                        <a class="ui button" href="/help/category" target="blank">Help</a>
                                     </div>
                                     <div class="results"></div>
                                 </div>
@@ -101,18 +102,15 @@
                     </div>
 
                     <div class="field fileds-margin" id="typesColorist">
-                        <label>Types</label>
+                        <label>Colors</label>
                         <div class="ui grid nested"></div>
                         <div class="fields">
                             <div class="five wide field">
                                 <input type="text" name="titleVR" placeholder="Title">
                             </div>
-                            <div class="two wide field">
+                            <div class="four wide field">
                                 <input type="text" name="valueVR" placeholder="Id">
-                            </div>
-                            <div class="two wide field">
-                                <input type="text" name="stockVR" placeholder="In Stock">
-                            </div>
+                            </div>                          
                             <div class="one wide field">
                                 <input type="color" name="color" placeholder="HEX Preview">
                             </div>
@@ -128,6 +126,31 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="field fileds-margin" id="typesSize">
+                        <label>Size</label>
+                        <div class="ui grid nested"></div>
+                        <div class="fields">
+                            <div class="five wide field">
+                                <input type="text" name="titleVR" placeholder="Title">
+                            </div>
+                            <div class="four wide field">
+                                <input type="text" name="valueVR" placeholder="Id">
+                            </div>
+                            <div class="two wide field flexer">
+                                <button type="button" class="ui teal tiny button"> Add </button>
+                            </div>
+                            <div class="six wide field"></div>
+                        </div>
+                    </div>
+
+                    <div class="field fileds-margin" id="typesStock">
+                         <label>Stock</label>
+                         <div class="ui grid">
+                         
+                         </div>                       
+                    </div>
+
 
                     <div class="field fileds-margin">
                         <label>Full description</label>
@@ -145,8 +168,8 @@
 
                 <div class="buttons container">
                     <button type="submit" class="ui green button">                            
-                                    Create
-                                </button>
+                      Create
+                    </button>
                 </div>
             </form>
         </div>

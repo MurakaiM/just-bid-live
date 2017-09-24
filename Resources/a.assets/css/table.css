@@ -69,6 +69,7 @@ tr.selected {
     cursor: pointer;
     position: relative;
     user-select: none;
+    border: none;
 }
 
 .ui.table thead th .arrows {

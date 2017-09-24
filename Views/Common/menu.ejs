@@ -7,52 +7,26 @@
   </div>
   <div class="col-md-6 right links">
 
-    <a id="account" style="<%if(user){%> display:none; <%}%>">My Account</a>
+    <a id="account" style="<%if(user){%> display:none; <%}%>">Sign in</a>
     <a id="user" href="/my" style="<%if(!user){%> display:none; <%}%>"> Hello, <%if(user){%> <%=user.PublicData.firstName%> <%}%> </a>
-              
+
+
     <button id="btn_notification" class="ui large">
         <i class="alarm icon"></i>
         <span id="count_notificator"></span>
 
         <div class="custom dropdown">     
           <div class="wrapper"> 
-            <div class="ui segment none content"> 
-                <a class="notification">
-                    <div class="image">
-                      <img src="<%=domain%>/g.assets/img/commericalicons/atm-1.png" alt="">
-                    </div>
-                    <div class="data">
-                        <div class="titles">
-                          <span class="title">Auction winning !</span>
-                          <span class="date">03.05.2016</span>
-                        </div>
-                        <div class="message"> You won "iPhone" on auction ! Click to continue.</div>
-                    </div>
-                </a>
-                <a class="notification">
-                    <div class="image">
-                      <img src="<%=domain%>/g.assets/img/commericalicons/atm-1.png" alt="">
-                    </div>
-                    <div class="data">
-                        <div class="titles">
-                          <span class="title">Auction winning !</span>
-                          <span class="date">03.05.2016</span>
-                        </div>
-                        <div class="message"> You won "iPhone" on auction ! Click to continue.</div>
-                    </div>
-                </a>
-                <a class="notification">
-                    <div class="image">
-                      <img src="<%=domain%>/g.assets/img/commericalicons/atm-1.png" alt="">
-                    </div>
-                    <div class="data">
-                        <div class="titles">
-                          <span class="title">Auction winning !</span>
-                          <span class="date">03.05.2016</span>
-                        </div>
-                        <div class="message"> You won "iPhone" on auction ! Click to continue.</div>
-                    </div>
-                </a>
+            <div id="cnt_notification" class="ui segment none content"> 
+                  <div class="no_notification">
+                      <i class="alarm mute icon"></i>
+                      <span>There are no new notifications.</span>
+                  </div>
+
+                  <div class="no_login" style="display:none;">
+                      <i class="user icon"></i>
+                      <span>You are not signed in.</span>
+                  </div>
             </div>      
             <div class="footer"> 
                <a href="/my/notifications" class="notification_link">Last notifications</a>
@@ -60,10 +34,13 @@
           </div>     
         </div>
     </button>
-    <a href="#" class="ui large">
+    <a class="ui large">
         <i class="mail icon"></i>        
     </a>
     
+    <button id="btn_signout" class="ui large" data-content="Sign out">
+      <i class="fa fa-power-off" aria-hidden="true"></i>
+    </button>
 
     <%if(user){
        if(!user.isSeller()){
@@ -87,7 +64,7 @@
   <div class="row">
     <div class="col-sm-0 col-md-6 col-lg-6 left">
       <a class="first <%if(page=="Live"){%>selected<%}%>" href="/">Live</a>
-      <a class="<%if(page=="Stock"){%>selected<%}%>" href="/stock">Stock</a>
+      <a class="<%if(page=="Stock"){%>selected<%}%>" href="/stock">Store</a>
       <a class="<%if(page=="Contact"){%>selected<%}%>" href="/contact">Contact Us</a>
     </div>
     <div class="col-9 col-sm-6 col-md-6 col-lg-6 right small_lefted">

@@ -19,6 +19,10 @@ function validateEmail(email) {
     return reg.test(email);
 }
 
+
+
+
+
 export function validSingIn(incoming : any) : UserError{
     if(incoming.email == undefined || incoming.password == undefined)
             return buildError(true, "Inputs fields are wrong");
@@ -398,6 +402,36 @@ export function validAuctionPay(incoming : any) : UserError{
 
     return buildError(false, "Everything is valid")
 }
+
+
+export function validateWinningStatus(incoming : any) : UserError{
+    if(!incoming.uid) return buildError(true, "No winning id was represented")
+
+    if(incoming.uid.length !== 36) return buildError(true, "Winning id format is wrong")
+
+    if(!incoming.status) return buildError(true, "No status was provided")
+
+    return buildError(false, "Everything is valid")
+}
+
+export function validateWinningTrack(incoming : any) : UserError{
+    if(!incoming.record) return buildError(true, "No winning id was represented")
+    
+    if(incoming.record.length !== 36) return buildError(true, "Winning id format is wrong")
+    
+    if(!incoming.track) return buildError(true, "No track was provided")
+    
+    return buildError(false, "Everything is valid")    
+}
+
+export function validateWinningFind(incoming : any) : UserError{
+    if(!incoming.winningId) return buildError(true, "No winning id was provided")
+
+    if(incoming.winningId.length !== 36) return buildError(true, "Wrong format for winning id")
+
+    return buildError(false, "Everything is valid")
+}
+
 
 
 function validateType(colors : any, sizes : any) : boolean{

@@ -23,6 +23,7 @@
                     <a class="item" data-tab="products">Products</a>
                     <a class="item" data-tab="auctions">Auctions</a>
                     <a class="item disabled" data-tab="orders">Orders</a>
+                    <a class="item" data-tab="winnings">Winnings</a>
                     <a class="item " data-tab="disabled">Disabled</a>
                     <a class="item disabled" data-tab="history">History</a>
                     <a class="item disabled" data-tab="messages">Messages</a>
@@ -248,13 +249,13 @@
                         <table class="ui celled striped table" id="auctions">
                             <thead>
                                <tr>
-                                 <th data-field="prTitle">Title</th>  
+                                 <th data-field="productTitle">Title</th>  
                                  <th data-field="uidFee">Fee</th>
                                  <th data-field="inStock">Stock </th>
                                  <th data-field="currentBid">Last bid</th>  
                                  <th data-field="onAuction"> On </th>      
-                                 <th data-field="isCompleted"> Completed </th>
-                                 <th data-field="temporaryDisabled"> Paused </th>
+                                 <th data-field="isCompleted"> Cmp </th>
+                                 <th data-field="temporaryDisabled"> Psd </th>
                                  <th data-field="updatedAt">Last action</th>                              
                                  <th data-field="createdAt">Created At</th>   
                                </tr>
@@ -290,7 +291,77 @@
                                </tr>
                             </tfoot>
                         </table>
-                    </div>                   
+                    </div>    
+                    <div class="ui segment none padding tab" data-tab="winnings">
+                        <span>  
+                            For one page : 
+                            <div id="winningsDrop" class="ui compact selection dropdown">
+                                <i class="dropdown icon"></i>
+                                <div class="text"></div>
+                                <div class="menu">
+                                    <div class="item" data-value="10">10</div>
+                                    <div class="item" data-value="25">25</div>
+                                    <div class="item" data-value="50">50</div>
+                                    <div class="item" data-value="100">100</div>
+                                </div>
+                            </div>
+                        </span>
+                        <span id="winningsSearch">                          
+                            <div class="ui icon search input">
+                                 <i class="search icon"></i>
+                                <input type="text" placeholder="Search...">                                
+                            </div>  
+                            <div id="winningsRefresh">
+                                 <i class="refresh icon"></i>
+                            </div>
+                        </span>
+
+                        <table class="ui celled striped table" id="winnings">
+                            <thead>
+                               <tr>
+                                 <th data-field="winnerName">Winner</th>  
+                                 <th data-field="lastBid">Bid</th>
+                                 <th data-field="status">Status</th>
+                                 <th data-field="trackNumber">Track number</th>
+                                 <th data-field="isFinished"> Completed </th>                           
+                                 <th data-field="updatedAt">Last action</th>                              
+                                 <th data-field="createdAt">Created At</th>   
+                               </tr>
+                            </thead>
+                            <tbody></tbody>
+                            <tfoot>
+                               <tr>
+                                <th colspan="10">
+                                <div class="ui left floated menu borderless backgroundless menuer">                                    
+                                    <button id="winningsDatails" class="ui green labeled tiny icon button" style="margin-right: 40px;">
+                                        <i class="expand icon"></i>
+                                        Details 
+                                    </button>          
+                                    <button id="winningsUpdate" class="ui blue small icon button disabled" data-content="Update information">
+                                        <i class="edit icon"></i>                                     
+                                    </button>                      
+                                 </div>          
+                                 </div>
+                                 <div class="ui right tiny floated pagination menu">
+                                    <a class="left icon item">
+                                        <i class="left chevron icon"></i>
+                                    </a>
+                                    <div class="ui left action input">
+                                        <button class="ui button radiusless borderless">                                            
+                                            To
+                                        </button>
+                                        <input class="radiusless borderless" type="text" value="1">
+                                    </div>                                        
+                                    <a class="right icon item">                                                                   
+                                        <i class="right chevron icon"></i>
+                                    </a>
+
+                                 </div>
+                                </th>
+                               </tr>
+                            </tfoot>
+                        </table>
+                    </div>                
                     <div class="ui segment tab" data-tab="messages">Messages</div>                    
                     <div class="ui segment tab" data-tab="settings"></div>
                 </div>

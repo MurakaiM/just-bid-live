@@ -56,6 +56,7 @@ export class Database{
       await AuctionSchema.sync();
       await SellerSchema.sync();
       await OrderSchema.sync();
+      await NotificationSchema.sync();
       await BillingSchema.sync();
   
       await this.productSearch.setUp();
@@ -97,6 +98,9 @@ export const NotificationSchema = globalSequlize.define('notification', {
     type : Sequelize.BOOLEAN,
     defaultValue : false
   }
+ },{
+  name: 'action_index',
+  fields: ['action'] 
 });
 
 
@@ -128,7 +132,7 @@ export const WinningSchema = globalSequlize.define('winning', {
   },
   selectedType : {
     type : Sequelize.STRING,
-    defaultValue : "not selected",
+    defaultValue : "Not selected",
     allowNull : false
   },
   lastBid : {
@@ -142,7 +146,8 @@ export const WinningSchema = globalSequlize.define('winning', {
     allowNull : false
   },  
   status : {
-    type : Sequelize.STRING
+    type : Sequelize.STRING,
+    defaultValue : 'new'
   },
   customerAddress : {
     type : Sequelize.STRING,
@@ -568,9 +573,7 @@ export const BillingSchema = globalSequlize.define('checkout',{
 });
 
 
-/* Notifications */
-UserSchema.hasMany(NotificationSchema, { foreignKey : "uid", targetKey : "userId", as : "Notification" })
-NotificationSchema.belongsTo(UserSchema, { foreignKey : "uid", targetKey : "userId", as : "Notification" })
+
 
 
 /* Products */
@@ -579,6 +582,10 @@ TypesSchema.belongsTo(ProductSchema,{ foreignKey : "productId", sourceKey : "prU
 
 WinningSchema.belongsTo(ProductSchema, { foreignKey: 'productId', sourceKey: 'prUid'} );
 ProductSchema.hasMany(WinningSchema, { foreignKey: 'productId', targetKey: 'prUid'} );
+
+
+WinningSchema.belongsTo(UserSchema, { foreignKey: 'winnerId', sourceKey: 'uid'} );
+UserSchema.hasMany(WinningSchema, { foreignKey: 'winnerId', targetKey: 'uid'} );
 
 /* Sellers */
 SellerSchema.belongsTo(UserSchema, { foreignKey: 'userId', sourceKey: 'uid', as : "Seller"} );
@@ -607,3 +614,7 @@ ProductSchema.hasOne( WishSchema , {foreignKey : 'orderId' , targetKey : 'orderI
 /* Auction  */
 AuctionSchema.belongsTo(ProductSchema, { foreignKey: 'uidProduct', sourceKey: 'prUid' });
 ProductSchema.hasMany(AuctionSchema, { foreignKey: 'uidProduct', targetKey: 'prUid' });
+
+WinningSchema.belongsTo(AuctionSchema, { foreignKey: 'auctionId', sourceKey: 'uidRecord'} );
+AuctionSchema.hasMany(WinningSchema, { foreignKey: 'auctionId', targetKey: 'uidRecord'} );
+

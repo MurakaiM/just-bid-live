@@ -14,7 +14,6 @@ function setUpSignSystem() {
   SignIn(window.WModals.signModal);
 
   $("#account").click(e => window.WModals.signModal.toggleState());
-  $('.mail.icon').click( e => POST('/user/signout'));
 }
 
 

@@ -1,6 +1,7 @@
 import * as uuid from 'uuid/v4'
 
 import { NotificationSchema } from '../Database/database.controller'
+import RealtimeController from '../Controllers/realtime.controller'
 
 import User from '../Models/user.model'
 
@@ -23,6 +24,25 @@ export default class Notification {
             title : data.title,
             message : data.message,
             action : data.action
+        });
+    }
+
+    public static Review(user : string, action : string) : Promise<any>{
+        return new Promise((resolve, reject) => {
+            NotificationSchema.update({
+                isViewed : true
+               },{
+                where : {
+                    userId : user,
+                    action : action
+                },
+                returning: true
+            })
+             .then( result => {            
+                RealtimeController.Instance.emitReviewNotification(user, result[1][0].recordId )
+                resolve("Emitted and saved")
+             })
+             .catch( error => reject(error))
         });
     }
 
@@ -56,12 +76,12 @@ export default class Notification {
         })
     }
 
-    public static CreateAuction(user : User, data : any ) : Promise<any>{
+    public static CreateAuction(user : string , data : any ) : Promise<any>{
         return Notification.Create({
-            userId : user.PublicData.uid,
+            userId : user,
             title : `Auction winnings !`,
             message : `Congratulations ! You won "${data.title}".`,
-            action : ``,
+            action : data.action,
             type : `aw`
         });
     }

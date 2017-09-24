@@ -2,7 +2,13 @@ import  * as uuid from 'uuid/v4'
 
 import User from './user.model'
 
-import { WinningSchema, ProductSchema, TypesSchema } from '../Database/database.controller' 
+import { 
+    AuctionSchema,
+    WinningSchema, 
+    ProductSchema, 
+    TypesSchema,
+    UserSchema
+} from '../Database/database.controller' 
 
 interface NewWinning{
     winner : string,
@@ -37,6 +43,8 @@ export default class Winning{
         });
     }
 
+
+
     public static FindWinning( id : string ) : Promise<any> {
         return WinningSchema.findOne({ where : { winningId : id }});
     }
@@ -47,9 +55,42 @@ export default class Winning{
                 winnerId : user.PublicData.uid,
                 status : 'new' 
             },
+            include : [
+                { model : AuctionSchema , attributes : ['mainImage'] },
+                { model : ProductSchema , attributes : ['prTitle']}
+            ],
             order : [['createdAt','DESC']]
         });
     }
+
+
+    public static FindSellerWinning( seller : User, id : string) : Promise<any>{
+        return WinningSchema.findOne({ 
+            where : { 
+                sellerId : seller.PublicData.uid,
+                winningId : id 
+            },
+            include : [                
+                { model : UserSchema , attributes : ['firstName','lastName']},
+                { model : ProductSchema, attributes : ['prShipment','prTitle']}
+            ]
+        });    
+    }
+
+    public static FindSellerWinnings( seller : User) : Promise<any>{
+        return WinningSchema.findAll({
+            where : {
+                sellerId : seller.PublicData.uid,
+                isFinished : false
+            },
+            include : [                
+                { model : UserSchema , attributes : ['firstName','lastName']}
+            ],
+            order : [['updatedAt','DESC']]
+        });
+    }
+
+   
 
 
     public static FindRender(id : string) : Promise<any>{
@@ -64,16 +105,35 @@ export default class Winning{
         });
     }
 
-    public static UpdateTrack( seller : User, track : string): Promise<any>{
+    public static UpdateTrack( seller : User, record : string ,track : string): Promise<any>{
+        console.log(record,track)
         return WinningSchema.update(
             {
                 productTrack : track
             },
             {
-                where : { sellerId : seller.PublicData.uid }
+                where : { 
+                    sellerId : seller.PublicData.uid,
+                    winningId : record 
+                }
             }
         )
     }
+
+    public static UpdateStatus( seller : User, record : string ,status : string): Promise<any>{
+        return WinningSchema.update(
+            {
+                status : status
+            },
+            {
+                where : { 
+                    sellerId : seller.PublicData.uid,
+                    winningId : record 
+                }
+            }
+        )
+    }
+
 
     public static FinishWinning( user : User) : Promise<any>{
         return WinningSchema.update(

@@ -280,8 +280,7 @@
     </div>
 
     <div id="auctionNewModal" class="my-modal dashed big">
-     <div class="body">
-            
+     <div class="body">            
             <h2 class="ui header main">
                 <div class="content">
                     Add product to auction.
@@ -322,12 +321,12 @@
                         <input type="text" name="fee" placeholder="Fee">
                      </div>
                      <div class="eight wide field partlydisabled">
-                        <input type="text" name="ape" placeholder="Appearence">
+                        <input type="text" name="ape" placeholder="Explanation">
                      </div>
                   </div>
                   <div class="fields">
                      <div class="sixteen wide field partlydisabled">
-                        <input type="text" name="exp" placeholder="Explanation">
+                        <input type="text" name="exp" placeholder="Appearence">
                      </div>                        
                   </div>
                 </div> 
@@ -407,7 +406,124 @@
                     <button type="submit" class="ui red button">Disable</button>
                 </div>
             </form>
-        </div>
-        
+        </div>        
+    </div>
+
+    <div id="winningUpdateModal" class="my-modal dashed">
+         <div class="body">
+            <h2 class="ui header main">
+                <div class="content">
+                    Update Winning item
+                </div>
+            </h2>
+            <h4 class="ui header main wrap">Change track number and status of winning item</h4>
+            <span class="ui descriptor">
+                 Please leave only valid data. Any not proper things will be reported.
+                 This changes will be displayed in
+                <span class="exact">Winner name</span> personal account.              
+            </span>
+
+            <form class="ui form"> 
+                <div class="field">               
+                    <label>Track Number</label>                       
+                    <input type="text" name="track" placeholder="Track Number">                    
+                </div>
+
+                <div class="ui message success">
+                    <div class="header">Action Completed</div>
+                    <p> Winning item was successfully updated </p>
+                </div>
+
+                <div class="ui message error">
+                    <div class="header">Action Forbidden</div>
+                    <p> Ooops... Error occurred </p>
+                </div>    
+
+                <div class="buttons container">
+                    <button type="submit" class="ui blue button">Update</button>     
+                </div>                       
+            </form>  
+        </div>    
+    </div>
+
+    <div id="winningDetailsModal" class="my-modal dashed big">      
+        <div class="body">            
+            <h2 class="ui header main">
+                <div class="content">
+                    Winning general details
+                </div>
+            </h2>
+            <h4 class="ui header main wrap">Information about winner</h4>
+            <span class="ui descriptor">
+                Use this information for creating package with the right type of product and correct destination.
+            </span>
+            <div class="ui segment none">
+                <div class="details once">
+                    <div class="details title">
+                        <i class="user icon"></i> Winner name 
+                    </div><div class="details value">
+                        Tsekhmastryuk Dan
+                    </div>
+                </div>
+
+                <div class="details once">
+                    <div class="details title">
+                        <i class="world icon"></i> Shp. address
+                    </div><div class="details value">
+                        Ukraine, Kyiv, 03164, str. R.Bukinoi
+                    </div>
+                </div>
+
+                <div class="details once">
+                    <div class="details title">
+                        <i class="external share icon"></i> Product link
+                    </div><div class="details value">
+                        <a href="/product/id88f01d05-fe41-4998-9a34-2665da4a4e5d" target="blank">iphone 7</a>
+                    </div>
+                </div>
+
+                <div class="details once">
+                    <div class="details title">
+                        <i class="travel icon"></i> Selected type
+                    </div><div class="details value">
+                        Small, XS
+                    </div>
+                </div>
+
+                <div class="details once">
+                    <div class="details title">
+                        <i class="barcode icon"></i>Track number 
+                    </div><div class="details value">1Z999AA10123456784</div>
+                </div>
+
+                <div class="details once">
+                    <div class="details title">
+                        <i class="help icon"></i>Status
+                    </div><div class="details value bolded">new</div>
+                </div>
+
+                <div class="details once">
+                    <div class="details title">
+                        <i class="dollar icon"></i>P. amount 
+                    </div><div class="details value">1.2$</div>
+                </div>
+
+                <div class="details once">
+                    <div class="details title">
+                        <i class="shipping icon"></i>Sh. amount 
+                    </div><div class="details value">4$</div>
+                </div>
+
+                <div class="details once">
+                    <div class="details title">
+                        <i class="check icon"></i>Is paid
+                    </div><div class="details value">
+                        No
+                    </div>
+                </div>
+
+
+            </div>
+        </div>        
     </div>
 </div>

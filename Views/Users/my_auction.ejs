@@ -1,3 +1,5 @@
+<%-include('../Function/funcitons')%>
+
 <!DOCTYPE html>
 <html>
 
@@ -18,7 +20,7 @@
               <div class="col-md-2">
                 <%-include('./my_menu', { active : 1 })%>
               </div>
-              <div class="col-md-10">                           
+                  <div class="col-md-10">                           
                     <div class="ui segment none">           
                         <div class="row">
                             <%winnings.forEach( winning =>{%>                          
@@ -26,28 +28,28 @@
                                     <div class="product auction">
                                         <div class="ui label won">WON</div>
                                         <div class="first">
-                                            <div class="collapsing image">
-                                                <img src="https://s-media-cache-ak0.pinimg.com/736x/fb/60/90/fb6090f6808037dd4aedb50f0cfbc7d8.jpg" alt="" />
-                                            </div>
+                                            <a href="/product/id<%=winning.productId%>" class="collapsing image">
+                                                <img src="<%=winning.auction.mainImage%>" alt="" />
+                                            </a>
                                         </div>
                                         <div class="second">
                                             <div class="information">
-                                                <div class="title">Dress</div>
+                                                <div class="title"><%=winning.product.prTitle%></div>
                                                 <div class="types">
-                                                    Small, XS
+                                                    
                                                 </div>
                                                 <div class="cost">
                                                     <div class="option">                                          
                                                         <span class="labeler">  <i class="legal icon"></i> Winning bid : </span>
-                                                        <span class="info">   <i class="fa fa-usd" aria-hidden="true"></i> 25</span>
+                                                        <span class="info">   <i class="fa fa-usd" aria-hidden="true"></i> <%=(winning.lastBid/100)%> </span>
                                                     </div>                                            
                                                     <div class="option">                                          
                                                         <span class="labeler">  <i class="shipping icon"></i> Delivery : </span>
-                                                        <span class="info">   <i class="fa fa-usd" aria-hidden="true"></i> 25</span>
+                                                        <span class="info">   <i class="fa fa-usd" aria-hidden="true"></i> <%=winning.auction.offShipment%> </span>
                                                     </div>
                                                     <div class="option">                                          
                                                         <span class="labeler">  <i class="wait icon"></i> Won at : </span>
-                                                        <span class="info"> 29.09.2017 </span>
+                                                        <span class="info"> <%=convertDate(winning.createdAt)%> </span>
                                                     </div>
                                                     <div class="option">                                          
                                                         <span class="labeler">  <i class="history icon"></i> Disappear after: </span>
@@ -57,10 +59,10 @@
                                             </div> 
                                         </div>
                                         <div class="third">                                       
-                                            <button class="ui button">
+                                            <a href="/my/winning/<%=winning.winningId%>" class="ui button">
                                                 <i class="checkmark icon"></i>
                                                 Checkout
-                                            </button>                                                                             
+                                            </a>                                                                             
                                         </div>
                                     </div>  
                                 </div>
@@ -78,6 +80,6 @@
     <!--Scripts include!-->
     <%-include('../Common/scripts')%>
     <script src="<%=domain%>/g.assets/js/tabulizer.js"></script>
-    <script src="<%=domain%>/u.assets/js/My/user.js"></script>
+    <script src="<%=domain%>/u.assets/js/my/user.js"></script>
 
 </html>

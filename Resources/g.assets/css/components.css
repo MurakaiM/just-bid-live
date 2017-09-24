@@ -132,6 +132,16 @@ nav a:focus {
   text-decoration: none;
 }
 
+.ui.popup{
+  padding: 2px;
+  box-shadow: 0 50px 100px rgba(50,50,93,.1), 0 15px 35px rgba(50,50,93,.15), 0 5px 15px rgba(0,0,0,.1);
+  border: none;
+}
+
+.ui.popup:before{
+  box-shadow: none!important;
+}
+
 .ui.select.file {
   display: inline-block;
   margin-left: 20px!important;
@@ -1145,6 +1155,7 @@ nav .mobile_nav a {
 
 .custom.dropdown .content .notification{
   width: 100%;
+  margin: auto;
   background: white;
   display: flex;
   height: auto;
@@ -1207,6 +1218,16 @@ nav .mobile_nav a {
   font-style: italic;
 } 
 
+.custom.dropdown .no_notification, 
+.custom.dropdown .no_login{
+  position: absolute;
+  top: 50%;
+  left :50%;
+  width: 100%;
+  transform: translate3d(-50%, -50%, 0);
+}
+
+
 .custom.dropdown .content .notification .data .message{
   font-size: 13px;
   color: #b3b3b3;
@@ -1255,9 +1276,6 @@ nav .mobile_nav a {
   transform: translateZ(0) translateX(-10%) rotateX(-15deg);
   will-change: opacity, transform;
 }
-
-
-#signInModal {}
 
 #waiterModal img {
   display: block;

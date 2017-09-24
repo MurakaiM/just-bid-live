@@ -7,6 +7,7 @@ import { isSeller }  from '../Utils/Communication/rules'
 import UserController from '../Controllers/user.controller'
 import ProductController from '../Controllers/product.controller'
 import OrderController from '../Controllers/order.controller'
+import WinningController from '../Controllers/winning.controller'
 import BasicController from '../Utils/Controllers/basic.controller'
 import AuctionController from '../Controllers/auction.controller'
 import RealtimeController from '../Controllers/realtime.controller'
@@ -20,7 +21,8 @@ export default class SellerApi extends BasicController{
     }
 
     Configure(){    
-        this.Get('/seller/product/all', this.getProducts);
+        this.Get('/seller/product/all', this.getProducts)
+        this.Get('/seller/winning/all', this.getWinning)
         this.Get('/seller/product/disabled', this.getDisabled);
 
         this.Get('/seller/store/statistics', this.getStatistics);
@@ -41,10 +43,57 @@ export default class SellerApi extends BasicController{
         this.Post('/seller/product/remove', this.removeProduct);
 
 
+        //this.Post('/seller/winning/status', this.winningStatus) 
+        this.Post('/seller/winning/track', this.winningTrack)    
+        this.Post('/seller/winning/especial', this.winningEspecial)    
+
+        
         this.Post('/seller/auction/create', this.createAuction);
         this.Post('/seller/auction/stock', this.stockAuction);
         this.Post('/seller/auction/pause', this.pauseAuction);
     }
+
+    /*Winnings*/
+    protected getWinning(req,res) : void {
+        isSeller(req,res).allowed( seller => 
+            WinningController.SellerWinnings(seller)
+                .then(result => res.send( BuildResponse(0,"Winnings were successfully fetched", result ) ))
+                .catch(error => { console.log(error); res.send( BuildResponse(10,"Error occurred", []) ) })
+        )
+    }
+
+    protected winningStatus(req,res) : void{
+        isSeller(req,res).allowed(seller => 
+            WinningController.UpdateStatus(seller, req.body)
+                .then( answer => 
+                  answer.success ? 
+                  res.send(BuildResponse(10,answer.result)):
+                  res.send(BuildResponse(0,answer.error))
+                )
+        )
+    }
+
+    protected winningTrack(req,res) : void{
+        isSeller(req,res).allowed(seller => 
+            WinningController.UpdateTrack(seller, req.body)
+                .then( answer => 
+                  answer.success ? 
+                  res.send(BuildResponse(0,'Track number was successfully updated',req.body.track)):
+                  res.send(BuildResponse(10,answer.error))
+                )
+        )
+    }
+    
+    protected winningEspecial(req,res) : void{
+        isSeller(req,res).allowed(seller => 
+            WinningController.EspecialWinning(seller, req.body).then(answer => 
+               answer.success ? 
+                res.send(BuildResponse(0,'Successfuly fetched especial',answer.result)):
+                res.send(BuildResponse(10,'Successfuly fetched especial',answer.error))
+            )               
+        )
+    }
+
 
 
     protected getFees(req,res) : void {

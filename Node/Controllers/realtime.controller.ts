@@ -26,14 +26,13 @@ export default class RealtimeSocket{
         this.io.use(io_passport.authorize({ 
             cookie: {
                 maxAge: 30 * 24 * 60 * 60 * 1000
-            },       
+            },      
+            passport : require('passport'), 
             store : Redis.Instance._session,
             cookieParser: cookieParser,
             secret: 'small kittens',
-            resave: false,
-            saveUninitialized: false,
-            success: (data, accept) => accept(null, true),
-            fail:  (data, message, error, accept) => accept(null,false)
+            success: (data, accept) => { console.log('recconnect'); accept(null, true)},
+            fail:  (data, message, error, accept) =>{ console.log('recconnect'); accept(null,true)}
           }));
 
         RealtimeSocket.Instance = this;
@@ -52,9 +51,11 @@ export default class RealtimeSocket{
     private configureAuth(){
         this.authNms.on('connection', socket => {
             let user = this.socketUser(socket);
-            
-            if(user.logged_in == false){                
-                return socket.disconnect();
+
+               
+            if(user.logged_in == false){   
+                  
+                return socket.disconnect(true);
             }
 
             socket.join(user.PublicData.uid);
@@ -117,6 +118,14 @@ export default class RealtimeSocket{
 
     public emitNew( newItem : any){
         this.auctionNms.emit('new' , newItem);
+    }
+
+    public emitNewNotification( userId : string, data : any){      
+        this.authNms.to(userId).emit('new:notification', data);
+    }
+
+    public emitReviewNotification( userId : string, data : any){ 
+        this.authNms.to(userId).emit('view:notification', data);
     }
 
     

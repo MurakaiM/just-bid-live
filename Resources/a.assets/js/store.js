@@ -1,10 +1,11 @@
-let table, tableDisabled, tableAuctions, tabs;
+let tabs, table, tableDisabled, tableAuctions, tableWinnings;
 let dataStats;
 
 $(e => onLoad());
 
 
 function onLoad() {
+  SetUpWinnings();
   SetUpProducts();
   SetUpDisabled();
   SetUpAuction();
@@ -14,6 +15,10 @@ function onLoad() {
     headers: ".tabs.head",
     contents: ".tabs.body"
   }, {
+    winnings: {
+      onOpen : (head,segment) => tableWinnings.loadInSegment('/seller/winning/all', head, segment),
+      onClose : () => tableWinnings.forceDelete
+    },
     products: {
       onOpen: (head, segment) => table.loadInSegment('/seller/product/all', head, segment),
       onClose: () => table.forceDelete()
@@ -961,10 +966,10 @@ function SetUpAuction() {
     row: item => {
       return $(` 
         <tr>
-          <td>${item.product.prTitle}</td> 
+          <td>${item.productTitle}</td> 
           <td>${currentFees[item.uidFee].title}</td>
           <td>${item.inStock}</td>
-          <td><i class="dollar icon"></i>${item.currentBid/100}</td>       
+          <td><i class="dollar icon"></i>${item.currentBid}</td>       
           ${reworkBoolean(item.onAuction)}
           ${reworkBoolean(item.isCompleted)}
           ${reworkBoolean(item.temporaryDisabled)}
@@ -972,6 +977,11 @@ function SetUpAuction() {
           <td>${new Date(item.createdAt).toLocaleDateString()}</td>   
         </tr>
       `)
+    },
+    transformation : value => {
+      value.currentBid = value.currentBid/100;
+      value.productTitle = value.product.prTitle;
+      return value;
     },
     click: (i, obj, arr) => {
       buttons.stock.removeClass('disabled');
@@ -996,6 +1006,127 @@ function SetUpAuction() {
   buttons.pause.click(e => pause.toggleState());
 }
 
+function SetUpWinnings(){
+  let currentItem = null;
+  const buttons = {
+    details : $("#winningsDatails"),
+    update : $("#winningsUpdate"),
+    refresh: $("#winningsRefresh")
+  }
+
+  const winningsUpdate = new Modal({
+    id: "#winningUpdateModal",
+    onOpen: (body, props) => body.find('.exact').text(currentItem.arr[currentItem.i].winnerName),
+    onClose: (body, props) => {},
+    middleware: (body, props, modal) => {
+      let options = {
+        on: 'blur',
+        inline: true,
+        rules: {
+          track: {
+            identifier: 'track',
+            rules: [{
+              type: 'empty',
+              prompt: 'Type clear and proper status description'
+            }]
+          }
+        },       
+        dataMiddleware : data => {
+          data.record = currentItem.arr[currentItem.i].winningId;         
+          return data;
+        },
+        success: data => {        
+          let current = currentItem.arr[currentItem.i];
+          current.productTrack = data;
+          tableWinnings.forceChange(currentItem.i, current);
+        },
+        failure: failure => console.log(error)
+      }
+
+      props.form = new Form(body.find('form'), "/seller/winning/track", options);     
+    }
+  }, true);
+
+  const winningsDetails = new Modal({
+    id: "#winningDetailsModal",
+    onOpen: (body, props) => {
+      props.segment.addClass('loading')
+      POST('/seller/winning/especial', { winningId : currentItem.arr[currentItem.i].winningId })
+        .then( answer => props.insertInto(answer.data))
+        .catch(error => winningsDetails.toggleState())
+    },
+    onClose: (body, props) => {},
+    middleware : (body, props, modal) => {
+      props.segment = body.find('.ui.segment');
+      props.dataValues = body.find('.details.value');
+      props.insertInto = data => {         
+        $(props.dataValues[0]).text(data.user.firstName + " " + data.user.lastName);
+        $(props.dataValues[1]).text(data.customerAddress ? data.customerAddress : "No address was selected yet");
+ 
+        $(props.dataValues[2]).find('a').attr('href',`/product/id${data.productId}`);
+        $(props.dataValues[2]).find('a').text(data.product.prTitle)
+
+        $(props.dataValues[3]).text(data.selectedType);
+        $(props.dataValues[4]).text(data.productTrack);
+        $(props.dataValues[5]).text(data.status);
+        $( props.dataValues[6]).text(`${data.lastBid}$`);
+        $(props.dataValues[7]).text(`${data.product.prShipment}$`);
+        $(props.dataValues[8]).text(data.billingId ? 'Yes' : 'No');
+        props.segment.removeClass('loading')
+      }  
+    }
+  }, true);
+
+  tableWinnings = new Table('winnings', {
+    defaultSort: 'updatedAt',
+    search: "#winningsSearch",
+    forPage: "#winningsDrop",
+    buttons: {
+      previous: ".left.icon.item",
+      next: ".right.icon.item",
+      to: ".ui.button.radiusless.borderless"
+    },
+    input: {
+      to: ".ui.left.action input"
+    },
+    row: item => {   
+      return $(` 
+        <tr>
+          <td>${item.winnerName}</td>      
+          <td><i class="dollar icon"></i>${item.lastBid}</td>     
+          <td>${item.status}</td>  
+          <td>${item.productTrack}</td>
+          ${reworkBoolean(item.isPaid)}
+          <td>${new Date(item.updatedAt).toLocaleDateString()}</td>
+          <td>${new Date(item.createdAt).toLocaleDateString()}</td>   
+        </tr>
+      `)
+    },
+    transformation : value => {
+      value.winnerName = value.user.firstName+" "+value.user.lastName;
+      value.lastBid = value.lastBid/100;
+      return value;
+    },
+    click: (i, obj, arr) => {
+      buttons.details.removeClass('disabled')
+      buttons.update.removeClass('disabled')
+      currentItem = {
+        i,
+        obj,
+        arr
+      }
+    },
+    onFocusLost: () => {
+      currentItem = null;
+      buttons.details.addClass('disabled')
+      buttons.update.addClass('disabled')
+    }
+  });
+
+  buttons.refresh.click(e => tableWinnings.loadFromCache());
+  buttons.update.click(e => winningsUpdate.toggleState())
+  buttons.details.click(e => winningsDetails.toggleState());
+}
 
 function numberRebase(number) {
   if (number < 100) {

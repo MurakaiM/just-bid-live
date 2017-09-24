@@ -5,6 +5,7 @@ import categoriesPopups from '../Database/database.categories'
 import UserController from '../Controllers/user.controller'
 import ProductController from '../Controllers/product.controller'
 import WinningController from '../Controllers/winning.controller'
+import NotificationController from '../Controllers/notification.controller'
 
 import { isAuth } from '../Utils/Communication/rules'
 import { DOMAIN } from '../keys'
@@ -63,7 +64,7 @@ export default class Renderer {
 
     public static product(req,res){
         let pageInfo = {
-            pageName : "Product",
+            pageName : "",
             currentUser : req.user,
             domain : DOMAIN,           
             login : false
@@ -75,6 +76,7 @@ export default class Renderer {
                 
                 product.increment('prViews');
                 pageInfo['product'] = product;
+                pageInfo['pageName'] = product.prTitle;
                        
                 return res.render('Products/product', pageInfo);
             })
@@ -127,10 +129,14 @@ export default class Renderer {
             login : false        
         };
 
-        Renderer.AccountRedirect(req, res, {          
-            render : "Users/my_auction",
-            info : pageInfo
-        }); 
+        WinningController.LoadWinnings(req.user).then( winnings => {
+            pageInfo['winnings'] = winnings;
+            
+            Renderer.AccountRedirect(req, res, {          
+                render : "Users/my_auction",
+                info : pageInfo
+            }); 
+        })        
     }
 
 
@@ -204,12 +210,17 @@ export default class Renderer {
         isAuth(req,res,true).allowed( user => 
             WinningController.WinningRender(user, wngId).then( answer => {   
                 if(!answer.success) return res.redirect('/');
-                                                           
+                   
                 pageInfo.winning = answer.result;
                 pageInfo.winning.dataValues.createdAt = TimeModule.convertTime(answer.result.createdAt);       
                 pageInfo.winning.image = answer.result.product.prTypes.colors[Object.keys(answer.result.product.prTypes.colors)[0]].image;
                             
-                return res.render('Users/my_checkout', pageInfo)
+                NotificationController.ReviewNotification(user, wngId)
+                .then( 
+                        result => res.render('Users/my_checkout', pageInfo), 
+                        error => res.render('Users/my_checkout', pageInfo)
+                     )
+               
             })
         );        
     }

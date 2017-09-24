@@ -357,4 +357,17 @@
   .ui.modal > .close{
     display: none;
   }
- }
+}
+
+
+
+/*Generalized mobile*/
+@media (max-width: 767px) {
+  .above_menu .links button .custom.dropdown{
+    left: -170px;
+  }
+
+  .above_menu .links button .custom.dropdown:after{
+    right: calc(50% - 10px);
+  }
+}

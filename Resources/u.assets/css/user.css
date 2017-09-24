@@ -133,6 +133,7 @@ tbody tr:last-child {
     margin: auto;
     border-radius: 5px;
     cursor: pointer;
+    display: block;
     width: 100%;
     background: #f9f9f9;
     border-radius: 25px 25px 0 0;

@@ -9,7 +9,6 @@ $(function () {
 });
 
 function setValidation() {
-
   var validationRules = {
     inline: true,
     rules: {

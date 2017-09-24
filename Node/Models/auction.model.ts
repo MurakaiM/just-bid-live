@@ -4,6 +4,7 @@ import * as uuid from 'uuid/v4'
 import TimeModule from '../Utils/Others/time'
 import AuctionLoader from '../Services/Auction/auction.loader'
 import RealtimeController from '../Controllers/realtime.controller'
+import NotificationController from '../Controllers/notification.controller'
 
 import { Database } from '../Database/database.controller'
 import { Fees } from '../Database/database.categories'
@@ -39,12 +40,18 @@ export default class AuctionItem{
 
     public async finish() : Promise<any>{  
         await this.dbAution.reload();
-        await this.registerWinning();
         
+        let winning = await this.registerWinning();   
+        let notification = await NotificationController.TypeWnning(winning.winnerId, {
+            title : this.dbAution.product.prTitle,
+            action : winning.winningId
+        });
+        RealtimeController.Instance.emitNewNotification(winning.winnerId, notification)
+
+
         this.dbAution.inStock = this.dbAution.inStock - 1;
         this.dbAution.currentUser = null;
         this.name = "";
-
 
         if(this.dbAution.inStock == 0){
            this.dbAution.isCompleted = true;
@@ -121,12 +128,12 @@ export default class AuctionItem{
 
     private registerWinning() : Promise<any>{
         return Winning.GenerateWinning({
-            auctionId : this.dbAution.uidRecord,
-            lastBid : this.dbAution.currentBid,
-            producId : this.dbAution.uidProduct,
-            seller : this.dbAution.uidSeller,
-            winner : this.dbAution.currentUser
-        });
+                auctionId : this.dbAution.uidRecord,
+                lastBid : this.dbAution.currentBid,
+                producId : this.dbAution.uidProduct,
+                seller : this.dbAution.uidSeller,
+                winner : this.dbAution.currentUser
+        })
     }
 
     public static async ForceCreate( user : User ,data : any ) : Promise<any>{         

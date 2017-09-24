@@ -21,7 +21,6 @@ function Table(id, options) {
     this.searched = null;
 
 
-
     this.createSortable = dom => {
         var data = dom.data('field');
       
@@ -65,7 +64,7 @@ function Table(id, options) {
         });
     }
 
-    
+
 
     this.forceDelete = () => {
         this.searched = null;
@@ -74,20 +73,23 @@ function Table(id, options) {
         this.forceClearSortable();
     }
       
-
     this.forceClearSortable = () => {
         this.currentSortableHeader.removeClass('up down');        
         this.currentSortableId = options.defaultSort;
         this.currentSortableBool = false;
         this.currentSortableHeader = $(`.ui.table thead th[data-field="${options.defaultSort}"]`);
-        this.currentSortableHeader.addClass('down');
+        this.currentSortableHeader.addClass('down');        
     }
 
-    this.forceLoad = data => {
+    this.forceLoad = (data, onFirst = true) => {
+        if(options.transformation && onFirst){
+            data = data.map(options.transformation)
+        }
+   
         this.searched = null;
-        this.data.current = [];
-        this.forPage = 10;    
-        this.loadData(data);
+        this.data.current = data;
+        this.forPage = 10; 
+        this.recalculatePages();  
         this.pagination(1);
     }
 
@@ -97,11 +99,13 @@ function Table(id, options) {
         this.forceLoad(this.data.current);
     }
 
-    this.forceChange = (i,data) => {
+    this.forceChange = (i,data) => {    
         this.data.current[i] = data;
         this.sortBy(options.defaultSort);
-        this.forceLoad(this.data.current);
+        this.forceLoad(this.data.current,false);
     }
+
+
 
     this.redraw = () => this.pagination(this.currentPage);
 
@@ -114,10 +118,8 @@ function Table(id, options) {
         $(options.input.to).val(this.currentPage);
     }
 
-    this.loadData = data => {         
-        this.data.current = data;
-        this.recalculatePages();
-    }
+
+
 
     this.recalculatePages = () => {
         var total = this.searched ? this.searched.length : this.data.current.length;
@@ -134,7 +136,7 @@ function Table(id, options) {
         }
 
         this.tbody.empty();
-
+      
         if (options.onFocusLost)
             options.onFocusLost();
 
@@ -161,7 +163,10 @@ function Table(id, options) {
         this.currentPage = page;
     }
 
-    this.sortBy = (key, way = false) => {        
+
+
+    
+    this.sortBy = (key, way = false) => {
         if (this.searched) {
             sortPragma(this.searched, key, way);
             this.displayPage(this.currentPage, this.searched);
@@ -171,26 +176,24 @@ function Table(id, options) {
         }
     }
 
-    this.disableSort = () => {
-        this.sortBy(options.defaultSort);
+    this.disableSort = () => {        
+        this.sortBy(options.defaultSort); 
         this.recalculatePages();
         this.displayPage(this.currentPage, this.searched ? this.searched : this.data.current);
+
+        this.forceClearSortable(); 
     }
 
     this.search = text => {
         this.searched = null;
         this.searched = [];
 
-    
+
         this.searched = this.data.current.filter(row => Object.keys(row).some( key  => 
             {                 
                 if(key == 'createdAt' || key == 'updatedAt'){
                     return (new Date(row[key]).toLocaleDateString().toLowerCase().indexOf(text) > -1)
-                }
-               
-                if( typeof(row[key]) === 'object' && row[key]){              
-                   Object.keys(row[key]).some(downkey => String(row[key][downkey]).toLowerCase().indexOf(text.toLowerCase()) > -1 );           
-                }              
+                }           
 
                 return ( String(row[key]).toLowerCase().indexOf(text.toLowerCase()) > -1 )
             }
@@ -203,27 +206,23 @@ function Table(id, options) {
 
     this.disableSearch = () => {
         this.searched = null;
-        this.recalculatePages();
+        this.recalculatePages(); 
         this.displayPage(1);
-
-        this.currentSortableHeader.removeClass('up down');
-        this.currentSortableId = null;
-        this.currentSortableBool = null;
+        this.disableSort();
     }
 
     this.pagination = index => {
-
         if (index <= 0) {
             index = 1;
         } else if (index > this.maxPages) {
             index = this.maxPages;
         }
-
-
+     
         this.currentPage = index;
-        if (this.searched) {
+       
+        if (this.searched) {           
             this.displayPage(index, this.searched);
-        } else {
+        } else {           
             this.displayPage(index, this.data.current);
         }
 
@@ -282,9 +281,13 @@ function Table(id, options) {
             .then( answer => { this.hashed.segment.toggleClass('loading'); this.forceLoad(answer.result.data); });
     }
 
+
+
     this.setUpUi();
 
+
     this.getData = () => this.data.current;
+
 
     function createRow(item) {
         let template = `<tr>`

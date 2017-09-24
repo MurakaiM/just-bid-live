@@ -46,8 +46,10 @@ function Auction() {
     const freeSlots = [];
 
     const AuctionListener = io('/auction');
-    AuctionListener.on('connect', () => {
-        AuctionListener.on('disconnect', disconnect => console.log(`Auction stream was disconnected... [${disconnect}]`))
+    
+    AuctionListener.once('connect', () => {
+     
+        AuctionListener.on('disconnect', disconnect => AuctionListener.connect())
         
         AuctionListener.on('bid', bid => currentStorage[bid.uid].ForceChange(bid) );
 
@@ -264,9 +266,30 @@ function Item(object, options) {
 
 
 function render(data,name) {
+    
     let currentBid = parseInt(data.currentBid) / 100;
+    let borderColor;
+
+    switch (data.uidFee) {
+        case 'small':
+            borderColor = 'purple'
+            break;
+
+        case 'small':
+            borderColor = 'orange'
+            break;
+
+        case 'small':
+            borderColor = 'pink'
+            break;
+    
+        default:
+            borderColor = '';
+            break;
+    }
+    
     return `<div class="col-md-6 col-lg-4">
-      <div class="product auction">
+      <div class="product auction ${borderColor}">
           <div class="product-content">          
             <div class="image">  
                <a href="/product/id${data.uidProduct}"> <img src="${data.mainImage}" alt=""> </a>

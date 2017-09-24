@@ -49,13 +49,18 @@ export class Database{
 
    private async initSchemas() : Promise<any> {   
       await UserSchema.sync();
+      await SellerSchema.sync();
+
       await ProductSchema.sync();
+
       await TypesSchema.sync();
+      await OrderSchema.sync();
+      await AuctionSchema.sync();
+    
       await WinningSchema.sync();
       await WishSchema.sync();
-      await AuctionSchema.sync();
-      await SellerSchema.sync();
-      await OrderSchema.sync();
+      
+      
       await NotificationSchema.sync();
       await BillingSchema.sync();
   

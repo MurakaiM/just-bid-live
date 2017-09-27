@@ -1,39 +1,53 @@
 import * as uuid from 'uuid/v4'
 
 import User from '../Models/user.model'
+import Storage from '../Utils/Controllers/storage'
+import Notifications from '../Services/Norifications/email.service'
+
 import { UserSchema } from '../Database/database.controller'
 import { UserMessages } from '../Interfaces/user.interfaces'
+import { AwaitResult } from '../Utils/Communication/async'
+
 
 
 export default class UserController{
 
-    public static SignUp(data : any, file : any) : Promise<UserMessages>{
-        return new Promise((resolve, reject) => {
-          User.LoadByEmailOrPhone(data.email,data.phone)
-            .then( user => {
-                if(user.Data.phone == data.phone) 
-                    return reject({ success : false, reason : "User with such phone already exists"});
-               
-                else if(user.Data.email = data.email) 
-                    return reject({ success : false, reason : "User with such email already exists"});
-            })
-            .catch(() => {  
-                var imageUrl = '';                            
-                User.ForceCreate(
-                    {
-                        email : data.email,
-                        phone : data.phone,
-                        birthday : data.birthday,
-                        password : data.password,
-                        firstName : data.firstName,
-                        lastName : data.lastName,
-                        imgUrl : imageUrl                 
-                    }
-                )
-                    .then( () => resolve({ success : true, reason : "User was successfuly created"}))
-                    .catch( () => reject({ success : true, reason : "Opps, error occured"}));               
-            });      
-        });
+    public static async SignUp(data : any, file : any) : Promise<AwaitResult>{
+        try{
+            let user = await User.LoadByEmailOrPhone(data.email, data.phone);           
+
+            if(user){
+                if(user.Data.phone == data.phone && user.Data.email == data.email)
+                    return { success : false, error : "User with such phone and email already exists"}
+                else if(user.Data.phone == data.phone) 
+                    return { success : false, error : "User with such phone already exists"}
+            
+                else if(user.Data.email == data.email) 
+                    return { success : false, error : "User with such email already exists"}
+            }
+            
+            let imageUrl = await Storage.Instance.uploadAvatar(file);
+            let newUser = await User.ForceCreate({
+                email : data.email,
+                phone : data.phone,
+                birthday : data.birthday,
+                password : data.password,
+                firstName : data.firstName,
+                lastName : data.lastName,
+                imgUrl : imageUrl                 
+            });
+            
+
+            Notifications.Instance.sendVerification({
+                email : newUser.email,
+                name : newUser.firstName+" "+newUser.lastName,
+                uid : newUser.uid
+            });
+
+            return { success : true, result : "User was successfuly created" }
+        }catch(error){
+            return { success : false, error : "Opps, error occured"}
+        }
     }
 
     public static RequestPassword(email : string) : Promise<any> {
@@ -48,9 +62,10 @@ export default class UserController{
                 password_link : pwdLink
               },
               {
-                where : { email : email}
+                where : { email : email},
+                returning : true
               })
-                .then( result => UserSchema.findOne({ where : { email : email} }))
+                .then( result => { console.log(result); return UserSchema.findOne({ where : { email : email} }) })
                 .then( user => resolve(user))
                 .catch( err => reject(err));          
 

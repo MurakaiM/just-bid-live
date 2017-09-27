@@ -176,9 +176,9 @@ export default class User {
 
 
     public static ForceCreate(data : UserInterface){
-        var dataObject : any = data; 
-        var passwordData : UserPassword = User.hashWithSalt(data.password,User.getRandomString(15));
-        var phoneParser  = parse(data.phone);
+        let dataObject : any = data; 
+        let passwordData : UserPassword = User.hashWithSalt(data.password,User.getRandomString(15));
+        let phoneParser  = parse(data.phone);
         
         dataObject.password = passwordData.password;
         dataObject.salt = passwordData.salt;
@@ -187,17 +187,11 @@ export default class User {
         dataObject.phone = data.phone;
         dataObject.country = phoneParser.country;    
         
-        return new Promise<User>((resolve, reject) => {
-            var user = UserSchema.build(dataObject);
+        return new Promise<any>((resolve, reject) => {
+            let user = UserSchema.build(dataObject);
             user.save()
-             .then( () => {            
-                var userObject : User = new User(dataObject.uid);
-                userObject.ForceLoad(user);
-                resolve(userObject);
-             })
-             .catch(err => { 
-                 console.log(err);  
-                 reject("Error occured (Database error)") });
+             .then( () => resolve(dataObject))
+             .catch(err => reject("Error occured (Database error)"));
         }); 
     }
 
@@ -310,7 +304,7 @@ export default class User {
                     userObject.ForceLoad(user);
                     resolve(userObject);
                 }else{
-                    reject("Can't get user (Such user not exists)");
+                    resolve(null);
                 }
             })
             .catch( err =>{console.log(err);  reject("Can't get user (Database problem)") });

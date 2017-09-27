@@ -51,6 +51,8 @@ export default class Notificator{
     }
 
     public sendPasswordreset(data : Password) : Promise<any>{
+
+
         let options = {
             num_rcpt_errors : 3
         };
@@ -60,9 +62,9 @@ export default class Notificator{
                 browser : data.browser,
                 name : data.name,
                 email : data.email,
-                link : this.verificationLink(data.link),
+                link : this.passwordLink(data.link),
                 dynamic_html : {
-                    button : `<a href="${this.verificationLink(data.link)}" class="href"> Reset Password </a>`
+                    button : `<a href="${this.passwordLink(data.link)}" class="href"> Reset Password </a>`
                 }
             },
             content : {

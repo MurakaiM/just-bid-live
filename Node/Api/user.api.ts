@@ -7,13 +7,14 @@ import {
         validResetPassword, 
         validSingIn, 
         validAuction,
-         UserError 
+        UserError 
 } from '../Utils/Others/validator'
 
 
 import { Response , BuildResponse } from '../Utils/Communication/response'
 import { isAuth, isSeller }  from '../Utils/Communication/rules'
 import { Database } from '../Database/database.controller'
+import { DOMAIN } from '../keys'
 
 import UserController from '../Controllers/user.controller'
 import ProductController from '../Controllers/product.controller'
@@ -25,6 +26,8 @@ import NotificationsController from '../Controllers/notification.controller'
 
 import Product from '../Models/product.model'
 import Notificatior from '../Services/Norifications/email.service'
+
+
 
 export default class UserApi extends BasicController{
     constructor() {
@@ -95,11 +98,12 @@ export default class UserApi extends BasicController{
             return res.send(BuildResponse(11,"Invalid input values", undefined , hasError.reason ));
         }
 
-
         UserController.SignUp(values,avatar)
-          .then( msg => res.send(BuildResponse(0,msg.reason)))
-          .catch( msg => res.send(BuildResponse(10,msg.reason)));
-    }
+          .then( answer =>  answer.success ?
+            res.send(BuildResponse(0,answer.result)) :
+            res.send(BuildResponse(10,answer.error)) 
+          )
+    }     
 
     protected signOut(req,res) : void{    
        if(req.user) 
@@ -115,15 +119,12 @@ export default class UserApi extends BasicController{
 
     protected verify(req,res) : void{
         UserController.VerifyUser(req.params.uid)
-            .then( user => {
-                const pageInfo = {
-                    pageName : "Verification",
-                    name : user.firstName,
-                    isSeller : user.isSeller
-                };
-
-                res.render('Actions/verification', pageInfo)
-            })
+            .then( user =>  res.render('Actions/verification', {
+                pageName : "Verification",
+                name : user.firstName,
+                isSeller : user.isSeller,
+                domain : DOMAIN
+            }))
             .catch( err => res.redirect('/'));
     }
 
@@ -138,13 +139,13 @@ export default class UserApi extends BasicController{
         
         if(hasError.invalid) return res.send(BuildResponse(11,"Invalid input values", undefined, hasError.reason));
         UserController.RequestPassword(values.email)
-            .then( user => {          
+            .then( user => { 
                 Notificatior.Instance.sendPasswordreset({
                     name : user.firstName,
                     link : user.password_link,
                     email : user.email,
-                    browser : "",
-                    operating : ""
+                    browser : agent.toAgent(),
+                    operating : agent.os.toString()
                 });
                 res.send(BuildResponse(0,"You successfuly requested password rest"))
             })

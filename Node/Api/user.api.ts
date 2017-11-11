@@ -148,7 +148,7 @@ export default class UserApi extends BasicController{
             pageName : 'Approval', 
             domain : DOMAIN,
             user : req.user.Data,
-            currentUser : req.user.Data
+            currentUser : req.user
         })        
     }
 

@@ -75,7 +75,8 @@ export default class SellerApi extends BasicController{
         return res.render('Sellers/approval', { 
             pageName : 'Approval', 
             domain : DOMAIN,
-            user : req.user.Data
+            user : req.user.Data,
+            currentUser : req.user.Data
         })    
     }   
 

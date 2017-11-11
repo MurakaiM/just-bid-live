@@ -108,7 +108,7 @@ function AuthController(){
             if(window.location.pathname.includes('seller')){
               window.location.href = '/seller/signin'
             }else{
-              if(window.location.href != '/') 
+              if(window.location.pathname != '/') 
                   window.location.href = '/'
             }
 

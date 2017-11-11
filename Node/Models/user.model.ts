@@ -217,7 +217,7 @@ export default class User {
     public static ForceStore(data : any, userAvatar : any, storeAvatar : any){       
         const passwordData : UserPassword = User.hashWithSalt(data.password,User.getRandomString(15));
         const phoneParser  = parse(data.phone);
-        const phoned  = `+${data.fphone}${data.fphone}`
+        const phoned  = `+${data.fphone}${data.lphone}`
 
         let readyUser, readyStore;
         let dataObject : any = {
@@ -274,7 +274,7 @@ export default class User {
 
     public static ForceStoreApproval(user : User, data : any, userAvatar : any, storeAvatar : any){
         const phoneParser  = parse(data.phone);
-        const phoned  = `+${data.fphone}${data.fphone}`
+        const phoned  = `+${data.fphone}${data.lphone}`
 
         let readyUser, readyStore;
         let dataObject : any = {

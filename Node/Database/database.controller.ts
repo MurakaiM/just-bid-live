@@ -101,8 +101,9 @@ export class Database{
       await WinningSchema.sync();
       await OrderSchema.sync();
 
-      await BillingSchema.sync();
       await PayoutSchema.sync();
+      await BillingSchema.sync();
+      
       await WishSchema.sync();      
       
       await NotificationSchema.sync();

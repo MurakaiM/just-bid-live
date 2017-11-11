@@ -16,6 +16,7 @@ export interface UserPassword{
 export interface UserPublic{
   email : string,
   uid : string,
+  provider : string,
   firstName : string,
   lastName : string,
   img? : string

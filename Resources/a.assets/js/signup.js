@@ -6,11 +6,14 @@ $(function () {
   setDates();
   setAvatar();
   setValidation();
+
+  $(".dropdown").dropdown();
 });
 
 function setValidation() {
   var validationRules = {
     inline: true,
+    finishing : true,
     rules: {
       storeName :{
         identifier : 'storeName',
@@ -66,11 +69,18 @@ function setValidation() {
           prompt: 'Please select your birth date'
         }]
       },
-      phone: {
-        identifier: 'phone',
+      fphone: {
+        identifier: 'fphone',
         rules: [{
-          type: 'phone[5]',
-          prompt: 'Enter valid phone number'
+          type: 'empty',
+          prompt: 'Please select your country cody'
+        }]
+      },
+      lphone: {
+        identifier: 'lphone',
+        rules: [{
+          type: 'empty',
+          prompt: 'Please enter rest part of phone number'
         }]
       },
       password: {

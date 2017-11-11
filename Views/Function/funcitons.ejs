@@ -3,7 +3,7 @@
         var dt = new Date(value);
         var data = {
             day : dt.getDate() < 10 ? 0+""+dt.getDate() : dt.getDate(),
-            month : (dt.getMonth() + 1) < 10 ? 0+""+(dt.getMonth()+1) : dt.getMonth()
+            month : (dt.getMonth() + 1) < 9 ? 0+""+(dt.getMonth()+1) : (dt.getMonth()+1)
         };
 
         return `${data.day}.${data.month}.${dt.getFullYear()}`

@@ -1,3 +1,4 @@
+import * as moment from 'moment'
 import {
     Database,
     ProductSchema,
@@ -6,19 +7,25 @@ import {
     OrderSchema,
     WinningSchema,
     BillingSchema,
+    PayoutSchema,
     AuctionSchema,
     TypesSchema
 } from '../Database/database.controller'
 
 import { AwaitResult } from '../Utils/Communication/async'
 
-import Merchant from '../Payments/merchant'
 import User from './user.model'
 
 
 export default class Seller {
     private dbSeller;
     private uuid : string;
+
+    public static GetSeller(user : User) : Promise<any>{
+        return SellerSchema.findOne({
+            where : { userId : user.PublicData.uid }
+        })
+    }
 
     public static FetchProducts(user: User): Promise < any > {
         let attributes: Array < any > = ['prUid', 'prTitle', 'prRating', 'prCost', 'prSold', 'prViews', 'prWishes', 'prTypes', 'createdAt', 'updatedAt'];
@@ -32,11 +39,12 @@ export default class Seller {
             ],
             where: {
                 prSeller: user.Data.uid,
-                prDisabled: false
+                prDisabled: false,
+                prAllowed : { $ne : false }
             },
             include: [{
                 model: TypesSchema,
-                as: "Type"
+                as: "types"
             }],
             attributes
         });
@@ -70,7 +78,7 @@ export default class Seller {
         });
     }
 
-    public static UpdateAuction(user: User, uuid: string, stock: number): Promise < any > {
+    public static UpdateAuction(user: User, uuid: string, stock: number): Promise<any> {
         return AuctionSchema.update({
             inStock: stock
         }, {
@@ -81,7 +89,7 @@ export default class Seller {
         });
     }
 
-    public static PauseAucion(user: User, uuid: string, availability: boolean): Promise < any > {
+    public static PauseAucion(user: User, uuid: string, availability: boolean): Promise<any> {
         return AuctionSchema.update({
             temporaryDisabled: availability
         }, {
@@ -92,24 +100,37 @@ export default class Seller {
         });
     }
 
-    public static async RequestPayout(user : User, nonce : any ) : Promise<AwaitResult>{
+    public static async PayoutRequested(user : User): Promise<{ requested : boolean, payout : any }>{
         try{
-           let seller : any = await user.Data.getSeller({ attributes : ['merchantId']});
-           let totalSum : number = await BillingSchema.sum('amount', { where: { status : "new", sellerId : user.PublicData.uid } });
-           let feeSum : number =  Seller.calcFee(totalSum);
-           
-                      
-           let transaction : any = await Merchant.Instance.CreateTransaction(seller.merchantId, totalSum, feeSum, nonce)
+            let payout = await PayoutSchema.findOne({
+                where : {
+                    sellerId : user.PublicData.uid,
+                    status : 'Waiting for review'
+                }
+            });
 
-           await BillingSchema.update({ status : "settled", payoutId : transaction.result.id },{ where: { status : "new", sellerId : user.PublicData.uid } })
-           return { success : true , result : transaction }
-
+            if(!payout){
+                return { requested : false, payout : null };
+            }else{  
+                return { requested : true, payout };
+            }                       
         }catch(error){
-           return { success : false , error } 
-        }    
+            return { requested : true, payout : null };
+        }
     }
 
+    public static ApproveSeller(user : User, data : any): Promise<any>{
+        return null;
+    }
 
+    public static UpdatePaypal(user: User, email : string): Promise<any>{
+        return SellerSchema.update({
+            paypalEmail: email,
+            paypalAccepted : moment().add(14, 'day')
+         },{
+            where :{ userId : user.PublicData.uid }     
+        })
+    }
 
     private static calcFee(allNumber : number) : number{
         let part = 0;

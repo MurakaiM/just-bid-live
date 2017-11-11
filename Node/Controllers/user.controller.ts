@@ -4,6 +4,7 @@ import User from '../Models/user.model'
 import Storage from '../Utils/Controllers/storage'
 import Notifications from '../Services/Norifications/email.service'
 
+import { validSocialSignUp } from '../Utils/Others/validator'
 import { UserSchema } from '../Database/database.controller'
 import { UserMessages } from '../Interfaces/user.interfaces'
 import { AwaitResult } from '../Utils/Communication/async'
@@ -20,8 +21,7 @@ export default class UserController{
                 if(user.Data.phone == data.phone && user.Data.email == data.email)
                     return { success : false, error : "User with such phone and email already exists"}
                 else if(user.Data.phone == data.phone) 
-                    return { success : false, error : "User with such phone already exists"}
-            
+                    return { success : false, error : "User with such phone already exists"}            
                 else if(user.Data.email == data.email) 
                     return { success : false, error : "User with such email already exists"}
             }
@@ -49,6 +49,34 @@ export default class UserController{
             return { success : false, error : "Opps, error occured"}
         }
     }
+
+    public static async SignVerify(user : User, data : any) : Promise<AwaitResult>{
+        try{
+            let hasError = validSocialSignUp(data);
+
+            if(hasError.invalid){
+                return { success : false, error : hasError.reason }
+            }
+            
+            let usr = await User.LoadByPhone(data.phone);           
+            
+            if(usr){           
+            return { success : false, error : "User with such phone already exists"} 
+            }
+
+            let upd = await User.SocialVerify(user.PublicData.uid, {
+                firstName : data.firstName,
+                lastName : data.lastName,   
+                birthday : new Date(data.birthday), 
+                phone : data.phone            
+            })
+
+            return { success : true, result : "Successfully updated"}
+        }catch(error){
+            return { success : false, error }
+        }
+    }
+
 
     public static RequestPassword(email : string) : Promise<any> {
         return new Promise((resolve, reject) => {

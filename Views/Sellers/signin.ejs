@@ -9,14 +9,32 @@
     <link rel="stylesheet" href="<%=domain%>/g.assets/css/responsive.css">
   </head>
 
-  <body>
+  <body class="preloading">
     <div class="content">
       <!--Menu include!-->
       <%-include('../Common/minimenu', { page : pageName  })%>
 
       <div class="single">
           <form id="sellerIn" class="ui form former small">
-              <h3 class="ui image header flexcenter"> <img src="<%=domain%>/g.assets/img/commericalicons/briefcase.png" alt="store"> Sign in as seller</h3>
+              <h3 class="ui image header flexcenter"> <img src="<%=domain%>/g.assets/img/commercialicons/briefcase.png" alt="store"> Sign in as seller</h3>
+    
+              <div class="ui two column grid">
+                    <div class="column social">
+                        <a href="/user/signin/facebook?seller=true" class="ui facebook button">
+                        <i class="facebook icon"></i>
+                        Facebook
+                        </a>
+                    </div>
+                    <div class="column social">
+                        <a href="/user/signin/google?seller=true" class="ui google plus button">
+                        <i class="google plus icon"></i>
+                        Google
+                        </a>
+                    </div>
+              </div>
+              <div class="ui horizontal divider gray">Or</div>
+
+             
               <div class="field">
                 <input type="text" placeholder="Email" name="email">
               </div>

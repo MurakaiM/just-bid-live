@@ -1,7 +1,8 @@
 export interface ControllerInterface {
     method : RequestType,
     path : string,
-    fn : Function
+    fn : Function,
+    middleware? : Array<Function>
 }
 
 
@@ -13,27 +14,30 @@ export default abstract class BasicController {
         this.Configure();
     }
 
-    protected Get(path : string, handler : Function){
+    protected Get(path : string, handler : Function, middleware? : Array<Function>){
         this.applyComponent(RequestType.GET,path,handler);
     }
 
-    protected Post(path : string, handler : Function){
+    protected Post(path : string, handler : Function, middleware? : Array<Function>){
         this.applyComponent(RequestType.POST,path,handler);
     }
-
-
-    protected abstract Configure();
     
 
-    private applyComponent(method : RequestType, path : string , handler : Function){ 
-        this.applied.push(
-            {
-                method : method,
-                path : path,
-                fn : handler
-            }
-        );       
+    private applyComponent(method : RequestType, path : string , handler : Function, middleware? : Array<Function>){ 
+        let data = {
+            method : method,
+            path : path,
+            fn : handler,                
+        };
+
+        if(middleware){
+            data['middleware'] = middleware;
+        }
+
+        this.applied.push(data);       
     }
+
+    protected abstract Configure();
 
     get Applied(){
         return this.applied;

@@ -30,42 +30,60 @@ import Notificatior from '../Services/Norifications/email.service'
 
 
 export default class UserApi extends BasicController{
+
     constructor() {
         super();
     }
 
     Configure(){
-        this.Get('/user/current',this.currentUser);
-        this.Get('/verification/:uid',this.verify);
-        this.Get('/user/products/search=:query', this.productSearch);
-      
-        this.Get('/user/orders/current', this.orders);
-        this.Get('/user/orders/history', this.history);
+        this.Get('/user/current',this.currentUser)
+        this.Get('/verification/:uid',this.verify)
+        this.Get('/user/products/search=:query', this.productSearch)
+       
+        this.Get('/user/signing/social/approval', this.socialApproval)
+        this.Post('/user/signing/social/approval', this.socialVerify)
+
+        this.Get('/user/orders/current', this.orders)
+        this.Get('/user/orders/history', this.history)
+
+        this.Get('/user/signin/google', this.signInGoogle)
+        this.Get('/user/signin/facebook', this.signInFacebook)
 
         this.Get('/user/notifications/new', this.newNotifications)
         this.Post('/user/notifications/review', this.reviewNotifications)
 
         this.Post('/user/orders/cart', this.loadCart)
 
-        this.Post('/user/signout', this.signOut);
-        this.Post('/user/signup', this.signUp);
-        this.Post('/user/signin', this.signIn);
-       
+        this.Post('/user/signout', this.signOut)
+        this.Post('/user/signup', this.signUp)
+        this.Post('/user/signin', this.signIn)
+             
+        this.Post('/user/password/request', this.requestPassword)
+        this.Post('/user/password/reset', this.resetPassword)
 
-        this.Post('/user/password/request', this.requestPassword);
-        this.Post('/user/password/reset', this.resetPassword);
+        this.Post('/user/product/type', this.productType)
     }
 
+    protected signInGoogle(req,res,next){     
+        if(req.query['seller']=='true'){
+            req.session.seller = true;
+        }
+        
+        return !req.isAuthenticated() ?
+             passport.authenticate('google',{ scope: ['profile','email'] })(req,res,next) :
+             res.redirect('/'); 
+    }   
 
-    protected productSearch(req,res) : void{
-        Database.Instance.productSearch.search(["prUid","prTitle","prCategory","prDescription","prTypes"], req.params.query)
-            .then( result => 
-                result.success ?                      
-                  res.send( BuildResponse(0,"Search successfully finished",result.result) ) :
-                  res.send( BuildResponse(10,"Error occurred",result.error) )
-            )
-       
+    protected signInFacebook(req,res,next){
+        if(req.query['seller']=='true'){
+            req.session.seller = true;
+        }
+
+        return !req.isAuthenticated() ?
+            passport.authenticate('facebook')(req,res,next) :
+            res.redirect('/'); 
     }
+
 
     protected signIn(req, res, next): void {
         var hasError : UserError   = validSingIn(req.body);
@@ -88,14 +106,16 @@ export default class UserApi extends BasicController{
         })(req, res, next);
     }
 
-    protected signUp(req,res) : void {
+    protected signUp(req,res): void {
+        req.body.phone = `+${req.body.fphone}${req.body.lphone}`;
+
         var values = req.body;
         var avatar = req.files ? req.files.avatar : null;   
 
-        var hasError : UserError   = validSignUp(values);
-
+        var hasError : UserError   = validSignUp(values); 
+        
         if(hasError.invalid){
-            return res.send(BuildResponse(11,"Invalid input values", undefined , hasError.reason ));
+            return res.send(BuildResponse(11, hasError.reason, undefined , hasError.reason ));
         }
 
         UserController.SignUp(values,avatar)
@@ -105,7 +125,7 @@ export default class UserApi extends BasicController{
           )
     }     
 
-    protected signOut(req,res) : void{    
+    protected signOut(req,res): void {    
        if(req.user) 
             var uid = req.user.PublicData.uid;
        else 
@@ -116,6 +136,39 @@ export default class UserApi extends BasicController{
            res.send(BuildResponse(0, "Sign out completed successfully"));
        });
     }
+
+
+    protected socialApproval(req,res): void{  
+        if(req.session.seller == true) return res.redirect('/seller/signing/approval')
+        if(!req.isAuthenticated()) return res.redirect('/')        
+        if(req.user.isVerified()) return res.redirect('/')
+        if(req.user.getProvider() == 'local') return res.redirect('/')
+        
+        return res.render('Users/approval', { 
+            pageName : 'Approval', 
+            domain : DOMAIN,
+            user : req.user.Data
+        })        
+    }
+
+    protected socialVerify(req,res): void{
+        if(!req.isAuthenticated()) 
+            return res.send(BuildResponse(10,"No user for approval"))        
+        
+        if(req.user.isVerified()) 
+            return res.send(BuildResponse(10,"User is already verified"))
+        
+        if(req.user.getProvider() == 'local') 
+            return res.send(BuildResponse(10,"Provider isn't social"))
+
+
+        req.body.phone = `+${req.body.fphone}${req.body.lphone}`
+        UserController.SignVerify(req.user, req.body)
+                      .then( answer => res.send( answer.success ? BuildResponse(0, 'Successfully verified') : BuildResponse(10, answer.error) ))
+                      .catch( error => res.send(BuildResponse(10, 'Error occurred')));
+    }
+
+
 
     protected verify(req,res) : void{
         UserController.VerifyUser(req.params.uid)
@@ -130,6 +183,26 @@ export default class UserApi extends BasicController{
 
     protected currentUser(req, res): void {
         isAuth(req, res).allowed(() => res.send(BuildResponse(0, "User successfully fetched", req.user.PublicData)));
+    }
+
+    protected productType(req,res) : void{
+        isAuth(req,res).allowed(user => 
+            ProductController.PublicStock(user,req.body)
+                .then( answer => answer.success ?
+                    res.send(BuildResponse(0,"Types were fetched", answer.result)) :
+                    res.send(BuildResponse(10,"Error occurred", null)),
+                )
+        )
+    }
+
+    protected productSearch(req,res) : void{
+        Database.Instance.productSearch.search(["prUid","prTitle","prCategory","prDescription","prTypes"], req.params.query)
+            .then( result => 
+                result.success ?                      
+                  res.send( BuildResponse(0,"Search successfully finished",result.result) ) :
+                  res.send( BuildResponse(10,"Error occurred",result.error) )
+            )
+       
     }
 
     protected requestPassword(req,res) : void {

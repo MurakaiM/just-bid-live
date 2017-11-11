@@ -1,23 +1,30 @@
-let tabs, table, tableDisabled, tableAuctions, tableWinnings;
-let dataStats;
+var tabs, table, tableDisabled, tableAuctions, tableWinnings;
+var dataStats, payoutsStats, personalStats;
+
+var winningsDetails;
+var winningItem = null;
 
 $(e => onLoad());
 
 
 function onLoad() {
+  $("thead th[data-content]").popup({ position: 'top center' });
+
   SetUpWinnings();
+  SetUpPersonal();
   SetUpProducts();
   SetUpDisabled();
+  SetUpPayouts();
   SetUpAuction();
   SetUpHome();
 
   tabs = new Tabs({
     headers: ".tabs.head",
     contents: ".tabs.body"
-  }, {
+   }, {
     winnings: {
-      onOpen : (head,segment) => tableWinnings.loadInSegment('/seller/winning/all', head, segment),
-      onClose : () => tableWinnings.forceDelete
+      onOpen: (head, segment) => tableWinnings.loadInSegment('/seller/winning/all', head, segment),
+      onClose: () => tableWinnings.forceDelete
     },
     products: {
       onOpen: (head, segment) => table.loadInSegment('/seller/product/all', head, segment),
@@ -35,13 +42,24 @@ function onLoad() {
       onOpen: (head, segment) => {
         dataStats.load(head, segment)
       },
+      onClose: () => {
+        dataStats.image.attr('src','')
+      }
+    },
+    payouts : {
+      onOpen: (head, segment) => {
+        payoutsStats.load(head, segment)
+      },
+      onClose: () => {}
+    },
+    personal : {
+      onOpen: (head, segment) => personalStats.load(head, segment),      
       onClose: () => {}
     }
   });
-
   $("#signout").click(e => POST('/user/signout'));
-}
 
+}
 
 function reworkRating(rating) {
   let rate = parseInt(rating ? rating : 0);
@@ -75,8 +93,119 @@ function reworkBoolean(bool) {
 }
 
 
+function SetUpPayouts(){  
+  const payouts = $('#payouts');
+
+  payoutsStats = {
+    load : (head,segment) => {
+      LoadSegment('/seller/store/payouts', head, segment)
+        .then(answer => loadData(answer.result.data, segment))
+        .catch();    
+    },
+    requested : payouts.find(`#requested`),
+    pending : payouts.find(`.big.itemed[data-tab="pending"] .money`),
+    available : payouts.find(`.big.itemed[data-tab="available"] .money`),
+    reqSummary: payouts.find(`.big.itemed[data-tab="requested"] .money`),
+    pendingList : payouts.find(`.tab.segment[data-tab="pending"] .grid.wr`),
+    requestedList : payouts.find(`.tab.segment[data-tab="requested"] .grid.wr`),
+    availableList : payouts.find(`.tab.segment[data-tab="available"] .grid.wr`),
+    paidAvailable : false
+  };
+
+  $('.menu .itemed').tab({
+    'onVisible' : path => (path == 'available' && payoutsStats.paidAvailable) ?  $("#getpaid").removeClass('disabled') : $("#getpaid").addClass('disabled')  
+  });
+
+  function loadData(data, segment){
+      let pending = { amount : 0, fee : 0 };
+      let available = { amount : 0, fee : 0 };
+      let lst = { amount : 0, fee : 0 };
+
+      let rq = data.result.requested.payout;
+
+      data.result.requested.requested == true ? 
+            payoutsStats.requested.html(
+              `<b>\$${toCurrency(rq.amount/100)}</b> was requested at <b>${new Date(rq.createdAt).toLocaleDateString()}</b>. 
+               Current status - <b>${rq.status}</b>.
+               You can't request new payout until this request is not finished.
+              `
+            ) : payoutsStats.requested.html('no earnings were requested for now.')
+            
+      payoutsStats.paidAvailable = !data.result.requested.requested;     
+
+      payoutsStats.pendingList.empty();
+      payoutsStats.availableList.empty();
+      payoutsStats.requestedList.empty();
+
+      data.result.pending.forEach( elem => {         
+        pending.amount += elem.amount ? elem.amount : 0; 
+        pending.fee += elem.fee ? elem.fee : 0;        
+        payoutsStats.pendingList.append(createRow(elem,false))
+      });
+
+      data.result.available.forEach( elem => {        
+        elem.amount-=elem.fee; 
+        available.amount += elem.amount ? elem.amount : 0; 
+        available.fee += elem.fee ? elem.fee : 0;        
+        payoutsStats.availableList.append(createRow(elem,true))
+      });
+
+      data.result.listed.forEach(elem => payoutsStats.requestedList.append(createRow(elem)));
+
+
+      if(data.result.pending.length == 0){
+        payoutsStats.pendingList.append(createEmpty());
+      }
+
+      if(data.result.available.length == 0){
+        payoutsStats.availableList.append(createEmpty());
+      }
+
+      if(data.result.listed.length == 0){
+        payoutsStats.requestedList.append(createEmpty());
+      }
+
+      payoutsStats.pending.text(`\$${toCurrency(pending.amount/100)}`)
+      payoutsStats.available.text(`\$${toCurrency(available.amount/100)}`)
+      payoutsStats.reqSummary.text(`\$${toCurrency(rq ? (rq.amount/100) : 0 )}`)
+
+      segment.removeClass('loading');
+  }
+
+  function createRow(elem,rq){
+    var template = $(`<div class="row no-margin" data-id="${elem.itemId}">
+                        <div class="three wide column flex center"> 
+                          <button class="ui compact button">Details</button> 
+                        </div>
+                        <div class="two wide column flex center">
+                          <span class="currency"> \$${toCurrency( (elem.amount ? elem.amount : 0)/100) } </span>
+                        </div>
+                        <div class="two wide column flex center">
+                          <span class="currency">\$${toCurrency( (elem.fee ? elem.fee : 0)/100) } </span>
+                        </div>
+                        <div class="four wide column flex center">
+                          <span class="inline-link"> ${elem.type} </span>
+                        </div>     
+                        <div class="five wide column flex center"> 
+                          <span class="inline-link"> ${new Date(elem.createdAt).toLocaleString() } </span>
+                        </div>                                        
+                      </div>`
+    );
+    var id = template.data('id');
+    template.find('button').click( e => {
+      winningItem = id;
+      winningsDetails.toggleState();
+    });
+    return template;
+  }
+
+  function createEmpty(){
+    return `<div class="paidempty"> No records to show </div>`
+  }
+}
+
 function SetUpHome() {
-  const wrapper = $("#homeData");
+  const wrapper = $("#home");
 
   dataStats = {
     load: (head, segment) => {
@@ -113,12 +242,228 @@ function SetUpHome() {
   }
 }
 
+function SetUpPersonal() {
+  const wrapper = $("#personal");
+  
+  personalStats = {
+      data : null,
+      load: (head, segment) => {
+        LoadSegment('/seller/store/personal', head, segment)
+          .then(answer => loadData(answer.result.data, segment))
+          .catch();
+      },
+      wrapper: wrapper,
+      paypalForm: wrapper.find('#paypal_update'),
+      paypalButton: wrapper.find('#paypal_update button'),
+      paypalInput: wrapper.find('#paypal_update input'),
+      paypalAvaiting : wrapper.find('#paypal_update .ui.message.yellow'),
+      paypalSuccess : wrapper.find('#paypal_update .ui.message.green'),
+      paypalError : wrapper.find('#paypal_update .ui.message.red'),
+
+      avatarForm : wrapper.find('#avatar_update'),
+      avatarSelectable : wrapper.find('#avatar_update label.ui.button.submit'),
+      avatarButton : wrapper.find('#avatar_update button'),
+      avatarImg : wrapper.find('#avatar_update img'),
+      avatarInput : wrapper.find('#new_avatar'),
+      avatarSuccess : wrapper.find('#avatar_update .ui.green'),
+      avatarError : wrapper.find('#avatar_update .ui.red'),
+
+      informationForm : wrapper.find('#info_update'),
+      informationTitle : wrapper.find('#info_update input[name="title"]'),
+      informationSubtitle : wrapper.find('#info_update input[name="subtitle"]'),
+      informationDescription : wrapper.find('#info_update textarea[name="description"]'),
+      informationButton : wrapper.find('#info_update button'),
+      informationSuccess : wrapper.find('#info_update .ui.message.green'),
+      informationError : wrapper.find('#info_update .ui.message.red'),
+  };
+
+  personalStats.paypalForm.submit(e => {
+    e.preventDefault()
+    return false
+  })
+  personalStats.paypalForm.form({ 
+    inline : true,
+    fields: { 
+      paypalEmail : {        
+        rules: [{
+            type   : 'email',
+            prompt : 'Please enter email in valid format'
+        }]
+      }
+    }    
+  })
+  personalStats.paypalButton.click( e => {
+    if(!personalStats.paypalForm.form('is valid'))
+      return;
+
+    if(personalStats.paypalInput.val() == personalStats.data.paypalEmail){
+      return;
+    }
+
+    setPaypalLoading()
+    POST('/seller/payout/paypal/update', { email : personalStats.paypalInput.val() })
+        .then(e => {          
+          removePaypalLoading();
+
+          var currentTime = new Date();
+          currentTime.setDate(currentTime.getDate()+14);
+
+          personalStats.paypalSuccess.addClass('hidden');
+          personalStats.paypalAvaiting.removeClass('hidden');
+
+          $("#paypal_date").text(currentTime.toLocaleDateString());
+        })
+        .catch(error => removePaypalLoading())
+  })
+
+
+  personalStats.avatarForm.submit(e => {
+    e.preventDefault();
+    return false
+  })
+  personalStats.avatarButton.click( e => {  
+    setAvatarLoading();
+    FormPOST('/seller/avatar/update', new FormData(personalStats.avatarForm[0]))
+          .then(e => {
+            removeAvatarLoading();
+            personalStats.avatarSuccess.removeClass('hidden')
+            setTimeout(e => personalStats.avatarSuccess.addClass('hidden'), 5000)
+          })
+          .catch(e => {
+             removeAvatarLoading()
+             personalStats.avatarError.removeClass('hidden')
+             setTimeout(e => personalStats.avatarError.addClass('hidden'), 5000)
+          })
+  })
+
+
+  personalStats.informationForm.submit( e => {
+    e.preventDefault()
+    return false
+  })
+  personalStats.informationForm.form({
+    fields: { 
+      title : {        
+        rules: [{
+            type   : 'empty',
+            prompt : 'Please enter store title'
+        }]
+      },
+      subtitle : {        
+        rules: [{
+            type   : 'empty',
+            prompt : 'Please enter store subtitle'
+        }]
+      },
+      description : {        
+        rules: [{
+            type   : 'empty',
+            prompt : 'Please enter store description'
+         },{
+            type   : 'maxLength[255]',
+            prompt : 'Description is too long'
+        }]
+      }
+    }    
+  })
+  personalStats.informationButton.click(e => {   
+    if(!personalStats.informationForm.form('is valid'))
+      return;
+
+    setInfoLoading();
+    POST('/seller/information/update', { 
+        title : personalStats.informationTitle.val(),
+        subtitle : personalStats.informationSubtitle.val(),
+        description : personalStats.informationDescription.val()
+      }).then( result => {
+        removeInfoLoading()
+        personalStats.informationSuccess.removeClass('hidden')
+        setTimeout(e => personalStats.informationSuccess.addClass('hidden'), 5000)
+      }).catch( error => {
+        removeInfoLoading()
+        personalStats.informationError.removeClass('hidden')
+        setTimeout(e => personalStats.informationError.addClass('hidden'), 5000)
+      });
+
+
+  })  
+
+  personalStats.avatarInput.on('change', event => readURL(personalStats.avatarInput, personalStats.avatarImg))
+
+
+  function setInfoLoading(){
+    personalStats.informationButton.addClass('loading')
+
+    personalStats.informationTitle.addClass('disabled')
+    personalStats.informationSubtitle.addClass('disabled')
+    personalStats.informationDescription.addClass('disabled')
+  }
+
+  function removeInfoLoading(){
+    personalStats.informationButton.removeClass('loading')
+    
+    personalStats.informationTitle.removeClass('disabled')
+    personalStats.informationSubtitle.removeClass('disabled')
+    personalStats.informationDescription.removeClass('disabled')
+  }
+
+
+  function setAvatarLoading(){
+    personalStats.avatarButton.addClass('loading')
+    personalStats.avatarSelectable.addClass('disabled')
+  }
+
+  function removeAvatarLoading(){
+    personalStats.avatarButton.removeClass('loading')
+    personalStats.avatarSelectable.removeClass('disabled')
+  }
+
+  
+  function setPaypalLoading(){
+      personalStats.paypalButton.addClass('loading')
+      personalStats.paypalInput.addClass('disabled')
+  }
+
+  function removePaypalLoading(){
+    personalStats.paypalButton.removeClass('loading')
+    personalStats.paypalInput.removeClass('disabled')
+  }
+
+
+  function loadData(data, segment){  
+    personalStats.data = data;
+    segment.removeClass('loading')  
+    
+    if(data.paypalEmail){
+        personalStats.paypalInput.val(data.paypalEmail)
+
+        if(new Date().getTime() < new Date(data.paypalAccepted).getTime() ){
+          personalStats.paypalAvaiting.removeClass('hidden');
+          $("#paypal_date").text(new Date(data.paypalAccepted).toLocaleDateString());
+        }else{
+          personalStats.paypalSuccess.removeClass('hidden');
+        }
+    }
+
+    if(data.cover){
+      personalStats.avatarImg.addClass('avatar')
+      personalStats.avatarImg.attr('src',data.cover)
+    }
+
+    personalStats.informationTitle.val(data.title)
+    personalStats.informationSubtitle.val(data.subtitle)
+    personalStats.informationDescription.val(data.description)
+
+  }
+}
+
 function SetUpProducts() {
   $(".ui.small.icon.button").popup({
     position: 'bottom center',
   });
 
-  let currentItem = null,currentTemp = null;
+  let currentItem = null,
+    currentTemp = null;
   const buttons = {
     open: $("#productsOpen"),
     delete: $("#productsDelete"),
@@ -130,7 +475,7 @@ function SetUpProducts() {
 
   Simditor.locale = 'en-US';
   toolbar = ['title', 'bold', 'italic', 'underline', 'strikethrough', 'fontScale', 'color', '|', 'ol', 'ul', 'blockquote', 'table', '|', 'link', 'image', 'hr', '|', 'indent', 'outdent', 'alignment'];
-  
+
   table = new Table('products', {
     defaultSort: 'updatedAt',
     search: "#productsSearch",
@@ -143,16 +488,16 @@ function SetUpProducts() {
     input: {
       to: ".ui.left.action input"
     },
-    row: item => {    
-      let hasError = false;   
-     
-      item.Type.forEach(e => e.inStock <=0 ? hasError = true : false);
+    row: item => {
+      let hasError = false;
+
+      item.types.forEach(e => e.inStock <= 0 ? hasError = true : false);
 
       return $(`
         <tr>
           <td>${item.prTitle}</td>
           ${reworkStock(item.prStock,hasError)}
-          <td><i class="dollar icon"></i>${item.prCost}</td>          
+          <td><i class="dollar icon"></i>${toCurrency(item.prCost)}</td>          
           <td>${reworkRating(item.prRating)}</td>
           <td>${item.prViews}</td>
           <td>${item.prSold}</td>       
@@ -207,7 +552,7 @@ function SetUpProducts() {
         as: "value",
         name: 'valueVR',
         valid: value => value.length != 0
-      },     
+      },
       {
         name: "path",
         valid: value => value.length > 0
@@ -242,31 +587,30 @@ function SetUpProducts() {
 
       return $(template);
     },
-    maxSize : 2
+    maxSize: 7
   });
 
   const nestedSize = new NestedList('#typesSize', {
-    listplace : '.ui.grid',
-    submiter : '.teal',
-    inputs : [
-      {
-        as : "title",
-        name : 'titleVR',
-        valid : value => {
-          if(value.length == 0) return false;
+    listplace: '.ui.grid',
+    submiter: '.teal',
+    inputs: [{
+        as: "title",
+        name: 'titleVR',
+        valid: value => {
+          if (value.length == 0) return false;
           return true;
         }
       },
       {
-        as : "value",
-        name : 'valueVR',
-        valid : value => {
-          if(value.length == 0) return false;
+        as: "value",
+        name: 'valueVR',
+        valid: value => {
+          if (value.length == 0) return false;
           return true;
         }
-      }      
+      }
     ],
-    mockuper : (data,id) => {
+    mockuper: (data, id) => {
       let template = $(`   
         <div class="row">   
           <div class="seven wide column">${data.title}</div>
@@ -276,7 +620,7 @@ function SetUpProducts() {
           </div>  
         </div>      
       `);
-      template.find('button').click( e => {
+      template.find('button').click(e => {
         template.remove();
         nestedSize.forceDelete(id);
       });
@@ -348,7 +692,7 @@ function SetUpProducts() {
       nestedColor.forceEmpty();
     },
     onClose: body => {},
-    middleware: (body, props, createModal) => createForm(createModal, body, nestedColor, nestedSize , editor, table)
+    middleware: (body, props, createModal) => createForm(createModal, body, nestedColor, nestedSize, editor, table)
   }, false);
 
   const editModal = new Modal({
@@ -366,11 +710,15 @@ function SetUpProducts() {
       props.stock.addClass('loading');
       props.stock.empty();
 
-      POST('/seller/product/types', { id })
-          .then( result => createTypes(props.types, id, result.data))
+      POST('/seller/product/types', {
+          id
+        })
+        .then(result => createTypes(props.types, id, result.data))
 
-      POST('/seller/product/stocks', { id })
-          .then( result => createStock(props.stock, id, result.data))
+      POST('/seller/product/stocks', {
+          id
+        })
+        .then(result => createStock(props.stock, id, result.data))
 
     },
     onClose: (body, props) => {},
@@ -391,9 +739,12 @@ function SetUpProducts() {
       props.form.form('reset');
 
       props.dropdown.dropdown('clear');
+
       props.fee.val('Fee');
-      props.exp.val('Appearence');
-      props.ape.val('Explanation');
+      props.exp.val('Explanation');
+      props.ape.val('Appearence');
+      props.str.val('Starting price')
+
       props.exact.text(currentItem.arr[currentItem.i].prTitle);
     },
     onClose: (body, props) => {},
@@ -415,6 +766,13 @@ function SetUpProducts() {
               type: "empty",
               prompt: 'Select type of auction item'
             }]
+          },
+          str : {
+            identifier: 'str',
+            rules: [{
+              type: "currency",
+              prompt: 'Select valid auction starting price'
+            }] 
           }
         },
         dataMiddleware: data => {
@@ -424,26 +782,38 @@ function SetUpProducts() {
         success: data => {
 
         },
-        failure: error => {
-
-        }
+        failure: (error,form) => {
+          
+        }     
       };
 
       props.form = body.find('form');
       props.submit = props.form.find('button');
       props.exact = body.find('.exact');
+
       props.fee = body.find('input[name="fee"]');
       props.exp = body.find('input[name="exp"]');
       props.ape = body.find('input[name="ape"]');
+      props.str = body.find('input[name="str"]')
 
       props.dropdown = body.find('.ui.dropdown').dropdown({
         onChange: (value, text, $choice) => {
           if (!currentFees[value])
             return;
 
-          props.fee.val(String(currentFees[value].fee) + ((currentFees[value].type == 'dollar') ? "$" : "%"));
-          props.ape.val(currentFees[value].appearance);
-          props.exp.val(currentFees[value].explanation);
+          props.fee.val(String(currentFees[value].fee) + ((currentFees[value].type == 'dollar') ? "$" : "%"))
+          props.ape.val(currentFees[value].appearance)
+          props.exp.val(currentFees[value].explanation)
+
+          if(value == 'reserved'){     
+            props.str.parent().removeClass('partlydisabled')
+            props.str.val('')
+          }else{        
+            props.str.parent().addClass('partlydisabled')
+            props.str.val(currentFees[value].begin)
+          }  
+                  
+          props.form.form('validate field','str');
         }
       });
 
@@ -519,6 +889,13 @@ function SetUpProducts() {
             prompt: 'Please enter valid cost in format XX.XX (0$ - 20$)'
           }]
         },
+        delivery : {
+          identifier: 'delivery',
+          rules: [{
+            type: 'integer[1..180]',
+            prompt: 'Please enter valid delivery time (days)'
+          }]
+        },
         category: {
           identifier: 'category',
           rules: [{
@@ -535,9 +912,13 @@ function SetUpProducts() {
             {
               type: 'minLength[20]',
               prompt: 'Minimum 20 symbols'
+            },
+            {
+              type: 'maxLength[250]',
+              prompt: 'Maximum 250 symbols'
             }
           ]
-        },
+        },        
         stock: {
           identifier: 'material',
           rules: [{
@@ -553,20 +934,20 @@ function SetUpProducts() {
           }]
         }
       },
-      success: data => {        
+      success: data => {
         table.forceRow(data);
         nestedColor.forceEmpty();
         editor.setValue('');
         createModal.toggleState();
       },
-      dataMiddleware: currentData => {    
-        Object.keys(nestedColor.getData()).forEach(e => delete nestedColor.getData()[e].uri )
-        Object.keys(nestedColor.getData()).forEach(e => currentData.append('filefor'+e, nestedColor.getData()[e].image));
+      dataMiddleware: currentData => {
+        Object.keys(nestedColor.getData()).forEach(e => delete nestedColor.getData()[e].uri)
+        Object.keys(nestedColor.getData()).forEach(e => currentData.append('filefor' + e, nestedColor.getData()[e].image));
 
         currentData.append('colors', JSON.stringify(nestedColor.getData()));
         currentData.append('sizes', JSON.stringify(nestedSize.getData()))
         currentData.append('full', editor.getValue());
-        
+
         return currentData;
       }
     }
@@ -578,12 +959,12 @@ function SetUpProducts() {
 
   function createTypes(placeholder, product, data) {
     placeholder.empty();
-    placeholder.append(generate(product,'colors', data.prTypes.colors));
-    placeholder.append(generate(product,'sizes', data.prTypes.sizes))
+    placeholder.append(generate(product, 'colors', data.prTypes.colors));
+    placeholder.append(generate(product, 'sizes', data.prTypes.sizes))
     placeholder.removeClass('loading');
   }
 
-  function generate(product,group, perset) {
+  function generate(product, group, perset) {
     if (!perset) {
       return;
     }
@@ -600,7 +981,7 @@ function SetUpProducts() {
 
   function createStock(placeholder, product, data) {
     placeholder.empty();
-    placeholder.append(generate('stocks', data ));
+    placeholder.append(generate('stocks', data));
     placeholder.removeClass('loading');
 
     function generate(group, perset) {
@@ -662,7 +1043,7 @@ function SetUpProducts() {
         uid: product,
         available: this.isDisabled,
         name: data.value,
-        group : group
+        group: group
       }).then(result => this.switchButton(this.button))
     });
 
@@ -710,7 +1091,7 @@ function SetUpProducts() {
         wrapped.typeId = data.typeId;
         return wrapped;
       },
-      success: (fetched, form) => {      
+      success: (fetched, form) => {
         table.forceChange(currentTemp.i, fetched);
         setTimeout(e => form.removeClass('success'), 3000);
       },
@@ -969,7 +1350,7 @@ function SetUpAuction() {
           <td>${item.productTitle}</td> 
           <td>${currentFees[item.uidFee].title}</td>
           <td>${item.inStock}</td>
-          <td><i class="dollar icon"></i>${item.currentBid}</td>       
+          <td><i class="dollar icon"></i>${toCurrency(item.currentBid)}</td>       
           ${reworkBoolean(item.onAuction)}
           ${reworkBoolean(item.isCompleted)}
           ${reworkBoolean(item.temporaryDisabled)}
@@ -978,8 +1359,8 @@ function SetUpAuction() {
         </tr>
       `)
     },
-    transformation : value => {
-      value.currentBid = value.currentBid/100;
+    transformation: value => {
+      value.currentBid = value.currentBid / 100;
       value.productTitle = value.product.prTitle;
       return value;
     },
@@ -1006,11 +1387,11 @@ function SetUpAuction() {
   buttons.pause.click(e => pause.toggleState());
 }
 
-function SetUpWinnings(){
+function SetUpWinnings() {
   let currentItem = null;
   const buttons = {
-    details : $("#winningsDatails"),
-    update : $("#winningsUpdate"),
+    details: $("#winningsDatails"),
+    update: $("#winningsUpdate"),
     refresh: $("#winningsRefresh")
   }
 
@@ -1030,50 +1411,71 @@ function SetUpWinnings(){
               prompt: 'Type clear and proper status description'
             }]
           }
-        },       
-        dataMiddleware : data => {
-          data.record = currentItem.arr[currentItem.i].winningId;         
+        },
+        dataMiddleware: data => {
+          data.record = currentItem.arr[currentItem.i].winningId;
           return data;
         },
-        success: data => {        
+        success: data => {
           let current = currentItem.arr[currentItem.i];
           current.productTrack = data;
+          current.status = "Sent";
           tableWinnings.forceChange(currentItem.i, current);
         },
         failure: failure => console.log(error)
       }
 
-      props.form = new Form(body.find('form'), "/seller/winning/track", options);     
+      props.form = new Form(body.find('form'), "/seller/winning/track", options);
     }
   }, true);
 
-  const winningsDetails = new Modal({
+  winningsDetails = new Modal({
     id: "#winningDetailsModal",
     onOpen: (body, props) => {
       props.segment.addClass('loading')
-      POST('/seller/winning/especial', { winningId : currentItem.arr[currentItem.i].winningId })
-        .then( answer => props.insertInto(answer.data))
-        .catch(error => winningsDetails.toggleState())
+      POST('/seller/winning/especial', {
+          winningId: winningItem 
+        })
+        .then(answer => props.insertInto(answer.data))
+        .catch(error => console.log(error))
     },
-    onClose: (body, props) => {},
-    middleware : (body, props, modal) => {
+    onClose: (body, props) => props.deleteInfo(),
+    middleware: (body, props, modal) => {
       props.segment = body.find('.ui.segment');
       props.dataValues = body.find('.details.value');
-      props.insertInto = data => {         
-        $(props.dataValues[0]).text(data.user.firstName + " " + data.user.lastName);
-        $(props.dataValues[1]).text(data.customerAddress ? data.customerAddress : "No address was selected yet");
- 
-        $(props.dataValues[2]).find('a').attr('href',`/product/id${data.productId}`);
-        $(props.dataValues[2]).find('a').text(data.product.prTitle)
+      props.addresses = body.find('.col-md-6.nopadding.addressed')
 
-        $(props.dataValues[3]).text(data.selectedType);
+      props.insertInto = data => {
+        $(props.dataValues[0]).text(data.user.firstName + " " + data.user.lastName);
+        $(props.dataValues[2]).text(data.customerInformation ? "Address was selected" : "No address was selected yet");
+
+        $(props.dataValues[1]).find('a').attr('href', `/product/id${data.productId}`);
+        $(props.dataValues[1]).find('a').text(data.product.prTitle)
+
+        $(props.dataValues[3]).text(data.type ? data.type.title : 'Type has not been selected yet');
         $(props.dataValues[4]).text(data.productTrack);
         $(props.dataValues[5]).text(data.status);
-        $( props.dataValues[6]).text(`${data.lastBid}$`);
-        $(props.dataValues[7]).text(`${data.product.prShipment}$`);
+        $(props.dataValues[6]).text(`${toCurrency(data.lastBid/100)}$`);
+        $(props.dataValues[7]).text(`${toCurrency(data.product.prShipment)}$`);
         $(props.dataValues[8]).text(data.billingId ? 'Yes' : 'No');
+
+        if (data.customerInformation) {
+          props.addresses.removeClass('closed')
+
+          $(props.dataValues[9]).text(data.customerInformation['shipping[first-name]']);
+          $(props.dataValues[10]).text(data.customerInformation['shipping[last-name]']);
+          $(props.dataValues[11]).text(data.customerInformation['shipping[address]']);
+          $(props.dataValues[14]).text(data.customerInformation['shipping[country]']);
+          $(props.dataValues[12]).text(data.customerInformation['shipping[city]']);
+          $(props.dataValues[13]).text(data.customerInformation['shipping[code]']);
+          $(props.dataValues[15]).text(data.customerInformation['shipping[phone]']);        
+        } else {
+          props.addresses.addClass('closed')
+        }
         props.segment.removeClass('loading')
-      }  
+      }
+
+      props.deleteInfo = () => props.dataValues.each( (i,e) => i != 1 ? $(e).text('') : $(e).find('a').text('') );
     }
   }, true);
 
@@ -1089,12 +1491,12 @@ function SetUpWinnings(){
     input: {
       to: ".ui.left.action input"
     },
-    row: item => {   
+    row: item => {
       return $(` 
         <tr>
           <td>${item.winnerName}</td>      
-          <td><i class="dollar icon"></i>${item.lastBid}</td>     
-          <td>${item.status}</td>  
+          <td><i class="dollar icon"></i>${toCurrency(item.lastBid)}</td>     
+          ${reworkStatus(item.status)} 
           <td>${item.productTrack}</td>
           ${reworkBoolean(item.isPaid)}
           <td>${new Date(item.updatedAt).toLocaleDateString()}</td>
@@ -1102,19 +1504,16 @@ function SetUpWinnings(){
         </tr>
       `)
     },
-    transformation : value => {
-      value.winnerName = value.user.firstName+" "+value.user.lastName;
-      value.lastBid = value.lastBid/100;
+    transformation: value => {
+      value.winnerName = value.user.firstName + " " + value.user.lastName;
+      value.lastBid = value.lastBid / 100;
       return value;
     },
     click: (i, obj, arr) => {
       buttons.details.removeClass('disabled')
       buttons.update.removeClass('disabled')
-      currentItem = {
-        i,
-        obj,
-        arr
-      }
+      currentItem = { i,obj,arr }
+      winningItem = currentItem.arr[currentItem.i].winningId
     },
     onFocusLost: () => {
       currentItem = null;
@@ -1155,9 +1554,42 @@ function redrawButton(props, temporaryDisabled) {
   }
 }
 
+function reworkStatus(status){
+  var cls = '';
+  
+  if(status == 'New')
+    cls = 'pr'
+  else if(status == 'Paid')
+    cls = 'gr'
+
+  return `
+    <td>
+      <b class="light ${cls}"> 
+        ${status} 
+      </b>
+    </td>
+  `;
+}
+
+function readURL(input,placeholder) {
+  
+    if (input[0].files[0]) {
+      var reader = new FileReader();
+  
+      reader.onload = function (e) {
+          placeholder.addClass('avatar');
+          placeholder.attr('src', e.target.result);
+      }
+  
+      reader.readAsDataURL(input[0].files[0]);
+    }
+}
+
+
 let currentFees = {
   standard: {
     fee: 2,
+    begin : 2,
     type: "dollar",
     title: "Standard Listing",
     explanation: "Bids Begin at $2 and bids goes up at $1 at a time",
@@ -1165,6 +1597,7 @@ let currentFees = {
   },
   featured: {
     fee: 3,
+    begin : 3,
     type: "dollar",
     title: "Featured Listing",
     explanation: "Bids Begin at $3 and bids goes up at $1 at a time",
@@ -1172,16 +1605,26 @@ let currentFees = {
   },
   small: {
     fee: 5,
+    begin : 1,
     type: "per",
-    title: "Standard 20% Percent",
+    title: "Standard 20% Percent",   
     explanation: "Bids Begin at $1 and bids goes up at 20% at a time",
     appearance: "Orange Color Border"
   },
   big: {
     fee: 10,
+    begin : 1,
     type: "per",
     title: "Big Percentage 50%",
     explanation: "Bids Begin at $1 and bids goes up at 50% at a time",
     appearance: "Pink Color Border"
+  },
+  reserved : {
+    fee : 15,
+    begin : "custom",
+    type: "per",
+    title: "Reserved Listing",
+    explanation : "Bids Begin at selected price aand bids goes up at $1 at a time",
+    appearance : "Red Color Border"    
   }
-};
+}

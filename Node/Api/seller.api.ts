@@ -1,5 +1,8 @@
+import * as passport from 'passport'
+
 import { validAuction } from '../Utils/Others/validator'
 import { Fees } from '../Database/database.categories'
+import { DOMAIN } from '../keys'
 
 import { Response , BuildResponse } from '../Utils/Communication/response'
 import { isSeller }  from '../Utils/Communication/rules'
@@ -12,6 +15,7 @@ import BasicController from '../Utils/Controllers/basic.controller'
 import AuctionController from '../Controllers/auction.controller'
 import RealtimeController from '../Controllers/realtime.controller'
 import SellerController from '../Controllers/seller.controller'
+import PaymentController from '../Controllers/payment.controller'
 
 import Product from '../Models/product.model'
 
@@ -23,35 +27,121 @@ export default class SellerApi extends BasicController{
     Configure(){    
         this.Get('/seller/product/all', this.getProducts)
         this.Get('/seller/winning/all', this.getWinning)
-        this.Get('/seller/product/disabled', this.getDisabled);
+        this.Get('/seller/product/disabled', this.getDisabled)
 
-        this.Get('/seller/store/statistics', this.getStatistics);
-        this.Get('/seller/categories/search=:query', this.searchCategory);
+        this.Get('/seller/store/personal', this.getPersonal)
+        this.Get('/seller/store/statistics', this.getStatistics)
+        this.Get('/seller/store/payouts', this.getPayouts)
+        this.Get('/seller/categories/search=:query', this.searchCategory)
         this.Get('/seller/fees', this.getFees)
     
-        this.Get('/seller/auction/all', this.getAuctions);
-
-        this.Post('/seller/signup', this.signUp);
-
-        this.Post('/seller/product/types', this.getType);
+        this.Get('/seller/auction/all', this.getAuctions)
+        this.Post('/seller/signup', this.signUp)
+        
+        this.Post('/seller/product/types', this.getType)
         this.Post('/seller/product/stocks', this.getStock)
-        this.Post('/seller/product/typesout', this.disableType);
-        this.Post('/seller/product/create', this.createProduct);
-        this.Post('/seller/product/stock', this.updateStock);        
-        this.Post('/seller/product/delete', this.deleteProduct);    
-        this.Post('/seller/product/renew', this.renewProduct);
-        this.Post('/seller/product/remove', this.removeProduct);
+        this.Post('/seller/product/typesout', this.disableType)
+        this.Post('/seller/product/create', this.createProduct)
+        this.Post('/seller/product/stock', this.updateStock)      
+        this.Post('/seller/product/delete', this.deleteProduct)   
+        this.Post('/seller/product/renew', this.renewProduct)
+        this.Post('/seller/product/remove', this.removeProduct)
+        
+        this.Post('/seller/payout/paypal/update', this.updatePaypal)
+        this.Post('/seller/avatar/update', this.updateAvatar)
+        this.Post('/seller/information/update', this.updatePersonal)
 
 
         //this.Post('/seller/winning/status', this.winningStatus) 
         this.Post('/seller/winning/track', this.winningTrack)    
         this.Post('/seller/winning/especial', this.winningEspecial)    
 
-        
-        this.Post('/seller/auction/create', this.createAuction);
-        this.Post('/seller/auction/stock', this.stockAuction);
-        this.Post('/seller/auction/pause', this.pauseAuction);
+        this.Post('/seller/auction/create', this.createAuction)
+        this.Post('/seller/auction/stock', this.stockAuction)
+        this.Post('/seller/auction/pause', this.pauseAuction)
+
+        /* External sign in */
+        this.Get('/seller/signing/social/approval', this.externalApprove)
+        this.Post('/seller/signing/social/approval', this.externalVerify)
     }
+
+    /* External login */
+    protected externalApprove(req,res){      
+        if(!req.session.seller) return res.redirect('/user/signing/social/approval')
+        if(!req.isAuthenticated()) return res.redirect('/')        
+        if(req.user.isVerified()) return res.redirect('/')
+        if(req.user.getProvider() == 'local') return res.redirect('/')
+
+        return res.render('Sellers/approval', { 
+            pageName : 'Approval', 
+            domain : DOMAIN,
+            user : req.user.Data
+        })    
+    }   
+
+    protected externalVerify(req,res){
+        if(!req.session.seller)
+            return res.send(BuildResponse(10,"Not valid sign in type"))
+        
+        if(!req.isAuthenticated()) 
+            return res.send(BuildResponse(10,"No user for approval"))        
+    
+        if(req.user.isVerified()) 
+            return res.send(BuildResponse(10,"User is already verified"))
+        
+        if(req.user.getProvider() == 'local') 
+            return res.send(BuildResponse(10,"Provider isn't social"))
+
+
+        req.body.phone = `+${req.body.fphone}${req.body.lphone}`
+
+        SellerController.SocialSignUp(req.user, req.body, req.files.userAvatar, req.files.storeAvatar)
+                        .then(result => res.send( BuildResponse(0,"User was successfuly created") ))
+                        .catch(error => res.send( BuildResponse(10,error) ))
+    }
+
+
+    /*Payouts*/
+    protected getPayouts(req,res) : void{
+        isSeller(req,res).allowed( seller => 
+            PaymentController.fetchSellerPayout(seller)
+                .then(answer => res.send( BuildResponse(0,"Payouts successfully fetched", answer) ))
+                .catch(error => res.send( BuildResponse(10,"Error occurred") ))
+        );
+    }
+
+    protected updatePaypal(req,res) : void{
+        isSeller(req,res).allowed( seller => 
+            SellerController.UpdatePaypal(seller,req.body)
+                .then(answer => res.send( BuildResponse(0,"Paypal Email successfully updated", answer) ))
+                .catch(error => res.send( BuildResponse(10,error) ))
+        )
+    }
+
+
+    /* Store information */    
+    protected updateAvatar(req,res) : void{
+        isSeller(req,res).allowed( seller => 
+            SellerController.UpdateAvatar(seller,req.files.avatar)
+                .then( 
+                    answer => answer.success ? 
+                        res.send(BuildResponse(0,answer.result)) :
+                        res.send(BuildResponse(10,answer.error))
+                )  
+        )
+    }
+
+    protected updatePersonal(req,res) : void{
+        isSeller(req,res).allowed(seller => 
+            SellerController.UpdatePersonal(seller, req.body)
+                .then( 
+                    answer => answer.success ? 
+                        res.send(BuildResponse(0,answer.result)) :
+                        res.send(BuildResponse(10,answer.error))
+                )                
+        )
+    }
+
 
     /*Winnings*/
     protected getWinning(req,res) : void {
@@ -95,6 +185,14 @@ export default class SellerApi extends BasicController{
     }
 
 
+    /*Others*/
+    protected getPersonal(req,res) : void{
+        isSeller(req,res).allowed( seller => 
+            SellerController.GetSeller(seller)
+                .then( sl => res.send( BuildResponse(0,"Seller info was successfully fetched",sl) ))
+                .catch( er => res.send( BuildResponse(10,"Error occurred")) )    
+        );
+    }
 
     protected getFees(req,res) : void {
         isSeller(req,res).allowed( user => res.send(Fees));
@@ -162,7 +260,7 @@ export default class SellerApi extends BasicController{
                  
              AuctionController.CreateItem(user, req.body) 
                   .then( result => res.send( BuildResponse(0,"Auction item was successfully created") ))
-                  .catch( error => res.send( BuildResponse(10,"Error occurred",error)))
+                  .catch( error => res.send( BuildResponse(10,error,error)))
                   
          });
     }

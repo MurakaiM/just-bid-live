@@ -3,6 +3,8 @@ import * as GCStorage from '@google-cloud/storage'
 import * as crypto from 'crypto'
 import * as fileType from 'file-type'
 
+import { AwaitResult } from '../Communication/async'
+
 export default class FileUploader{
     public static Instance : FileUploader;    
     private bucket;
@@ -28,7 +30,24 @@ export default class FileUploader{
         return this.uploadFile(fileData, 'products')
     }
 
-    private uploadFile(fileData : any, directory : string) : Promise<any> {       
+    public async changeAvatar(url : string, fileData : any) : Promise<AwaitResult>{
+        try{
+            await this.deleteFile(this.parseExectUrl(url))
+            let chr = await this.uploadAvatar(fileData)
+
+            return { success : true, result : chr }
+        }catch(error){
+            throw new Error(error)
+        }
+    }
+
+
+    
+    private deleteFile(url : string) : Promise<any>{
+        return this.bucket.file(url).delete();
+    }
+
+    private uploadFile(fileData : any, directory : string) : Promise<any>{       
         return new Promise((resolve, reject) => {
             if(!fileData){
                 return resolve('');
@@ -44,6 +63,23 @@ export default class FileUploader{
         });       
     }
 
+    private uploadLinkFile(fileData : any, gcsname : string) : Promise<any>{
+        return new Promise((resolve, reject) => {
+            if(!fileData){
+                return resolve('');
+            }
+
+            const file = this.bucket.file(gcsname);
+            const stream = file.createWriteStream({ metadata: {contentType: fileData.mimetype}});
+
+            stream.on('error', (err) => reject(err));
+            stream.on('finish', () => resolve(this.getPublicUrl(gcsname)));
+            stream.end(fileData.data);          
+        });   
+    }    
+
+
+
     private getPublicUrl(filename : string) : string {
         return `https://storage.googleapis.com/${this.bucketId}/${filename}`;
     }
@@ -58,7 +94,7 @@ export default class FileUploader{
     }
 
 
-
+    
     private hashName() : string{
        var length : number = this.getRandomNumber(50,100);
        
@@ -74,5 +110,10 @@ export default class FileUploader{
     private getRandomNumber(min, max) : number {
         return Math.random() * (max - min) + min;
     }
-    
+ 
+    private parseExectUrl(url : string){
+        let tokens : Array<string> = url.split('/')
+        return `${tokens[tokens.length - 2]}/${tokens[tokens.length - 1]}`        
+    }
+
 }

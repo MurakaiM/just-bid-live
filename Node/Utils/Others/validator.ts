@@ -14,7 +14,7 @@ function buildError(err,msg) : UserError{
     }
 }
 
-function validateEmail(email) {
+export function validateEmail(email) {
     var reg = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return reg.test(email);
 }
@@ -40,12 +40,9 @@ export function validSignUp(incoming : any) : UserError {
         return buildError(true,'Your password is badly formatted');
     }
 
-
-
     if(!isValidNumber(incoming.phone)){
         return buildError(true,"Your phone is invalid");
     }    
-
 
     if(!incoming.hasOwnProperty('email') 
         || !incoming.hasOwnProperty('password') 
@@ -227,6 +224,14 @@ export function validProduct ( incoming : any) : UserError{
     }
 
 
+    if(!incoming.delivery){
+        return buildError(true, "No delivery time provided")
+    }
+
+    if(incoming.delivery <= 0){
+        return buildError(true, "Wrong delivery time provided")
+    }
+
     if(!incoming.shipment){
         return buildError(true, "No shipment provided")
     }
@@ -403,6 +408,17 @@ export function validAuctionPay(incoming : any) : UserError{
     return buildError(false, "Everything is valid")
 }
 
+export function validSocialSignUp(incoming : any) : UserError{
+    if(!incoming.firstName) return { invalid : true, reason : 'Wrong first name' }
+
+    if(!incoming.lastName) return { invalid : true, reason : 'Wrong last name' }
+
+    if(!incoming.birthday) return { invalid : true, reason : 'Wrong birthday' }
+
+    if(!isValidNumber(incoming.phone)) return { invalid : true, reason : 'Wrong phone number' }
+
+    return { invalid : false, reason : 'Everything is valid' }
+}
 
 export function validateWinningStatus(incoming : any) : UserError{
     if(!incoming.uid) return buildError(true, "No winning id was represented")
@@ -425,6 +441,7 @@ export function validateWinningTrack(incoming : any) : UserError{
 }
 
 export function validateWinningFind(incoming : any) : UserError{
+
     if(!incoming.winningId) return buildError(true, "No winning id was provided")
 
     if(incoming.winningId.length !== 36) return buildError(true, "Wrong format for winning id")
@@ -432,6 +449,27 @@ export function validateWinningFind(incoming : any) : UserError{
     return buildError(false, "Everything is valid")
 }
 
+export function validStoreUpdate(incoming : any) : UserError{
+
+    if(!incoming.title) return buildError(true, "No title was provided")
+
+    if(incoming.title.length == 0) return buildError(true, "Too short title was provided")
+
+
+    if(!incoming.subtitle) return buildError(true, "No subtitle was provided")
+
+    if(incoming.subtitle.length == 0) return buildError(true, "Too short subtitle was provided")
+
+
+    if(!incoming.description) return buildError(true, "No description was provided")
+
+    if(incoming.description.length == 0) return buildError(true, "Too short description was provided")
+
+    if(incoming.description.length > 255) return buildError(true, "Too long short description was provided")
+
+
+    return buildError(false, "Everything is valid")
+}
 
 
 function validateType(colors : any, sizes : any) : boolean{

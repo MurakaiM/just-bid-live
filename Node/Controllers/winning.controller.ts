@@ -9,8 +9,10 @@ import { AwaitResult } from '../Utils/Communication/async'
 
 import User from '../Models/user.model'
 import Winning from '../Models/winning.model'
+import Types from '../Models/type.model'
 
 export default class WinningController{
+   
 
      public static async WinningRender(user : User, id : string): Promise<AwaitResult>{        
         try{       
@@ -36,14 +38,15 @@ export default class WinningController{
         
         try{
             let result = await Winning.FindSellerWinning(seller, incoming.winningId);
-
+                    
             if(result == null) {
                 return { success : false, error : "Wrong parameters was provided" }
             }else{
                 return { success : true, result }
             }
 
-         }catch(error){
+         }catch(error){   
+             console.log(error)    
              return { success : false, error }
          }
      }
@@ -54,6 +57,10 @@ export default class WinningController{
 
      public static SellerWinnings(seller : User) : Promise<any>{
         return Winning.FindSellerWinnings(seller)
+     }
+
+     public static ReadyCustomersWinnings( customer : User) : Promise<any>{
+         return Winning.FindCustomerWinnings(customer);
      }
 
      public static async UpdateStatus(seller : User, data : any) : Promise<AwaitResult>{
@@ -85,4 +92,6 @@ export default class WinningController{
             return { success : true, error }
         }
      }
+
+     
 }

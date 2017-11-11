@@ -12,7 +12,7 @@
 
 
     <button id="btn_notification" class="ui large">
-        <i class="alarm icon"></i>
+        <i class="fa fa-bell" aria-hidden="true"></i>
         <span id="count_notificator"></span>
 
         <div class="custom dropdown">     
@@ -29,42 +29,46 @@
                   </div>
             </div>      
             <div class="footer"> 
-               <a href="/my/notifications" class="notification_link">Last notifications</a>
+               <span id="rvw_notification" class="notification_link">Review all</a>
             </div> 
           </div>     
         </div>
     </button>
-    <a class="ui large">
-        <i class="mail icon"></i>        
-    </a>
+
+     <!--
+      <a class="ui large">
+          <i class="mail icon"></i>        
+      </a>
+    !-->
     
     <button id="btn_signout" class="ui large" data-content="Sign out">
       <i class="fa fa-power-off" aria-hidden="true"></i>
     </button>
 
-    <%if(user){
-       if(!user.isSeller()){
-      %> 
-      <a class="ui large" id="mainCart">
-          <i class="fa fa-shopping-basket" aria-hidden="true"></i>
-          <div class="floating ui circular teal label hidden">0</div>
-      </a>
-    
-    <%}
-    }else{%>
-      <a class="ui large" id="mainCart">
-          <i class="fa fa-shopping-basket" aria-hidden="true"></i>
-          <div class="floating ui circular teal label hidden">0</div>
-      </a>
-    <%}%>
-
+    <!--
+        <%if(user){
+          if(!user.isSeller()){
+          %> 
+          <a class="ui large" id="mainCart">
+              <i class="fa fa-shopping-basket" aria-hidden="true"></i>
+              <div class="floating ui circular teal label hidden">0</div>
+          </a>
+        
+        <%}
+        }else{%>
+          <a class="ui large" id="mainCart">
+              <i class="fa fa-shopping-basket" aria-hidden="true"></i>
+              <div class="floating ui circular teal label hidden">0</div>
+          </a>
+        <%}%>
+    !-->
   </div>
 </div>
 <nav>
   <div class="row">
     <div class="col-sm-0 col-md-6 col-lg-6 left">
       <a class="first <%if(page=="Live"){%>selected<%}%>" href="/">Live</a>
-      <a class="<%if(page=="Stock"){%>selected<%}%>" href="/stock">Store</a>
+      <!--<a class="<%if(page=="Stock"){%>selected<%}%>" href="/stock">Store</a>!-->
       <a class="<%if(page=="Contact"){%>selected<%}%>" href="/contact">Contact Us</a>
     </div>
     <div class="col-9 col-sm-6 col-md-6 col-lg-6 right small_lefted">
@@ -77,23 +81,7 @@
               <i class="loading-icon" aria-hidden="true"></i>
             </i>
           </div>
-          <div class="results">
-            <div class="name">Passwords</div>
-            <a class="result">
-              <div class="content">
-                <div class="title">123456</div>
-              </div>
-            </a>
-            <a class="result">
-              <div class="content">
-                <div class="title">12345678</div>
-              </div>
-            </a>
-            <a class="result">
-              <div class="content">
-                <div class="title">1234</div>
-              </div>
-            </a>
+          <div class="results">          
           </div>
         </div>
       </div>

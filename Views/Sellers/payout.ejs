@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <!--Head include!-->
+        <%-include('../Common/head', { pageName : pageName })%>
+        <link rel="stylesheet" type="text/css" href="<%=domain%>/a.assets/editor/css/simditor.css" />
+
+        <link rel="stylesheet" type="text/css" href="<%=domain%>/u.assets/css/user.css" />
+        <link rel="stylesheet" type="text/css" href="<%=domain%>/g.assets/css/orders.css" />
+        <link rel="stylesheet" type="text/css" href="<%=domain%>/a.assets/css/table.css" />
+
+        <link rel="stylesheet" type="text/css" href="<%=domain%>/g.assets/css/responsive.css">
+    </head>
+    <body class="preloading">
+        <div class="content">
+            <!--Menu include!-->
+            <%-include('../Common/menu', { page : pageName , user : currentUser })%>
+            <div class="row products admin">
+              <div class="col-md-2">
+                <div class="ui vertical menu profiler tabs head">   
+                    <a class="item" href="/seller/mystore#home">Home</a>
+                    <a class="item" href="/seller/mystore#personal">Personal</a>                
+                    <a class="item" href="/seller/mystore#products">Products</a>
+                    <a class="item" href="/seller/mystore">Auctions</a>
+                    <a class="item disabled" href="/seller/mystore#orders">Orders</a>
+                    <a class="item" href="/seller/mystore#winnings">Winnings</a>
+                    <a class="item " href="/seller/mystore#disabled">Disabled</a>
+                    <a class="item disabled" href="/seller/mystore">History</a>
+                    <a class="item disabled" href="/seller/mystore">Messages</a>
+                    <a class="item" href="/seller/mystore#payouts">Payouts</a>
+                    <a class="item disabled" href="/seller/mystore">Settings</a>
+                    <a class="item" id="signout">Sign out</a>
+                </div>
+              </div>
+              <div class="col-md-10">
+                <div class="tabs body">         
+                    <div id="payouts" class="ui segment padding tab active" data-tab="payouts">
+                        <div class="ui grid nomargin">
+                            <div class="row margin auto">
+
+                                <%if(answer.success == true){%>
+                                    <div class="four wide column flex center"> 
+                                        <img class="ui small image margin auto" src="<%=domain%>/g.assets/img/commercialicons/atm.png"> 
+                                    </div>
+                                    <div class="twelve wide column flex center"> 
+                                        <div>
+                                            <div class="title">Payout was successfully requested </div> 
+                                            <div class="subtitle"> Check payout status at <strong>Payouts</strong> tab into your account.  </div> 
+                                            <div class="description"> 
+                                                Withdrawal - <strong> <%=(answer.result.overall/100)%></strong>$ <br>                                       
+                                                Fee - <strong> <%=(answer.result.fee/100)%></strong>$<br><br>
+
+                                                <span class="tip">
+                                                    <strong> Explanation </strong> - your request will be checked by our system.
+                                                    Usually this process won't take a lot of time. 
+                                                    If there will be any suspicious activity, 
+                                                    we will contact you for a fair solution of this situation. 
+                                                    Anyway, you can contact our support any time with any questions about your request.                                                                            
+                                                </span>
+                                            </div> 
+                                        </div>    
+                                    </div>   
+                                <%}else{%>
+                                    <div class="four wide column flex center"> 
+                                        <img class="ui small image margin auto" src="<%=domain%>/g.assets/img/commercialicons/time-passing.png"> 
+                                    </div>
+
+                                    <%if(answer.error == 'No email'){%>
+
+                                    <div class="twelve wide column flex center"> 
+                                        <div>
+                                            <div class="title">No associated payout email </div> 
+                                            <div class="subtitle"> Association process available into <strong>Personal</strong> tab into your account. </div> 
+                                            <div class="description"> 
+                                                <span class="tip">
+                                                    <strong> Explanation </strong> - email for paypal payout is not associated for your account.
+                                                    You can find association from into <strong>Personal</strong> tab.
+                                                    This process takes 14 days from day when you add new payout email.<br><br>
+                                                    For security reasons, your email status displayed only into <strong>Personal</strong> 
+                                                    tab into your account.                                                                       
+                                                </span>
+                                            </div> 
+                                        </div>    
+                                    </div>
+
+                                    <%}else{%>
+
+                                    <div class="twelve wide column flex center"> 
+                                        <div>
+                                            <div class="title">Pending payout email </div> 
+                                            <div class="subtitle"> Check email status at <strong>Personal</strong> tab into your account.  </div> 
+                                            <div class="description"> 
+                                                <span class="tip">
+                                                    <strong> Explanation </strong> - email for paypal payout is into pending status yet.
+                                                    This process takes 14 days from day when you add new payout email.<br><br>
+                                                    For security reasons, your email status displayed only into <strong>Personal</strong> 
+                                                    tab into your account.                                                                       
+                                                </span>
+                                            </div> 
+                                        </div>    
+                                    </div>
+
+                                    <%}%>
+                                <%}%>
+
+                            </div>
+                        </div> 
+                    </div>
+                </div>
+              </div>
+            </div>
+
+            <%-include('../Store/modals')%>
+            <%-include('../Common/each', { login :  login ? true : false })%>
+            <%-include('../Common/footer')%>
+        </div>
+    </body>
+
+    <!--Head include!-->
+    <%-include('../Common/scripts')%>   
+    <script src="<%=domain%>/g.assets/js/tabulizer.js"></script>
+    <script src="<%=domain%>/a.assets/js/table.js"></script>
+
+</html>

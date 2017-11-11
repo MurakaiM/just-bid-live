@@ -1,13 +1,58 @@
 import * as  Sequelize from 'sequelize'
 
+const Op = Sequelize.Op;
+const operatorsAliases = {
+  $eq: Op.eq,
+  $ne: Op.ne,
+  $gte: Op.gte,
+  $gt: Op.gt,
+  $lte: Op.lte,
+  $lt: Op.lt,
+  $not: Op.not,
+  $in: Op.in,
+  $notIn: Op.notIn,
+  $is: Op.is,
+  $like: Op.like,
+  $notLike: Op.notLike,
+  $iLike: Op.iLike,
+  $notILike: Op.notILike,
+  $regexp: Op.regexp,
+  $notRegexp: Op.notRegexp,
+  $iRegexp: Op.iRegexp,
+  $notIRegexp: Op.notIRegexp,
+  $between: Op.between,
+  $notBetween: Op.notBetween,
+  $overlap: Op.overlap,
+  $contains: Op.contains,
+  $contained: Op.contained,
+  $adjacent: Op.adjacent,
+  $strictLeft: Op.strictLeft,
+  $strictRight: Op.strictRight,
+  $noExtendRight: Op.noExtendRight,
+  $noExtendLeft: Op.noExtendLeft,
+  $and: Op.and,
+  $or: Op.or,
+  $any: Op.any,
+  $all: Op.all,
+  $values: Op.values,
+  $col: Op.col,
+};
+
+
 import Search from '../Utils/Controllers/search'
 
 import { DATABASE_URL } from '../keys'
 
 
-const globalSequlize = new Sequelize(DATABASE_URL, {
+const globalSequlize = new Sequelize(DATABASE_URL,{
   logging : false,
-  dialect : 'postgres'
+  dialect : 'postgres',
+  operatorsAliases : operatorsAliases,
+  pool: {
+    max: 18,
+    min: 1,
+    idle: 10000
+  }
 });
 
 
@@ -32,7 +77,6 @@ export class Database{
       });
    }
 
-
    get Sequelize() : any{ 
      return this.sequelize; 
    }
@@ -45,25 +89,24 @@ export class Database{
       }); 
    }
 
-
-
    private async initSchemas() : Promise<any> {   
       await UserSchema.sync();
       await SellerSchema.sync();
 
       await ProductSchema.sync();
 
-      await TypesSchema.sync();
-      await OrderSchema.sync();
+      await TypesSchema.sync();      
       await AuctionSchema.sync();
-    
+           
       await WinningSchema.sync();
-      await WishSchema.sync();
-      
+      await OrderSchema.sync();
+
+      await BillingSchema.sync();
+      await PayoutSchema.sync();
+      await WishSchema.sync();      
       
       await NotificationSchema.sync();
-      await BillingSchema.sync();
-  
+     
       await this.productSearch.setUp();
     } 
 }
@@ -74,7 +117,7 @@ export function initDatabase() : Promise<any>{
 }
 
 
-/*Notification schema*/
+/* Notification schema */
 export const NotificationSchema = globalSequlize.define('notification', {
   recordId : {
     type: Sequelize.UUID,
@@ -109,8 +152,8 @@ export const NotificationSchema = globalSequlize.define('notification', {
 });
 
 
-/*Auction winning schema*/
-export const WinningSchema = globalSequlize.define('winning', {
+/* Auction winning schema */
+export const WinningSchema = globalSequlize.define('winning', {  
   winningId : {
     type : Sequelize.UUID,
     primaryKey : true
@@ -135,10 +178,9 @@ export const WinningSchema = globalSequlize.define('winning', {
     type : Sequelize.UUID,
     allowNull : false
   },
-  selectedType : {
-    type : Sequelize.STRING,
-    defaultValue : "Not selected",
-    allowNull : false
+  selectedTypeId : {
+    type : Sequelize.UUID,   
+    allowNull : true
   },
   lastBid : {
     type : Sequelize.INTEGER,
@@ -152,10 +194,10 @@ export const WinningSchema = globalSequlize.define('winning', {
   },  
   status : {
     type : Sequelize.STRING,
-    defaultValue : 'new'
+    defaultValue : 'New'
   },
-  customerAddress : {
-    type : Sequelize.STRING,
+  customerInformation : {
+    type : Sequelize.JSON,
     allowNull : true
   },
   isFinished : {
@@ -164,7 +206,7 @@ export const WinningSchema = globalSequlize.define('winning', {
   }
 })
 
-/*Product schema*/
+/* Product schema */
 export const ProductSchema = globalSequlize.define('product', {
     prUid : {
       type: Sequelize.UUID,
@@ -189,7 +231,8 @@ export const ProductSchema = globalSequlize.define('product', {
       allowNull : false
     },
     prRating : {
-      type : Sequelize.FLOAT
+      type : Sequelize.DOUBLE,
+      allowNull : true
     },
     prSold : {
       type : Sequelize.INTEGER,
@@ -223,10 +266,21 @@ export const ProductSchema = globalSequlize.define('product', {
     prShipment : {
       type : Sequelize.FLOAT                        
     },
+    prDelivery : {
+      type : Sequelize.INTEGER,
+      defaultValue  : 0
+    },
+    prDiscount : {
+      type : 'SMALLINT',
+      allowNull : true
+    },
     prSeller : { 
       type : Sequelize.UUID,
       allowNull : false
     }, 
+    prAllowed : {
+      type : Sequelize.BOOLEAN      
+    },
     prTypes : {
       type : Sequelize.JSON  
     },    
@@ -236,7 +290,32 @@ export const ProductSchema = globalSequlize.define('product', {
     }    
 });
 
+/* Category schema */
+export const CategorySchema = globalSequlize.define('category', {
+    id : {
+      type : Sequelize.STRING(15),
+      primaryKey : true
+    },
+    level : {
+      type : Sequelize.STRING(1),
+      allowNull : false
+    },
+    name : {
+      type : Sequelize.STRING,
+      allowNull : false
+    },
+    imageUrl : {
+      type : Sequelize.STRING(15)
+    }
+
+});
+
+/* Type's schema */
 export const TypesSchema = globalSequlize.define('type', {
+  typeUid :{
+    type : Sequelize.UUID,
+    primaryKey : true
+  },
   productId : {
     type : Sequelize.UUID,
     allowNull : false
@@ -266,8 +345,7 @@ export const TypesSchema = globalSequlize.define('type', {
 });
 
 
-
-/* User schema*/
+/* User schema */
 export const UserSchema = globalSequlize.define('user', {
     uid: {
       type: Sequelize.UUID,
@@ -288,12 +366,20 @@ export const UserSchema = globalSequlize.define('user', {
       unique: true
     },
     country : { 
-      type: Sequelize.STRING,     
-      allowNull: false
+      type: Sequelize.STRING
     },
     password: {
       type: Sequelize.TEXT,
       allowNull: false
+    },
+    provider  : {
+      type : Sequelize.STRING(15),
+      defaultValue : 'local',
+      allowNull : false
+    },
+    providerId : {
+      type : Sequelize.STRING,
+      allowNull : true
     },
     password_date: {
       type: Sequelize.DATE,
@@ -304,10 +390,9 @@ export const UserSchema = globalSequlize.define('user', {
       defaultValue: ""
     },
     salt: {
-      type: Sequelize.STRING(15),
-      allowNull: false
+      type: Sequelize.STRING(15)      
     },   
-    veryfied: {
+    verified: {
       type: Sequelize.BOOLEAN,
       defaultValue: false
     },
@@ -332,6 +417,11 @@ export const UserSchema = globalSequlize.define('user', {
       allowNull : true,
       defaultValue : ""
     }    
+ },{
+  indexes : [{
+    unique : true,
+    fields : ['providerId']
+  }]
 });
 
 /* Seller schema */
@@ -344,41 +434,16 @@ export const SellerSchema = globalSequlize.define('seller',{
     type : Sequelize.UUID,
     allowNull : false
   },
-  masterMerchantId : {
+  paypalEmail : {
     type : Sequelize.STRING,
-    allowNull : true,
-    defaultValue : ""
+    allowNull : true
   },
-  merchantId : {
-    type : Sequelize.STRING,
-    allowNull : true,
-    defaultValue : ""
-  }, 
-  merchantStatus : {
-    type : Sequelize.STRING,
-    allowNull : false
-  },  
-  masterMerchantStatus : {
-    type : Sequelize.STRING,
-    allowNull : false
-  },
-  merchantMessage :  {
-    type : Sequelize.STRING,
+  paypalAccepted: {
+    type : Sequelize.DATE,
     allowNull : true
   },
   rating : {
-    type : Sequelize.FLOAT,
-    allowNull : true
-  },
-  credit : {
-    type : Sequelize.STRING,
-    validate : {
-      isCreditCard: true
-    },
-    allowNull : true
-  },
-  creditExpire : {
-    type : Sequelize.DATEONLY,
+    type : Sequelize.DOUBLE,
     allowNull : true
   },
   title : {
@@ -399,7 +464,7 @@ export const SellerSchema = globalSequlize.define('seller',{
   }  
 });
 
-/* Whish schema*/
+/* Whish schema */
 export const WishSchema = globalSequlize.define('whish', {
       uidRecord : {
         type : Sequelize.UUID,
@@ -418,7 +483,7 @@ export const WishSchema = globalSequlize.define('whish', {
 });
 
 
-/* Auction schema*/
+/* Auction schema */
 export const AuctionSchema = globalSequlize.define('auction', {
       uidRecord : {
         type : Sequelize.UUID,
@@ -480,8 +545,8 @@ export const AuctionSchema = globalSequlize.define('auction', {
       } 
 });
 
-/* Order schema*/
-export const OrderSchema= globalSequlize.define('orders', {
+/* Order schema */
+export const OrderSchema = globalSequlize.define('orders', {
     orderId : { 
       type : Sequelize.UUID,
       primaryKey : true
@@ -526,75 +591,132 @@ export const OrderSchema= globalSequlize.define('orders', {
 });
 
 /* Billing schema */
-export const BillingSchema = globalSequlize.define('checkout',{
+export const BillingSchema = globalSequlize.define('payment',{
     billingId : {
       type : Sequelize.UUID,
       primaryKey : true
-    },
-    itemId : {
-      type : Sequelize.UUID,
-      allowNull : false
     },
     sellerId : {
       type : Sequelize.UUID,
       allowNull : false
     },
+    itemId : { 
+      type : Sequelize.UUID,
+    },   
     customerId : {
       type : Sequelize.UUID,
       allowNull : false
     },
     payoutId : {
-      type : Sequelize.STRING,
+      type : Sequelize.UUID,
       allowNull : true
     },
-    paymentId : {
+    sourceId : {
+      type : Sequelize.STRING,
+      allowNull : false
+    },
+    chargeId : {
       type : Sequelize.STRING,
       allowNull : true
-    },
-    payoutStatus : {
-      type : Sequelize.STRING,
-      defaultValue : "new"
-    },
-    paymentStatus : {
-      type : Sequelize.STRING,
-      defaultValue : "new"
-    },
+    },     
+    available : {
+      type : Sequelize.BOOLEAN,
+      defaultValue : false
+    },   
     amount : {
-      type : Sequelize.REAL,
+      type : Sequelize.INTEGER,
       allowNull : false,
       defaultValue : 0
+    }, 
+    fee : {
+      type : Sequelize.INTEGER,
+      allowNull : true     
     },
-    status : {
-      type : Sequelize.STRING,
-      defaultValue : "new"
-    },
+    transactional_fee : {
+      type : Sequelize.INTEGER,
+      allowNull : false,
+      defaultValue : 30
+    },  
     type : {
       type : Sequelize.STRING,
       defaultValue : ""
     }
   },{
     name: 'payments_keys',
-    fields: ['payoutId', 'paymentId'] 
+    fields: ['payoutId', 'paymentId','sourceId'] 
+});
+
+/* Payout schema */
+export const PayoutSchema = globalSequlize.define('payout' ,{
+    payoutId : {
+      type : Sequelize.UUID,
+      primaryKey : true
+    },
+    sellerId : {
+      type : Sequelize.UUID,
+      allowNull : false
+    },
+    payingId : {
+      type : Sequelize.STRING,
+      allowNull : true
+    },
+    status : {
+      type : Sequelize.STRING,
+      allowNull : false
+    },
+    amount : {
+      type : Sequelize.INTEGER,
+      allowNull : false,
+      defaultValue : 0
+    }, 
+    fee : {
+      type : Sequelize.INTEGER,
+      allowNull : false,
+      defaultValue : 0     
+    },
+    transactional_fee : {
+      type : Sequelize.INTEGER,
+      allowNull : false,
+      defaultValue : 30
+    }
 });
 
 
+/* Billing association */
+PayoutSchema.hasMany(BillingSchema, { foreignKey : "payoutId", targetKey : "payoutId", as : 'billings' })
+BillingSchema.belongsTo(PayoutSchema, { foreignKey : "payoutId", targetKey : "payoutId", as : 'payout' })
 
+UserSchema.hasMany(PayoutSchema, { foreignKey : "sellerId", targetKey : "uid", as : 'payouts' })
+PayoutSchema.belongsTo(UserSchema, { foreignKey : "sellerId", targetKey : "uid", as : 'requestor' })
+
+UserSchema.hasMany(BillingSchema, { foreignKey : "customerId", targetKey : "uid", as : 'payments' })
+BillingSchema.belongsTo(UserSchema, { foreignKey : "customerId", targetKey : "uid", as : 'customer' })
 
 
 /* Products */
-ProductSchema.hasMany(TypesSchema, { foreignKey : "productId", targetKey : "prUid", as : "Type"});
-TypesSchema.belongsTo(ProductSchema,{ foreignKey : "productId", sourceKey : "prUid", as : "Type"} )
+ProductSchema.hasMany(TypesSchema, { foreignKey : "productId", targetKey : "prUid", as : "types"});
+TypesSchema.belongsTo(ProductSchema,{ foreignKey : "productId", sourceKey : "prUid", as : "product"} )
 
 WinningSchema.belongsTo(ProductSchema, { foreignKey: 'productId', sourceKey: 'prUid'} );
 ProductSchema.hasMany(WinningSchema, { foreignKey: 'productId', targetKey: 'prUid'} );
 
+TypesSchema.hasMany(WinningSchema, { foreignKey: 'selectedTypeId', targetKey: 'typeUid'});
+WinningSchema.belongsTo(TypesSchema, { foreignKey: 'selectedTypeId', sourceKey: 'typeUid'});
 
 WinningSchema.belongsTo(UserSchema, { foreignKey: 'winnerId', sourceKey: 'uid'} );
 UserSchema.hasMany(WinningSchema, { foreignKey: 'winnerId', targetKey: 'uid'} );
 
+
+ProductSchema.belongsTo(UserSchema, { foreignKey: 'prSeller', sourceKey: 'uid', as : "creator"} );
+UserSchema.hasMany(ProductSchema, { foreignKey: 'prSeller', targetKey: 'uid' , as : "products"} );
+
+
+
+
 /* Sellers */
-SellerSchema.belongsTo(UserSchema, { foreignKey: 'userId', sourceKey: 'uid', as : "Seller"} );
-UserSchema.hasOne(SellerSchema, { foreignKey: 'userId', targetKey: 'uid' , as : "Seller"} );
+SellerSchema.belongsTo(UserSchema, { foreignKey: 'userId', sourceKey: 'uid', as : "user"} );
+UserSchema.hasOne(SellerSchema, { foreignKey: 'userId', targetKey: 'uid' , as : "seller"} );
+
 
 
 /* Orders */
@@ -608,6 +730,7 @@ OrderSchema.belongsTo(ProductSchema, { foreignKey: 'productId', sourceKey: 'prUi
 ProductSchema.hasMany(OrderSchema, { foreignKey: 'productId', targetKey: 'prUid' } );
 
 
+
 /* Wishes */
 WishSchema.belongsTo( UserSchema, { foreignKey : 'uidUser' , sourceKey : 'uid' });
 UserSchema.hasMany( WishSchema, { foreignKey : 'uidUser' , targetKey : 'uid' });
@@ -616,10 +739,12 @@ WishSchema.belongsTo( ProductSchema , { foreignKey : 'orderId' , sourceKey : 'or
 ProductSchema.hasOne( WishSchema , {foreignKey : 'orderId' , targetKey : 'orderId' });
 
 
+
 /* Auction  */
 AuctionSchema.belongsTo(ProductSchema, { foreignKey: 'uidProduct', sourceKey: 'prUid' });
 ProductSchema.hasMany(AuctionSchema, { foreignKey: 'uidProduct', targetKey: 'prUid' });
 
 WinningSchema.belongsTo(AuctionSchema, { foreignKey: 'auctionId', sourceKey: 'uidRecord'} );
 AuctionSchema.hasMany(WinningSchema, { foreignKey: 'auctionId', targetKey: 'uidRecord'} );
+
 

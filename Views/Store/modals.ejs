@@ -1,7 +1,6 @@
 
 <!-- Product page segment !-->
 <div>
-
     <div id="deleteModal" class="my-modal dashed">
         <div class="body">
             <h2 class="ui header main">
@@ -70,26 +69,32 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="fields">
-                            <div class="four wide field">
+                        <div class="five fields">
+                            <div class="field">
                                 <div class="ui left icon input">
                                     <input type="text" name="cost" placeholder="Price">
                                     <i class="dollar icon"></i>
                                 </div>
                             </div>
-                            <div class="four wide field">
+                            <div class="field">
                                 <div class="ui left icon input">
                                     <input type="text" name="shipment" placeholder="Shipment">
-                                    <i class="dollar icon"></i>
+                                    <i class="shipping icon"></i>
                                 </div>
                             </div>
-                            <div class="four wide field">
+                            <div class="field">
+                                <div class="ui left icon input">
+                                    <input type="text" name="delivery" placeholder="Delivery (days)">
+                                    <i class="wait icon"></i>
+                                </div>
+                            </div>
+                            <div class="field">
                                 <div class="ui left icon input">
                                     <input type="text" name="material" placeholder="Material">
                                     <i class="archive icon"></i>
                                 </div>
                             </div>
-                            <div class="four wide field">
+                            <div class="field">
                                 <div class="ui left icon input">
                                     <input type="text" name="guarantee" placeholder="Guarantee">
                                     <i class="protect icon"></i>
@@ -279,7 +284,7 @@
         </div>
     </div>
 
-    <div id="auctionNewModal" class="my-modal dashed big">
+    <div id="auctionNewModal" class="my-modal page medium">
      <div class="body">            
             <h2 class="ui header main">
                 <div class="content">
@@ -302,8 +307,9 @@
                                 <option value="">Auction type</option>
                                 <option value="standard">Standard Listing</option>
                                 <option value="featured">Featured Listing</option>
+                                <option value="reserved">Reserved Listing</option>
                                 <option value="small">Standard 20% Percent</option>
-                                <option value="big">Big Percentage 50%</option>
+                                <option value="big">Big Percentage 50%</option>                                
                             </select>                          
                         </div>
                         <div class="six wide field">
@@ -317,23 +323,36 @@
                 <div class="field fileds-margin">
                   <label>Type explanation</label>  
                   <div class="fields">
-                     <div class="eight wide field partlydisabled">
+                     <div class="two wide field partlydisabled">
                         <input type="text" name="fee" placeholder="Fee">
                      </div>
-                     <div class="eight wide field partlydisabled">
+                     <div class="four wide field partlydisabled">
                         <input type="text" name="ape" placeholder="Explanation">
                      </div>
-                  </div>
+                     <div class="ten wide field partlydisabled">
+                        <input type="text" name="exp" placeholder="Appearence">
+                     </div> 
+                  </div>                                
+                </div> 
+                <div class="field fileds-margin">
+                  <label>Starting price in dollars</label>            
                   <div class="fields">
                      <div class="sixteen wide field partlydisabled">
-                        <input type="text" name="exp" placeholder="Appearence">
-                     </div>                        
+                        <input type="text" name="str" placeholder="Starting price">
+                     </div>                     
                   </div>
-                </div> 
+                </div>
 
                 <div class="ui message success">
-                    <div class="header">Action Completed</div>
+                    <div class="header">Auction Created</div>
                     <p> Auction item was successfully published </p>
+                </div>
+
+                <div class="ui custom message error">
+                    <div class="header">Action Forbidden</div>
+                    <p> 
+                        Auction item wasn't successfully published.                    
+                    </p>
                 </div>
 
                 <div class="buttons container">
@@ -416,7 +435,7 @@
                     Update Winning item
                 </div>
             </h2>
-            <h4 class="ui header main wrap">Change track number and status of winning item</h4>
+            <h4 class="ui header main wrap">Change track number (delivery) of winning item</h4>
             <span class="ui descriptor">
                  Please leave only valid data. Any not proper things will be reported.
                  This changes will be displayed in
@@ -446,7 +465,7 @@
         </div>    
     </div>
 
-    <div id="winningDetailsModal" class="my-modal dashed big">      
+    <div id="winningDetailsModal" class="my-modal page">      
         <div class="body">            
             <h2 class="ui header main">
                 <div class="content">
@@ -457,72 +476,116 @@
             <span class="ui descriptor">
                 Use this information for creating package with the right type of product and correct destination.
             </span>
-            <div class="ui segment none">
-                <div class="details once">
-                    <div class="details title">
-                        <i class="user icon"></i> Winner name 
-                    </div><div class="details value">
-                        Tsekhmastryuk Dan
+            <div class="ui segment row none">
+                <div class="col-md-6 nopadding">
+                    <div class="details once">
+                        <div class="details title">
+                            <i class="user icon"></i> Winner name 
+                        </div><div class="details value"></div>
+                    </div>
+
+                    <div class="details once">
+                        <div class="details title">
+                            <i class="external share icon"></i> Product link
+                        </div><div class="details value">
+                            <a href="/product/" target="blank"></a>
+                        </div>
+                    </div>
+
+                    <div class="details once">
+                        <div class="details title">
+                            <i class="world icon"></i> Shipment
+                        </div><div class="details value"></div>
+                    </div>
+
+                    <div class="details once">
+                        <div class="details title">
+                            <i class="travel icon"></i> Selected type
+                        </div><div class="details value"></div>
+                    </div>
+
+                    <div class="details once">
+                        <div class="details title">
+                            <i class="barcode icon"></i> Track number 
+                        </div><div class="details value"></div>
+                    </div>
+
+                    <div class="details once">
+                        <div class="details title">
+                            <i class="help icon"></i> Status
+                        </div><div class="details value bolded"></div>
+                    </div>
+
+                    <div class="details once">
+                        <div class="details title">
+                            <i class="dollar icon"></i> Price
+                        </div><div class="details value"></div>
+                    </div>
+
+                    <div class="details once">
+                        <div class="details title">
+                            <i class="shipping icon"></i> Shipment cost
+                        </div><div class="details value"></div>
+                    </div>
+
+                    <div class="details once">
+                        <div class="details title">
+                            <i class="check icon"></i> Is paid
+                        </div><div class="details value"></div>
                     </div>
                 </div>
+                <div class="col-md-6 nopadding addressed">
+                    <div class="inline-sub">
+                        Shipment information <br> 
+                        (left by customer during checkout)
+                    </div>
 
-                <div class="details once">
-                    <div class="details title">
-                        <i class="world icon"></i> Shp. address
-                    </div><div class="details value">
-                        Ukraine, Kyiv, 03164, str. R.Bukinoi
+                    <div class="details once">
+                        <div class="details title">
+                            <i class="address book icon"></i> First name 
+                        </div><div class="details value"></div>
+                    </div>
+
+                    <div class="details once">
+                        <div class="details title">
+                            <i class="address book outline icon"></i> Last name
+                        </div><div class="details value"></div>
+                    </div>
+
+                    <div class="details once">
+                        <div class="details title">
+                            <i class="address card share icon"></i> Address
+                        </div><div class="details value">
+                           
+                        </div>
+                    </div>
+
+                    <div class="details once">
+                        <div class="details title">
+                            <i class="building icon"></i> City
+                        </div><div class="details value">
+                           
+                        </div>
+                    </div>
+
+                    <div class="details once">
+                        <div class="details title">
+                            <i class="mail icon"></i> Postal code 
+                        </div><div class="details value"> </div>
+                    </div>
+
+                    <div class="details once">
+                        <div class="details title">
+                            <i class="flag icon"></i> Country
+                        </div><div class="details value"> </div>
+                    </div>
+
+                    <div class="details once">
+                        <div class="details title">
+                            <i class="mobile icon"></i> Phone
+                        </div><div class="details value"> </div>
                     </div>
                 </div>
-
-                <div class="details once">
-                    <div class="details title">
-                        <i class="external share icon"></i> Product link
-                    </div><div class="details value">
-                        <a href="/product/id88f01d05-fe41-4998-9a34-2665da4a4e5d" target="blank">iphone 7</a>
-                    </div>
-                </div>
-
-                <div class="details once">
-                    <div class="details title">
-                        <i class="travel icon"></i> Selected type
-                    </div><div class="details value">
-                        Small, XS
-                    </div>
-                </div>
-
-                <div class="details once">
-                    <div class="details title">
-                        <i class="barcode icon"></i>Track number 
-                    </div><div class="details value">1Z999AA10123456784</div>
-                </div>
-
-                <div class="details once">
-                    <div class="details title">
-                        <i class="help icon"></i>Status
-                    </div><div class="details value bolded">new</div>
-                </div>
-
-                <div class="details once">
-                    <div class="details title">
-                        <i class="dollar icon"></i>P. amount 
-                    </div><div class="details value">1.2$</div>
-                </div>
-
-                <div class="details once">
-                    <div class="details title">
-                        <i class="shipping icon"></i>Sh. amount 
-                    </div><div class="details value">4$</div>
-                </div>
-
-                <div class="details once">
-                    <div class="details title">
-                        <i class="check icon"></i>Is paid
-                    </div><div class="details value">
-                        No
-                    </div>
-                </div>
-
-
             </div>
         </div>        
     </div>

@@ -1,0 +1,30 @@
+
+<!DOCTYPE html>
+<html>  
+
+  <head>
+    <!--Head include!-->
+    <%-include('./Common/head')%>
+    <link rel="stylesheet" href="<%=domain%>/g.assets/css/responsive.css">  
+  </head>
+
+  <body class="preloading">
+
+    <div class="content">
+      <!--Menu include!-->
+      <%-include('./Common/menu', { page : pageName , user : currentUser })%>
+
+      <div class="single">
+
+      </div>
+
+      <%-include('./Common/each')%>
+      <%-include('./Common/footer')%>
+    </div>
+  </body>
+
+  <!--Scripts include!-->
+  <%-include('./Common/scripts')%>
+  <script src="<%=domain%>/u.assets/js/contact.js" charset="utf-8"></script>
+
+</html>

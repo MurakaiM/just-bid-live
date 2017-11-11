@@ -63,6 +63,8 @@ export default class RealtimeSocket{
             socket.on('status', e => this.authNms.to(user.PublicData.uid).emit('status', buildResponse(socket)));
 
             socket.on('count', e => this.NotificationCount(user))
+
+            socket.on('review:all', e => this.NotificationReviewAll(user))
         });
 
         function buildResponse(socket){
@@ -134,6 +136,14 @@ export default class RealtimeSocket{
             .then( 
                 count => this.authNms.to(user.PublicData.uid).emit('count',count),
                 error => this.authNms.to(user.PublicData.uid).emit('count',0)
+            )
+    }
+
+    private NotificationReviewAll(user : User){
+        NotificationController.ReviewAllNotifications(user)
+            .then(
+                reviewed => this.authNms.to(user.PublicData.uid).emit('all:notification'),
+                error => console.log(error)
             )
     }
 

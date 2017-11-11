@@ -1,0 +1,224 @@
+
+<!DOCTYPE html>
+<html>
+
+  <!--Head include!-->
+ <%-include('../Common/head')%>
+  <link rel="stylesheet" href="<%=domain%>/u.assets/css/product.css">
+  <link rel="stylesheet" href="<%=domain%>/g.assets/css/responsive.css">
+
+  <body class="preloading">
+
+    <div class="content">
+      <!--Menu include!-->
+      <%-include('../Common/menu', { page : pageName, user : currentUser  })%>
+
+      <!--
+      <div class="exactly path">
+        <div class="ui breadcrumb">
+          <a href="/" class="section">Stock</a>
+          <span class="divider">/</span>
+          <a href="/" class="section">Women Clothes</a>
+          <span class="divider">/</span>
+          <a href="/" class="section">Dresses</a>
+          <span class="divider">/</span>
+          <div class="active section">Gray shirt</div>
+        </div>
+      </div>!-->
+
+      <div class="row exactly products">
+        <div class="col-md-4 col-lg-4">
+          <div class="exactly aller">
+            <div class="exactly wrapper">
+              <div class="exactly image">
+                  <div class="ui text shape">
+                    <div class="sides">
+                      <%if(product.prTypes){%>                       
+                        <% Object.keys(product.prTypes.colors).forEach( (e,i) => { %>
+                            <div id="<%=product.prTypes.colors[e].value%>" class="ui header side <%if(i == 0){%>active<%}%>">
+                              <img src="<%=product.prTypes.colors[e].image%>" alt="">
+                            </div>                            
+                        <%})%>                                       
+                      <%}%>
+                    </div>
+                  </div>
+              </div>
+              <div class="exactly controlls">
+                <div class="ui icon button" id="previous_slide">
+                  <i class="angle left  icon"></i>
+                </div>
+                <div class="ui icon button" id="next_slide">
+                  <i class="angle right icon"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-8 col-lg-8">
+            <div class="exactly description">
+                <div class="header"><%=product.prTitle%></div>
+                <div class="description"><%=product.prDescription%></div>
+            </div>
+            <div class="exactly cost">
+                  <div class="exactly price">
+                      <span class="labeler">Current price :</span>
+
+                      <i class="fa fa-usd" aria-hidden="true"></i>
+                      <span id="price"> <%=product.prCost%></span>
+                  </div>
+                  <div class="exactly seller">
+                      <span class="labeler">Seller :</span>
+                      <a href="/seller/id" id="seller"> Dan </a>
+                  </div>
+            </div>
+
+            <h4 class="ui fitted divider widther "></h4>       
+            <div class="exactly options">
+            
+              <div class="types">                            
+                <%if(product.prTypes.colors){%>
+                  <div class="option">
+                    <span class="labeler">  <i class="paint brush icon"></i> Color :</span>
+                    <div id="color" class="ui fluid selection dropdown ">
+                    <span class="default text">Select color</span>
+                    <div class="menu">
+                      <div class="scrolling menu">
+                        <% Object.keys(product.prTypes.colors).forEach( e => { %>
+                            <div class="item <%if(product.prTypes.colors[e].disable){%> disabled  <%}%>"  data-value="<%=product.prTypes.colors[e].value%>">
+                                  <div class="ui empty circular label" style="background : <%=product.prTypes.colors[e].color%>;!imporant"></div>
+                                  <%=product.prTypes.colors[e].title%>
+                            </div>
+                        <%})%> 
+                      </div>
+                    </div>
+                    </div>
+                  </div>             
+                <%}%>
+              
+                <%if(product.prTypes.sizes){%>
+                  <div class="option">
+                    <span class="labeler">  <i class="compress icon"></i> Size :</span>
+                    <div id="size" class="ui fluid selection dropdown">
+                      <div class="default text">Select size</div>
+                      <div class="menu">
+                        <div class="scrolling menu">
+                          <% Object.keys(product.prTypes.sizes).forEach( e => { %>
+                              <div class="item <%if(product.prTypes.sizes[e].disable){%> disabled  <%}%>"  data-value="<%=product.prTypes.sizes[e].value%>">                                 
+                                    <%=product.prTypes.sizes[e].title%>
+                              </div>
+                          <%})%> 
+                        </div>                      
+                      </div>
+                    </div>
+                  </div>             
+                <%}%>               
+              </div>
+
+              <div class="option">
+                  <span class="labeler">  <i class="hashtag icon"></i> Quantity :</span>
+                  <div class="ui input">
+                    <input type="number" value="1" min="1" max="99" id="quantity">
+                  </div>
+              </div>             
+              <div class="option empty"></div>
+              <div class="option">
+                <span class="labeler">  <i class="shipping icon"></i> Shipping : </span>
+                <span class="info">   <i class="fa fa-usd" aria-hidden="true"></i> <%=product.prShipment%></span>
+              </div>
+              <div class="option">
+                <span class="labeler">  <i class="protect icon"></i> Guarantee :</span>
+                <span class="info"> 12 month </span>
+              </div>
+            </div>
+           
+        </div>
+
+        <div class="col-md-12 col-lg-12">
+          <div class="exactly content">
+            <div class="ui top attached tabular menu">
+                <a class="item active" data-tab="first">Detailed description</a>            
+              </div>
+              <div class="ui bottom attached tab segment active" data-tab="first">
+                <%-product.prFull%>
+              </div>
+              <div class="ui bottom attached tab segment" data-tab="second">
+                <h4 class="ui fitted divider"></h4>
+                <div class="ui comments">
+                  <div class="comment">
+                    <a class="avatar">
+                      <img src="https://semantic-ui.com/images/avatar/small/matt.jpg">
+                    </a>
+                    <div class="content">
+                      <a class="author">Matt</a>
+                      <div class="metadata">
+                        <span class="date">Today at 5:42PM</span>
+                      </div>
+                      <div class="text">
+                        How artistic!
+                      </div>
+                      <div class="actions">
+                        <a class="report">Report</a>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="comment">
+                    <a class="avatar">
+                      <img src="https://semantic-ui.com/images/avatar/small/elliot.jpg">
+                    </a>
+                    <div class="content">
+                      <a class="author">Elliot Fu</a>
+                      <div class="metadata">
+                        <span class="date">Yesterday at 12:30AM</span>
+                      </div>
+                      <div class="text">
+                        <p>This has been very useful for my research. Thanks as well!</p>
+                      </div>
+                      <div class="actions">
+                        <a class="report">Report</a>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="comment">
+                    <a class="avatar">
+                      <img src="https://semantic-ui.com/images/avatar/small/joe.jpg">
+                    </a>
+                    <div class="content">
+                      <a class="author">Joe Henderson</a>
+                      <div class="metadata">
+                        <span class="date">5 days ago</span>
+                      </div>
+                      <div class="text">
+                        Dude, this is awesome. Thanks so much
+                      </div>
+                      <div class="actions">
+                        <a class="report">Report</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="ui bottom attached tab segment" data-tab="third">
+                Shipment
+              </div>
+              <div class="ui bottom attached tab segment" data-tab="fourth">
+                Guarantees
+              </div>
+              <div class="ui bottom attached tab segment" data-tab="fifth">
+                Seller
+              </div>
+          </div>
+        </div>
+      </div>
+
+      <%-include('../Common/footer')%>
+    </div>
+
+    <%-include('../ProductParts/Cart')%>
+
+    <!--Scripts include!-->
+    <%-include('../Common/scripts')%>   
+    <script src="<%=domain%>/u.assets/js/exact.js" charset="utf-8"></script>
+
+  </body>
+
+</html>

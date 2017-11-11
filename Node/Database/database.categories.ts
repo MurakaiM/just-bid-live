@@ -487,7 +487,6 @@ function transpiler(categories : any){
            readyResult[element.url]  = { name : element.name, category : element.name};
         }
   });
-
   return readyResult;
 }
 
@@ -509,7 +508,7 @@ export function validateCategory( name : string) : boolean{
 
 export const Fees = {
   standard : {
-    fee : 2,
+    fee : 200,
     begin : 200,
     goes : {
       by : 100,
@@ -520,7 +519,7 @@ export const Fees = {
     appearance : "No Color Border"
   },
   featured : {
-    fee : 3,
+    fee : 300,
     begin : 300,
     goes : {
       by : 100,
@@ -551,13 +550,44 @@ export const Fees = {
     type : "per",
     explanation : "Bids Begin at $1 and bids goes up at 50% at a time",
     appearance : "Pink Color Border"
+  },
+  reserved : {
+    fee : 15,
+    begin : "custom",
+    goes : {
+      by : 100,
+      type : "dollar"
+    },
+    type : "per",
+    explanation : "Bids Begin at selected price and bids goes up at 15% at a time",
+    appearance : "Red Color Border"
   }
-};
+}
 
 export function validateFee( name : string) : boolean{
   return (Fees[name] !== undefined)
 }
 
-export function getFee( name : string) : boolean{
+export function getFee( name : string) : any{
   return Fees[name];
+}
+
+function calcFee( amount : number, name : string) : number{
+  let feeType = getFee(name);
+  /**
+   * For wrong fee we collect 1$ as standart
+   */
+  if(!feeType){
+    return 100 
+  }
+
+  if(feeType.type == 'dollar'){
+    return feeType.fee;
+  }else{
+    return (amount * feeType.fee)/100
+  }
+}
+
+export function getWinningFee(winning : any){
+  return calcFee(winning.lastBid, winning.auction.uidFee)  
 }

@@ -46,6 +46,25 @@ export default class Notification {
         });
     }
 
+    public static ReviewRedirected(user : string, id : string) : Promise<any>{
+        return new Promise((resolve, reject) => {
+            NotificationSchema.update({
+                isViewed : true
+               },{
+                where : {
+                    userId : user,
+                    recordId : id
+                },
+                returning: true
+            })
+             .then( result => {            
+                RealtimeController.Instance.emitReviewNotification(user, result[1][0].recordId )
+                resolve("Emitted and saved")
+             })
+             .catch( error => reject(error))
+        });
+    }
+
     public static GetLast(user : User) : Promise<any>{
         return NotificationSchema.findAll({
             where : {
@@ -86,4 +105,23 @@ export default class Notification {
         });
     }
 
+    public static CreateCharge(user : string, data : any) : Promise<any>{
+        return Notification.Create({
+            userId : user,
+            title : `Successful payment !`,
+            message : `<strong>${(data.amount/100)}$</strong> was successfully charged for you winning "${data.title}".`,
+            action : data.action,
+            type : `wch`
+        });
+    }
+
+    public static CreateError(user : string, data : any) : Promise<any>{
+        return Notification.Create({
+            userId : user,
+            title : `Payment failure !`,
+            message : `Error occurred while charging for you winning "${data.title}".<br> ${data.error_message}`,
+            action : data.action,
+            type : `fch`
+        });
+    }
 }

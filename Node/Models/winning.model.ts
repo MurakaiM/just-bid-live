@@ -6,6 +6,7 @@ import {
     AuctionSchema,
     WinningSchema, 
     ProductSchema, 
+    BillingSchema,
     TypesSchema,
     UserSchema
 } from '../Database/database.controller' 
@@ -23,7 +24,6 @@ interface SelectWinning{
     type : string
 }
 
-
 export default class Winning{
     private uuid : string;
     private dbWinning : string;
@@ -32,36 +32,55 @@ export default class Winning{
 
     get Data(){ return this.dbWinning; }
 
-    public static GenerateWinning(data : NewWinning) : Promise<any>{    
-        return WinningSchema.create({
-            winningId : uuid(),
-            winnerId : data.winner,
-            sellerId : data.seller,
-            auctionId : data.auctionId,
-            productId : data.producId,
-            lastBid : data.lastBid
+    public static async GenerateWinning(data : NewWinning) : Promise<any>{           
+        return await WinningSchema.create({
+           winningId : uuid(),
+           winnerId : data.winner,
+           sellerId : data.seller,
+           auctionId : data.auctionId,
+           productId : data.producId,
+           lastBid : data.lastBid
+        });
+    }       
+
+
+    public static FindWinning(user : User, id : string) : Promise<any> {
+        return WinningSchema.findOne({ 
+            where : { 
+                winnerId : user.PublicData.uid,
+                winningId : id 
+            },
+            include : [
+                { model : ProductSchema },
+                { model : AuctionSchema }
+            ]    
         });
     }
 
-
-
-    public static FindWinning( id : string ) : Promise<any> {
-        return WinningSchema.findOne({ where : { winningId : id }});
+    public static forPayment(id : string) : Promise<any>{
+        return WinningSchema.findOne({ 
+            where : { winningId : id },
+            include : [
+                { model : ProductSchema },
+                { model : TypesSchema }
+            ]    
+        });
     }
 
     public static FindWinnings( user : User ) : Promise<any> {
         return WinningSchema.findAll({ 
             where : { 
                 winnerId : user.PublicData.uid,
-                status : 'new' 
+                status : 'New' 
             },
             include : [
                 { model : AuctionSchema , attributes : ['mainImage'] },
-                { model : ProductSchema , attributes : ['prTitle']}
+                { model : ProductSchema , attributes : ['prTitle','prShipment']}
             ],
             order : [['createdAt','DESC']]
         });
     }
+
 
 
     public static FindSellerWinning( seller : User, id : string) : Promise<any>{
@@ -72,7 +91,8 @@ export default class Winning{
             },
             include : [                
                 { model : UserSchema , attributes : ['firstName','lastName']},
-                { model : ProductSchema, attributes : ['prShipment','prTitle']}
+                { model : ProductSchema, attributes : ['prShipment','prTitle']},
+                { model : TypesSchema }            
             ]
         });    
     }
@@ -90,12 +110,27 @@ export default class Winning{
         });
     }
 
-   
+
+
+    public static FindCustomerWinnings( customer : User) : Promise<any>{
+        return WinningSchema.findAll({ 
+            where : { 
+                winnerId : customer.PublicData.uid, 
+                status : { $ne : "New"}
+            },
+            order : [['updatedAt','DESC']],
+            include : [
+                { model : ProductSchema },
+                { model : TypesSchema }
+            ]    
+        });
+    }
+
 
 
     public static FindRender(id : string) : Promise<any>{
         return WinningSchema.findOne({
-            attributes : ['lastBid','winnerId','createdAt'],
+            attributes : ['lastBid','winnerId','status','createdAt'],
             where : { winningId : id },
             include: [{
                 attributes : ['prUid','prTitle', 'prDescription', 'prTypes', 'prShipment', 'prRating'],
@@ -109,7 +144,8 @@ export default class Winning{
         console.log(record,track)
         return WinningSchema.update(
             {
-                productTrack : track
+                productTrack : track,
+                status : 'Sent'
             },
             {
                 where : { 
@@ -133,6 +169,8 @@ export default class Winning{
             }
         )
     }
+
+    
 
 
     public static FinishWinning( user : User) : Promise<any>{
@@ -164,4 +202,25 @@ export default class Winning{
             return { success : false , error }
         }
     }
+
+
+    /* Finding by winning */
+    public static async FindByBilling(billingId : string){
+        return WinningSchema.findOne({
+            where : {
+                billingId : billingId
+            },
+            include : [
+                { model : ProductSchema },
+                { model : TypesSchema }
+            ]    
+        });
+    }
+ 
+    public static ExtractFee(winning : any): number{
+        let fee : number = 0;
+
+        return 0;
+    }
+
 }

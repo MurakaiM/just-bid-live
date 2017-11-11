@@ -7,9 +7,10 @@
         <%-include('../Common/head')%>
         <link rel="stylesheet" href="<%=domain%>/u.assets/css/user.css" />
         <link rel="stylesheet" href="<%=domain%>/g.assets/css/orders.css" />
+        <link rel="stylesheet" href="<%=domain%>/u.assets/css/product.css" />
         <link rel="stylesheet" href="<%=domain%>/g.assets/css/responsive.css">
     </head>
-    <body>
+    <body class="preloading">
         <div class="content">
             <!--Menu include!-->
             <%-include('../Common/menu', { page : pageName , user : currentUser })%>
@@ -18,15 +19,25 @@
                 <%-include('./my_menu', { active : null })%>
               </div>
               <div class="col-md-10">                           
-                    <div class="ui segment none">           
+                    <div class="ui segment">           
                         <div class="ui items">
                             <div class="item auction">
                                 <div class="image">
-                                    <img src="<%=winning.image%>">
+                                <div class="ui text shape">
+                                    <div class="sides">
+                                        <%if(winning.product.prTypes){%>                       
+                                            <% Object.keys(winning.product.prTypes.colors).forEach( (e,i) => { %>
+                                                <div id="<%=winning.product.prTypes.colors[e].value%>" class="ui header side <%if(i == 0){%>active<%}%>">
+                                                <img src="<%=winning.product.prTypes.colors[e].image%>" alt="">
+                                                </div>                            
+                                            <%})%>                                       
+                                        <%}%>
+                                        </div>
+                                    </div>                                  
                                 </div>
                                 <div class="flexwrap">
                                     <div class="content">
-                                        <a class="header" href="<%=domain+"/product/id"+winning.product.prUid%>"><%=winning.product.prTitle%></a>
+                                        <a class="header" href="<%=domain+'/product/id'+winning.product.prUid%>"><%=winning.product.prTitle%></a>
                                         <div class="meta">
                                             <span><%=winning.createdAt%></span>
                                         </div>
@@ -34,13 +45,9 @@
                                             <p><%=winning.product.prDescription%></p>
                                         </div>
                                         <div class="extra">
-                                            <div class="ui star rating">
-                                                <i class="icon active"></i>
-                                                <i class="icon active"></i>
-                                                <i class="icon active"></i>
-                                                <i class="icon"></i>
-                                                <i class="icon"></i>
-                                            </div>
+                                            <span class="amount"> <%=((winning.lastBid/100)+winning.product.prShipment).toFixed(2)%>$ </span>
+                                            <span class="amountd"> Bid : <%=(winning.lastBid/100).toFixed(2)%>$ </span>
+                                            <span class="amountd"> Shipment : <%=(winning.product.prShipment).toFixed(2)%>$</span></span>
                                         </div>
                                     </div>
                                 </div>
@@ -49,27 +56,74 @@
                         <div class="ui horizontal winning divider">
                             Checkout
                         </div>
-                        <form class="ui form none">                           
+                        <form class="ui form loading overall none" action="/payment/charge" method="post" id="payment-form">  
+                            <div class="field">
+                                <label>Type selection</label>
+                                <div class="<%if(winning.product.prTypes.colors && winning.product.prTypes.sizes){%>two fields<%}else{%>field<%}%>">
+                                    <%if(winning.product.prTypes.colors){%>
+                                        <div class="field">
+                                            <div id="colors" class="ui fluid selection dropdown ">
+                                                <input type="hidden" name="color">
+                                                <span class="default text">Select color</span>
+                                                    <div class="menu">
+                                                    <div class="scrolling menu">
+                                                        <% Object.keys(winning.product.prTypes.colors).forEach( e => { %>
+                                                            <div class="item <%if(winning.product.prTypes.colors[e].disable){%> disabled <%}else{%> available <%}%>"  data-value="<%=winning.product.prTypes.colors[e].value%>">
+                                                                <div class="ui empty circular label" style="background : <%=winning.product.prTypes.colors[e].color%>;!imporant"></div>
+                                                                <%=winning.product.prTypes.colors[e].title%>
+                                                            </div>
+                                                        <%})%> 
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>             
+                                    <%}%>
+                    
+                                    <%if(winning.product.prTypes.sizes){%>
+                                        <div class="field">                                   
+                                            <div id="sizes" class="ui fluid selection dropdown">
+                                                <input type="hidden" name="size">
+                                                <div class="default text">Select size</div>
+                                                <div class="menu">
+                                                    <div class="scrolling menu">
+                                                    <% Object.keys(winning.product.prTypes.sizes).forEach( e => { %>
+                                                        <div class="item <%if(winning.product.prTypes.sizes[e].disable){%> disabled <%}else{%> available <%}%>"  data-value="<%=winning.product.prTypes.sizes[e].value%>">                                 
+                                                                <%=winning.product.prTypes.sizes[e].title%>
+                                                        </div>
+                                                    <%})%> 
+                                                    </div>                      
+                                                </div>
+                                            </div>
+                                        </div>             
+                                    <%}%>      
+                                </div>
+                            </div>
                             <div class="field">
                                 <label>Name</label>
                                 <div class="two fields">
                                 <div class="field">
-                                    <input type="text" name="shipping[first-name]" placeholder="First Name">
+                                    <input type="text" name="shipping[first-name]" placeholder="First Name" value="<%=currentUser.Data.firstName%>">
                                 </div>
                                 <div class="field">
-                                    <input type="text" name="shipping[last-name]" placeholder="Last Name">
+                                    <input type="text" name="shipping[last-name]" placeholder="Last Name" value="<%=currentUser.Data.lastName%>">
                                 </div>
                                 </div>
                             </div>
                             <div class="field">
                                 <label>Billing Address</label>
+                                <div class="field">
+                                    <input type="text" name="shipping[address]" placeholder="Street Address">
+                                </div>
                                 <div class="fields">
-                                    <div class="eleven wide field">
-                                        <input type="text" name="shipping[address]" placeholder="Street Address">
+                                    <div class="six wide field">
+                                        <input type="text" name="shipping[city]" placeholder="City">
+                                    </div>
+                                    <div class="five wide field">
+                                        <input type="text" name="shipping[code]" placeholder="Postal Code">
                                     </div>
                                     <div class="five wide field">                                           
                                             <div class="ui fluid search selection dropdown">
-                                                <input type="hidden" name="country">
+                                                <input type="hidden" name="shipping[country]" value="<%=currentUser.Data.country.toLowerCase()%>"> 
                                                 <i class="dropdown icon"></i>
                                                 <div class="default text">Select Country</div>
                                                 <div class="menu">
@@ -320,63 +374,33 @@
                                  </div>
                             </div>                                                    
                             <div class="field">
-                                <label>Card Type</label>
-                                <div class="ui selection dropdown">
-                                <input type="hidden" name="card[type]">
-                                <div class="default text">Type</div>
-                                <i class="dropdown icon"></i>
-                                <div class="menu">
-                                    <div class="item" data-value="visa">
-                                    <i class="visa icon"></i>
-                                    Visa
+                                <label>Payment details</label>
+                                <div class="fields">
+                                    <div class="four wide field">
+                                        <input type="tel" placeholder="Phone number" name="shipping[phone]" value="<%=currentUser.Data.phone%>">
                                     </div>
-                                    <div class="item" data-value="amex">
-                                    <i class="amex icon"></i>
-                                    American Express
+                                    <div class="twelve wide field group">
+                                        <div id="card-element" class="field"></div>                                    
                                     </div>
-                                    <div class="item" data-value="discover">
-                                    <i class="discover icon"></i>
-                                    Discover
-                                    </div>
-                                </div>
                                 </div>
                             </div>
-                            <div class="fields">
-                                <div class="seven wide field">
-                                <label>Card Number</label>
-                                <input type="text" name="card[number]" maxlength="16" placeholder="Card #">
-                                </div>
-                                <div class="three wide field">
-                                <label>CVC</label>
-                                <input type="text" name="card[cvc]" maxlength="3" placeholder="CVC">
-                                </div>
-                                <div class="six wide field">
-                                <label>Expiration</label>
-                                <div class="two fields">
-                                    <div class="field">
-                                    <select class="ui fluid search dropdown" name="card[expire-month]">
-                                        <option value="">Month</option>
-                                        <option value="1">January</option>
-                                        <option value="2">February</option>
-                                        <option value="3">March</option>
-                                        <option value="4">April</option>
-                                        <option value="5">May</option>
-                                        <option value="6">June</option>
-                                        <option value="7">July</option>
-                                        <option value="8">August</option>
-                                        <option value="9">September</option>
-                                        <option value="10">October</option>
-                                        <option value="11">November</option>
-                                        <option value="12">December</option>
-                                    </select>
-                                    </div>
-                                    <div class="field">
-                                    <input type="text" name="card[expire-year]" maxlength="4" placeholder="Year">
-                                    </div>
-                                </div>
-                                </div>
-                            </div>                            
-                            <div class="ui button" tabindex="0">Submit Order</div>
+
+                            <div class="ui error custom message">
+                                <div class="header">Action Forbidden</div>
+                                <p>There are some incompleted fields</p>
+                            </div>
+                                                   
+                            <div class="submit_holder">
+                                    <div class="ui labeled button" tabindex="0">
+                                        <button type="submit" class="ui submit button">
+                                            <i class="checkmark icon"></i> Pay
+                                        </button>
+                                        <span class="ui basic label payer">
+                                            <b><%=((winning.lastBid/100)+winning.product.prShipment).toFixed(2)%>$</b>
+                                        </span>
+                                    </div>   
+                            </div>                             
+                         </div>
                         </form>
                     </div>
               </div>
@@ -389,6 +413,12 @@
 
     <!--Head include!-->
     <%-include('../Common/scripts', { domain })%> 
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/libphonenumber-js/0.4.18/libphonenumber-js.min.js"></script>
+    <script src="https://js.stripe.com/v3/"></script>    
     <script src="<%=domain%>/u.assets/js/personal/winning.js"></script>
+    <script>
+        setUpElements("<%=stripeKey%>");
+        setUpSelection("<%=winning.product.prUid%>");
+    </script>
 
 </html>

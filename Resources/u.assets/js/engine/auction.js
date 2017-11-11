@@ -8,9 +8,6 @@ $(function () {
 });
 
 
-
-
-
 function ReworkActivity() {
     var listener = new Listener(GOING_TIMER)
     var popup = new Modal(
@@ -189,12 +186,11 @@ function Item(object, options) {
         props.currentTimer.text('Waiting for the first bid');
     }
 
-
+    
     function LoadTimer(data, difference, changed = false) {  
         props.currentName.removeClass('waiting');
         doms.awaiter.remove();
         
-     
         let offset = difference % 1000;
         let seconds = (difference - offset) / 1000;
         let total = seconds - GOING_OFFSET;
@@ -206,7 +202,8 @@ function Item(object, options) {
 
         changed ? props.currentName.text(data.name) :   props.currentName.text(object.name)
         
-        if(changed && data.user == window.WAuth.getData().user.uid){
+        
+        if(data.user == window.WAuth.getData().user.uid || data.currentUser == window.WAuth.getData().user.uid ){
             props.currentName.addClass("my");
         }else{
             props.currentName.removeClass("my")
@@ -262,16 +259,12 @@ function Item(object, options) {
 }
 
 
-
-
-
-function render(data,name) {
-    
+function render(data,name) {    
     let currentBid = parseInt(data.currentBid) / 100;
     let borderColor;
 
     switch (data.uidFee) {
-        case 'small':
+        case 'featured':
             borderColor = 'purple'
             break;
 
@@ -279,10 +272,13 @@ function render(data,name) {
             borderColor = 'orange'
             break;
 
-        case 'small':
+        case 'big':
             borderColor = 'pink'
             break;
-    
+        case 'reserved':
+            borderColor = 'reserved'
+            break;
+
         default:
             borderColor = '';
             break;

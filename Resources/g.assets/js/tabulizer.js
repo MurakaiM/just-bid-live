@@ -1,5 +1,4 @@
-
-
+/* Tabulation component */
 function Tabs(options, ajax){
     this.currentTab = null;
     this.currentId = null;
@@ -12,6 +11,7 @@ function Tabs(options, ajax){
         var dom = $(element);
         var data = dom.data('tab');
         
+    
         if(dom.hasClass('disabled'))
             return;
         
@@ -27,7 +27,13 @@ function Tabs(options, ajax){
         this.contents[data] = dom;       
     }
 
-    this.openTab = id => {     
+    this.openTab = id => { 
+        if(id == this.currentId){
+            return;
+        }
+
+        window.location.href = '#/'+id;
+
         if(this.currentId &&  ajax[this.currentId]){
             ajax[this.currentId].onClose(this.currentHead, this.currentTab);
         }
@@ -43,7 +49,7 @@ function Tabs(options, ajax){
             this.currentTab.toggleClass('active');
 
         this.currentTab = this.contents[id];
-        this.currentId = this.id;
+        this.currentId = id;
 
         this.currentTab.toggleClass('active');
 
@@ -57,6 +63,9 @@ function Tabs(options, ajax){
     this.preload = (head,body) => {
         this.currentHead = head;
         this.currentTab = body;
+
+        this.currentHead.addClass('active');
+        this.currentTab.addClass('active');
         
         this.currentId = body.data('tab');
         if(ajax[this.currentId]){
@@ -65,15 +74,21 @@ function Tabs(options, ajax){
 
     }
 
+    this.openHashTab = hash => {
+        this.openTab(hash.replace('#/',''))
+    }
+
+
     $(options.headers).find('a[data-tab]').each( (i,element) => reworkHeader(element));
     $(options.contents).find('.segment.tab[data-tab]').each( (i,element) => reworkContent(element));
 
+    var hashed = window.location.hash.replace('#/','');
+    hashed = hashed ? hashed : 'home';
+
     this.preload( 
-        $(options.headers).find('a.active[data-tab]'),
-        $(options.contents).find('.segment.tab.active[data-tab]')
+        $(options.headers).find(`a[data-tab="${hashed}"]`),
+        $(options.contents).find(`.segment.tab[data-tab="${hashed}"]`)
     );
-
-
 }
 
 /* Promise */

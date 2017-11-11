@@ -6,6 +6,7 @@ function Table(id, options) {
 
     this.maxPages;
     this.forPage = 10;
+    this.total = this.table.find('.ui.label.total');
     this.currentPage;
     this.currentRow;
 
@@ -63,7 +64,6 @@ function Table(id, options) {
             }
         });
     }
-
 
 
     this.forceDelete = () => {
@@ -125,6 +125,7 @@ function Table(id, options) {
         var total = this.searched ? this.searched.length : this.data.current.length;
 
         this.maxPages = Math.ceil(total / this.forPage);
+        this.total.text(' / '+this.maxPages)
 
         if (this.currentPage > this.maxPage)
             this.currentPage = this.maxPage;
@@ -213,7 +214,7 @@ function Table(id, options) {
 
     this.pagination = index => {
         if (index <= 0) {
-            index = 1;
+            index = this.maxPages >= 1 ? 1 : 0;
         } else if (index > this.maxPages) {
             index = this.maxPages;
         }
@@ -254,10 +255,10 @@ function Table(id, options) {
 
         $(options.forPage).dropdown('set selected', 10);
         $(options.forPage).dropdown({ onChange: () => this.changeFor($(options.forPage).dropdown('get value')) });
-        $(options.buttons.next).click(e => this.bNext());
-        $(options.buttons.previous).click(e => this.bPrevious());
+        this.table.find(options.buttons.next).click(e => this.bNext());
+        this.table.find(options.buttons.previous).click(e => this.bPrevious());
 
-        const input = $(options.input.to);
+        const input = this.table.find(options.input.to);
         $(options.buttons.to).click(e => {
             let val = parseInt(input.val());
             if (isNaN(val))

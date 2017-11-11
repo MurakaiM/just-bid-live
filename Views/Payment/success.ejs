@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <!--Head include!-->
+        <%-include('../Common/mobile')%>
+        <%-include('../Common/head')%>
+        <link rel="stylesheet" href="<%=domain%>/u.assets/css/user.css" />
+        <link rel="stylesheet" href="<%=domain%>/g.assets/css/orders.css" />
+        <link rel="stylesheet" href="<%=domain%>/u.assets/css/product.css" />
+        <link rel="stylesheet" href="<%=domain%>/g.assets/css/responsive.css">
+    </head>
+    <body class="preloading">
+        <div class="content">
+            <!--Menu include!-->
+            <%-include('../Common/menu', { page : pageName , user : currentUser })%>
+            <div class="row products">
+              <div class="col-md-2">
+                <%-include('../Users/my_menu', { active : 0 })%>
+              </div>
+              <div class="col-md-10">       
+                     <div class="ui segment success none">
+                        <i class="fa fa-check-circle" aria-hidden="true"></i>
+                        <span> 
+                            Payment process was successfully finished !                            
+                        </span>
+                    </div>               
+                    <div class="ui segment">           
+                       <div class="ui items">
+                            <div class="item auction">
+                                <div class="image">                           
+                                    <img src="<%=item.product.prTypes.colors[item.colorImage].image%>" />  
+                                </div>
+                                <div class="flexwrap">
+                                    <div class="content">
+                                        <a class="header" href="<%=domain+"/product/id"+item.product.prUid%>"><%=item.product.prTitle%></a>
+                                        <div class="meta">
+                                            <span><%=item.type.title%></span>
+                                        </div>
+                                        <div class="description">
+                                            <p><%=item.product.prDescription%></p>
+                                        </div>
+                                        <div class="extra">
+                                            <span class="amount"> <%=((item.lastBid/100)+item.product.prShipment).toFixed(2)%>$ </span>
+                                            <span class="amountd"> Bid : <%=(item.lastBid/100).toFixed(2)%>$ </span>
+                                            <span class="amountd"> Shipment : <%=(item.product.prShipment).toFixed(2)%>$</span></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>                            
+                        </div>                                     
+                    </div>     
+              </div>
+            </div>
+
+            <%-include('../Common/each')%>
+            <%-include('../Common/footer')%>
+        </div>
+    </body>
+
+    <!--Head include!-->
+    <%-include('../Common/scripts')%>
+    <script src="<%=domain%>/g.assets/js/tabulizer.js"></script>
+    <script src="<%=domain%>/u.assets/js/personal/user.js"></script>
+
+</html>

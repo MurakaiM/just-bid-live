@@ -42,7 +42,7 @@ export default class AuctionItem{
         await this.dbAution.reload();
         
         let winning = await this.registerWinning();   
-        let notification = await NotificationController.TypeWnning(winning.winnerId, {
+        let notification = await NotificationController.TypeWinning(winning.winnerId, {
             title : this.dbAution.product.prTitle,
             action : winning.winningId
         });
@@ -61,7 +61,7 @@ export default class AuctionItem{
                 
            await this.dbAution.save();
         }else{          
-           this.dbAution.currentBid = Fees[this.dbAution.uidFee].begin;
+           this.dbAution.currentBid = this.dbAution.offCost;
            this.number = AuctionItem.startTimer;
            await this.dbAution.save();
 
@@ -144,30 +144,33 @@ export default class AuctionItem{
         data.uidRecord = uuid();
         data.isCompleted = false;
         data.uidFee = data.type;
+        data.offCost = (data.type == 'reserved') ? (data.str*100) : AuctionItem.getFees(data.type).begin;
         data.auctionStart = new Date();
         data.auctionEnds = new Date(data.auctionStart.getTime() + AuctionItem.startTimer + AuctionItem.goingTimer );
 
-        var product = await ProductSchema.findOne({ where : { prUid : data.uidProduct } });
-        var newItem;
+        let product = await ProductSchema.findOne({ where : { prUid : data.uidProduct } });
+        let newItem;
 
         return new Promise((resolve, reject) => {
-
             if(product){
-              const firstColor = Object.keys(product.prTypes.colors)[0];  
+                if(!product.prAllowed){
+                    return reject("Your product has't been aprroved yet"); 
+                }
 
-              data.currentBid = AuctionItem.getFees(data.type).begin;             
-              data.offCost = AuctionItem.getOff(data.currentBid, product.prCost);
-              data.offShipment = product.prShipment;
-              data.mainImage = product.prTypes.colors[firstColor].image;
-              data.inStock = data.stock;
-     
-              newItem = AuctionSchema.build(data);             
-              newItem.save()
-                .then( result => resolve("Successfuly saved"))
-                .catch( error =>  reject(error));
+                const firstColor = Object.keys(product.prTypes.colors)[0];  
+
+                data.currentBid = data.offCost;  
+                data.offShipment = product.prShipment;
+                data.mainImage = product.prTypes.colors[firstColor].image;
+                data.inStock = data.stock;
+        
+                newItem = AuctionSchema.build(data);             
+                newItem.save()
+                    .then( result => resolve("Successfuly saved"))
+                    .catch( error =>  reject("Database error"));
                 
             }else{ 
-              return reject("There is no product with such id"); 
+                return reject("There is no product with such id"); 
             }    
 
         });

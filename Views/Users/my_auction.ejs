@@ -12,7 +12,7 @@
         <link rel="stylesheet" href="<%=domain%>/g.assets/css/orders.css" />
         <link rel="stylesheet" href="<%=domain%>/g.assets/css/responsive.css"/>
     </head>
-    <body>
+    <body class="preloading">
         <div class="content">
             <!--Menu include!-->
             <%-include('../Common/menu', { page : pageName , user : currentUser })%>
@@ -23,6 +23,13 @@
                   <div class="col-md-10">                           
                     <div class="ui segment none">           
                         <div class="row">
+                            <%if(winnings.length == 0){%>
+                                <div class="empty-notify">
+                                    <img src="<%=domain%>/g.assets/img/commercialicons/safebox-2.png">
+                                    <span> You don't have any winnings for now. </span>
+                                </div>
+                            <%}%>
+
                             <%winnings.forEach( winning =>{%>                          
                                 <div class="col-sm-6 col-md-6 col-lg-4">
                                     <div class="product auction">
@@ -40,19 +47,19 @@
                                                 </div>
                                                 <div class="cost">
                                                     <div class="option">                                          
-                                                        <span class="labeler">  <i class="legal icon"></i> Winning bid : </span>
+                                                        <span class="labeler">  <i class="fa fa-gavel" aria-hidden="true"></i> Winning bid : </span>
                                                         <span class="info">   <i class="fa fa-usd" aria-hidden="true"></i> <%=(winning.lastBid/100)%> </span>
                                                     </div>                                            
                                                     <div class="option">                                          
-                                                        <span class="labeler">  <i class="shipping icon"></i> Delivery : </span>
-                                                        <span class="info">   <i class="fa fa-usd" aria-hidden="true"></i> <%=winning.auction.offShipment%> </span>
+                                                        <span class="labeler">  <i class="fa fa-truck" aria-hidden="true"></i> Delivery : </span>
+                                                        <span class="info">   <i class="fa fa-usd" aria-hidden="true"></i> <%=winning.product.prShipment%> </span>
                                                     </div>
                                                     <div class="option">                                          
-                                                        <span class="labeler">  <i class="wait icon"></i> Won at : </span>
+                                                        <span class="labeler">  <i class="fa fa-clock-o" aria-hidden="true"></i> Won at : </span>
                                                         <span class="info"> <%=convertDate(winning.createdAt)%> </span>
                                                     </div>
                                                     <div class="option">                                          
-                                                        <span class="labeler">  <i class="history icon"></i> Disappear after: </span>
+                                                        <span class="labeler">  <i class="fa fa-history" aria-hidden="true"></i> mail icon after: </span>
                                                         <span class="info"> 7 days </span>
                                                     </div>
                                                 </div>                                       
@@ -60,7 +67,7 @@
                                         </div>
                                         <div class="third">                                       
                                             <a href="/my/winning/<%=winning.winningId%>" class="ui button">
-                                                <i class="checkmark icon"></i>
+                                                <i class="fa fa-check" aria-hidden="true"></i>
                                                 Checkout
                                             </a>                                                                             
                                         </div>

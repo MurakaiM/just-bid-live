@@ -129,20 +129,6 @@ function Cart(anchor) {
   return this;
 }
 
-
-/*
-  Product schema
-
-  title
-  type
-  img_url
-  cost
-  quantity
-  shipment
-  sellerLink
-  sellerName
-
-*/
 function Product(json) {
   var currentData = json;
   var jqItem = generateTemplate(json);

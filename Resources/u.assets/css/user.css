@@ -107,6 +107,8 @@
     font-size: 14px;
     margin-right: 5px;
     line-height: 20px;
+    width: 85px;
+    display: inline-block;
 }
 
 .product .current .option .info {
@@ -114,6 +116,11 @@
     font-weight: 500;
     opacity: .85;
     display: block;
+    padding-left: 25px;
+}
+
+.product .current .option .info.small{
+    font-size: 12px;
 }
 
 .product .current .types {
@@ -147,7 +154,7 @@ tbody tr:last-child {
 .collapsing.image img {
     width: 100%;
     border-radius: 5px;
-    box-shadow: 0 0 15px 0px rgba(21, 21, 21, 0.2);
+    box-shadow: 0 0 5px 0px rgba(21, 21, 21, 0.2);
 }
 
 .product.auction{
@@ -168,6 +175,13 @@ tbody tr:last-child {
     width: calc(100% + 30px);
     position: relative;
     left: -15px;
+}
+
+.user_menu a.disabled{
+    filter : blur(4px);
+    opacity:  .6;
+    pointer-events: none;
+    user-select: none;
 }
 
 .user_menu a {
@@ -197,6 +211,7 @@ tbody tr:last-child {
 .user_menu a i {
     font-size: 20px;
     left: 10px;
+    top: 5px;
     position: absolute;
     image-rendering: -webkit-optimize-contrast;
 }

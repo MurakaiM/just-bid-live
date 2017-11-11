@@ -6,13 +6,14 @@ $(function () {
   setDates();
   setAvatar();
   setValidation();
+
   $('.ui.dropdown').dropdown();
 });
 
 function setValidation() {
-
   var validationRules = {
     inline: true,
+    finishing : true,
     rules: {
       firstName: {
         identifier: 'firstName',
@@ -42,11 +43,18 @@ function setValidation() {
           prompt: 'Please select your birth date'
         }]
       },
-      phone: {
-        identifier: 'phone',
+      fphone: {
+        identifier: 'fphone',
         rules: [{
-          type: 'phone[5]',
-          prompt: 'Enter valid phone number'
+          type: 'empty',
+          prompt: 'Please select your country cody'
+        }]
+      },
+      lphone: {
+        identifier: 'lphone',
+        rules: [{
+          type: 'empty',
+          prompt: 'Please enter rest part of phone number'
         }]
       },
       password: {
@@ -62,17 +70,14 @@ function setValidation() {
           type: 'match[password]',
           prompt: 'Passwords must be similar'
         }]
-      },
+      }
     }
   }
-
-
 
   var form = new Form("signUp", "/user/signup", validationRules, true);
 }
 
-function setDates() {
-  
+function setDates() {  
   $("#birthday").datepicker({
     format: 'mm.dd.yyyy',
     endDate: new Date(),
@@ -82,16 +87,15 @@ function setDates() {
 
 function setAvatar() {
   fileselect = $("#fileselect");
-  fileselect.on('change', () => {
+  fileselect.on('change', () => {  
+    $('.ui.image').addClass('avatar');
     readURL(fileselect)
   });
 }
 
-function readURL(input) {
-
+function readURL(input) { 
   if (input[0].files[0]) {
-    var reader = new FileReader();
-
+    var reader = new FileReader(); 
     reader.onload = function (e) {
       $('.ui.avatar').attr('src', e.target.result);
     }

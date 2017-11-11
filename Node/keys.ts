@@ -8,6 +8,31 @@ export const GOOGLE_APP = process.env.GOOGLE_APP || 'mythical-bazaar-175300'
 
 export const DOMAIN = process.env.DOMAIN || 'http://localhost:8080'
 
+export const STRIPE_SECRET = process.env.STRIPE_SECRET || 'sk_test_b3lIafPPmnd0DPdXslzRt7RG'
+
+export const STRIPE_PUBLIC = process.env.STRIPE_PUBLIC || 'pk_test_rkROYQBkFdCz9tQoBr2AmrUu'
+
+export const STRIPE_WEBHOOKS = require('../Keys/stripe.webhooks.json')
+
 export const STORAGE_CREDITNAILS = require('../Keys/storage.json')
 
-export const PORT = process.env.PORT || 8080
+export const PORT = parseInt(process.env.PORT) || 8080
+
+export const HOST_URL = DOMAIN
+
+
+
+export const GOOGLE_AUTH_CLIENTID = process.env.GOOGLE_AUTH_CLIENT_ID || '131187575520-s2pql3nps5qi305bsvlog35dh3d8alum.apps.googleusercontent.com'
+
+export const GOOGLE_AUTH_SECRET = process.env.GOOGLE_AUTH_SECRET || 'NFYqAmZpd36t-rbLGX0cUZWA'
+
+
+export const FACEBOOK_APP_ID = process.env.FACEBOOK_APP_ID || '352673801850452'
+
+export const FACEBOOK_APP_SECRET = process.env.FACEBOOK_APP_SECRET || 'c3ba385eaa269aa0ddb64693ff958a18'
+
+
+
+export const GOOGLE_AUTH_CALLBACK = process.env.GOOGLE_AUTH_CALLBACK || '/auth/callback/google'
+
+export const FACEBOOK_AUTH_CALLBACK = process.env.FACEBOOK_AUTH_CALLBACK || '/auth/callback/facebook'

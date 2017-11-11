@@ -17,6 +17,8 @@ import {
     ProductSchema
 } from '../Database/database.controller'
 
+import { AwaitResult } from '../Utils/Communication/async'
+
 import Storage from '../Utils/Controllers/storage'
 
 import Product from '../Models/product.model'
@@ -49,6 +51,7 @@ export default class ProductController {
                     prUid: uuid(),
                     prSeller: user.PublicData.uid,
                     prTitle: params.title,
+                    prDelivery : params.delivery,
                     prDescription: params.description,
                     prCost: cost,
                     prShipment: shipment,
@@ -57,27 +60,23 @@ export default class ProductController {
                     prCategory: compiledTester[params.category],
                     prMaterial: params.material,
                     prGuarantee: params.guarantee
-                }, {
-                    transaction: TR
-                });
+                }, {transaction: TR});
 
-                for (let key of Object.keys(params.colors)) {
-                    params.colors[key].image = await Storage.Instance.uploadType(files['filefor' + key]);
-                }
+                let colors = Object.keys(params.colors);
+                let uploads = await Promise.all(colors.map(key => Storage.Instance.uploadType(files['filefor' + key])));
+               
+                colors.forEach( (key,i) => params.colors[key].image = uploads[i]);
+        
 
-                let typesObject = {
-                    colors: params.colors,
-                    sizes: params.sizes
-                };
-                product.prTypes = typesObject;
-                await product.save({
-                    transaction: TR
-                });
+                let typesObject = { colors: params.colors, sizes: params.sizes }
+                product.prTypes = typesObject
+                await product.save({ transaction: TR })
 
 
                 let bulkArray: Array < any > = [];
                 if (Object.keys(params.sizes).length == 0)
                     Object.keys(params.colors).forEach(key => bulkArray.push({
+                        typeUid : uuid(),
                         productId: product.prUid,
                         sellerId: product.prSeller,
                         title: params.colors[key],
@@ -88,6 +87,7 @@ export default class ProductController {
                     for (let colorKey of Object.keys(params.colors)) {
                         for (let sizeKey of Object.keys(params.sizes)) {
                             bulkArray.push({
+                                typeUid : uuid(),
                                 productId: product.prUid,
                                 sellerId: product.prSeller,
                                 inStock: params[colorKey + sizeKey],
@@ -98,27 +98,58 @@ export default class ProductController {
                     }
                 }
 
-                await TypesSchema.bulkCreate(bulkArray, {
-                    transaction: TR
-                })
-                await TR.commit();
-                let finished = await Product.ForceForSeller(user,product.prUid);
+                await TypesSchema.bulkCreate(bulkArray, { transaction: TR })
+                await TR.commit()
+                
+                let finished = await Product.ForceForSeller(user,product.prUid)
 
-                return {
-                    succ: true,
-                    product: finished.dataValues
-                }
+                return {  succ: true, product: finished.dataValues }
             } catch (error) {
                 await TR.rollback();
-
-                return {
-                    succ: false,
-                    err: error
-                };
+                return { succ: false, err: error }
             }
         })
     }
 
+    public static async PublicStock(user : User, params : any) : Promise<AwaitResult>{
+        try{
+            let hasError = validId(params);
+
+            if(hasError.invalid) return { success : false,  error : hasError.reason }
+
+            let typesStock = await TypesSchema.findAll({
+                where: { productId: params.id },
+                attributes : ['typeId','inStock']
+            });
+
+            return { success : true, result : typesStock }
+        }catch(error){
+            return { success : false,  error }
+        }
+    }
+
+    public static async ApprovalProduct(user : User, params : any) : Promise<AwaitResult>{
+        try{
+            let hasError = validId(params);
+
+            if(params.allowed == null || params.allowed == undefined){
+                return { success : false , error : 'No allowed parameter was provded.' } 
+            }
+
+            if(hasError.invalid){
+                return { success : false , error : hasError.reason } 
+            }
+
+            await Product.ForceApproval(params.id, params.allowed)    
+            return { success : true, result :  'Product was successfully approved' }
+        }catch(error){
+            console.log(error)
+            return { success : true, error }
+        }
+    }
+
+
+    
     public static GetProduct(uid: string): Promise < any > {
         return Product.ForceFind(uid);
     }
@@ -185,5 +216,10 @@ export default class ProductController {
                 .catch(err => reject(err));
         });
     }
+    
+    public static GetUnchecked() : Promise<any>{
+        return Product.ForceUnreviewd();
+    }
+
 
 }

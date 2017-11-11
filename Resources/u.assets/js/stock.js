@@ -6,11 +6,6 @@ var currentDom;
 var sliderInterval;
 
 
-
-//options.selector = ".product.stock"
-//options.img_selector = ".image"
-//options.expandable_target = ".expandable_body .header"
-
 $(function () {
   var products = new Expandable();
   products.init();

@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="<%=domain%>/u.assets/css/product.css">
   <link rel="stylesheet" href="<%=domain%>/g.assets/css/responsive.css">
 
-  <body>
+  <body class="preloading">
 
     <div class="content">
       <!--Menu include!-->
@@ -66,8 +66,8 @@
                       <span id="price"> <%=product.prCost%></span>
                   </div>
                   <div class="exactly seller">
-                      <span class="labeler">Seller :</span>
-                      <a href="/seller/id" id="seller"> Dan </a>
+                      <span class="labeler">Seller's store :</span>
+                      <a id="seller"> <%=product.creator.seller.title%> </a>
                   </div>
             </div>
 
@@ -123,16 +123,21 @@
               <div class="option">
                 <span class="labeler">  <i class="shipping icon"></i> Shipping : </span>
                 <span class="info">   <i class="fa fa-usd" aria-hidden="true"></i> <%=product.prShipment%></span>
+              </div>              
+              <div class="option">
+                <span class="labeler">  <i class="wait icon"></i> Delivery :</span>
+                <span class="info"> <%=product.prDelivery%> days</span>
               </div>
               <div class="option">
                 <span class="labeler">  <i class="protect icon"></i> Guarantee :</span>
-                <span class="info"> 12 month </span>
+                <span class="info"> <%=product.prGuarantee%></span>
               </div>
             </div>
+
+            <!--
             <div class="exactly types">
                 <div id="cart" class="ui exactly submit button" data-id="<%=product.prUid%>"><i class="add cart icon"></i> Add to cart</div>
             </div>
-
             <div class="exactly statistic">
               <h4 class="ui horizontal divider header widther">Statistics</h4>
               <div class="exactly stats">
@@ -165,6 +170,8 @@
               </div>
               <h4 class="ui fitted divider widther"></h4>
             </div>
+            -->
+
         </div>
 
         <div class="col-md-12 col-lg-12">
@@ -250,8 +257,7 @@
     <%-include('../ProductParts/Cart')%>
 
     <!--Scripts include!-->
-    <%-include('../Common/scripts')%>
-    <script src="<%=domain%>/u.assets/js/search.js" charset="utf-8"></script>
+    <%-include('../Common/scripts')%>   
     <script src="<%=domain%>/u.assets/js/exact.js" charset="utf-8"></script>
 
   </body>

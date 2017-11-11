@@ -1,3 +1,4 @@
+<%-include('../Function/funcitons')%>
 <!DOCTYPE html>
 <html>
 
@@ -9,7 +10,7 @@
         <link rel="stylesheet" href="<%=domain%>/g.assets/css/orders.css" />
         <link rel="stylesheet" href="<%=domain%>/g.assets/css/responsive.css">
     </head>
-    <body>
+    <body class="preloading">
         <div class="content">
             <!--Menu include!-->
             <%-include('../Common/menu', { page : pageName , user : currentUser })%>
@@ -20,54 +21,54 @@
               <div class="col-md-10">                     
                     <div class="ui segment none">           
                         <div class="row">                           
-                            <div class="col-sm-6 col-md-6 col-lg-4">
-                                 <div class="product ui flex orders order">
-                                    <div class="first">
-                                        <div class="collapsing image">
-                                            <img src="https://s-media-cache-ak0.pinimg.com/736x/fb/60/90/fb6090f6808037dd4aedb50f0cfbc7d8.jpg" alt="" />
+                            <%winnings.forEach(elem =>{%>
+                                <div class="col-sm-6 col-md-6 col-lg-4">
+                                    <div class="product ui flex orders order">
+                                        <div class="first">
+                                            <div class="collapsing image">
+                                                <img src="<%=elem.product.prTypes.colors[elem.type.typeId.split('|')[0]].image%>" alt="" />
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="second">
-                                        <div class="information">
-                                            <div class="title">Dress</div>
-                                            <div class="types">
-                                                Small, XS
-                                            </div>
-                                            <div class="cost">
-                                                <div class="option">                                          
-                                                    <span class="labeler">  <i class="shopping basket icon"></i> Price : </span>
-                                                    <span class="info">   <i class="fa fa-usd" aria-hidden="true"></i> 25</span>
-                                                </div>                                            
-                                                <div class="option">                                          
-                                                    <span class="labeler">  <i class="shipping icon"></i> Shipping : </span>
-                                                    <span class="info">   <i class="fa fa-usd" aria-hidden="true"></i> 25</span>
-                                                </div>
-                                                <div class="option">                                          
-                                                    <span class="labeler">  <i class="hashtag icon"></i> Qunatity : </span>
-                                                    <span class="info"> 1</span>
-                                                </div>
-                                            </div>                                       
-                                        </div> 
-                                    </div>
-                                    <div class="third">
-                                        <div class="current">
-                                            <div class="title">Information :</div>                                        
-                                            <div class="option first">                                          
-                                                <span class="labeler"><i class="help icon"></i> Status </span>
-                                                <span class="info">Waiting for review</span>
-                                            </div>
-                                            <div class="option">                                          
-                                                <span class="labeler"><i class="time icon"></i> Created </span>
-                                                <span class="info">10.08.2017</span>
-                                            </div>
-                                            <div class="option">                                          
-                                                <span class="labeler"><i class="barcode icon"></i> Track </span>
-                                                <span class="info"> 79493028565287</span>
+                                        <div class="second">
+                                            <div class="information">
+                                                <div class="title"> <%=elem.product.prTitle%> </div>
+                                                <div class="types"> <%=elem.type.title%></div>
+                                                <div class="cost">
+                                                    <div class="option">                                          
+                                                        <span class="labeler">  <i class="fa fa-check" aria-hidden="true"></i> Price : </span>
+                                                        <span class="info">   <i class="fa fa-usd" aria-hidden="true"></i> <%=(elem.lastBid/100).toFixed(2)%> </span>
+                                                    </div>                                            
+                                                    <div class="option">                                          
+                                                        <span class="labeler">  <i class="fa fa-truck" aria-hidden="true"></i> Shipping : </span>
+                                                        <span class="info">   <i class="fa fa-usd" aria-hidden="true"></i> <%=elem.product.prShipment%> </span>
+                                                    </div>
+                                                    <div class="option">                                          
+                                                        <span class="labeler">  <i class="fa fa-hashtag" aria-hidden="true"></i> Qunatity : </span>
+                                                        <span class="info"> 1</span>
+                                                    </div>
+                                                </div>                                       
                                             </div> 
-                                        </div> 
-                                    </div>
-                                </div>  
-                            </div>
+                                        </div>
+                                        <div class="third">
+                                            <div class="current">
+                                                <div class="title">Information :</div>                                        
+                                                <div class="option first">                                          
+                                                    <span class="labeler"><i class="fa fa-question" aria-hidden="true"></i> Status </span>
+                                                    <span class="info"><%=elem.status%></span>
+                                                </div>
+                                                <div class="option">                                          
+                                                    <span class="labeler"><i class="fa fa-clock-o" aria-hidden="true"></i> Created </span>
+                                                    <span class="info"><%=convertDate(elem.createdAt)%></span>
+                                                </div>
+                                                <div class="option">                                          
+                                                    <span class="labeler"><i class="fa fa-barcode" aria-hidden="true"></i> Track </span>
+                                                    <span class="info small"> <%=elem.productTrack%> </span>
+                                                </div> 
+                                            </div> 
+                                        </div>
+                                    </div>  
+                                </div>
+                            <%})%>
                         </div>                                        
                     </div>               
               </div>

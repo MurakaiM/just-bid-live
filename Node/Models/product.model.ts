@@ -3,9 +3,11 @@ import * as uuid from 'uuid/v4'
 import ProductInterface from '../Interfaces/product.interfaces'
 import { 
     Database,
+    UserSchema,
     ProductSchema, 
     OrderSchema,
     AuctionSchema,
+    SellerSchema,
     TypesSchema 
 } from '../Database/database.controller'
 
@@ -79,6 +81,29 @@ export default class Product {
         return this.dbProduct; 
     }
 
+
+    public static async ChangeStock( user : User , uuid : string, type: string , stock : number) : Promise<any> {
+        try{
+            await TypesSchema.update({
+                inStock : stock
+            },{ 
+                where : {
+                    productId : uuid,
+                    sellerId : user.PublicData.uid,
+                    typeId : type
+                }
+            })
+
+            let product = await  Product.ForceForSeller(user, uuid);
+            return {
+                success : true,
+                product
+            }
+        }catch(error){
+            return { success : false, error}
+        }
+        
+    }
 
     public static GetCart( data : any) : Promise<Array<Product>> {      
         return new Promise((resolve, reject) => {
@@ -164,41 +189,33 @@ export default class Product {
             },
             include: [{
                 model: TypesSchema,
-                as: "Type"
+                as: "types"
             }],
             attributes
         })
     }
 
     public static ForceFind(uuid : string ) : Promise<any>{
-        return ProductSchema.findOne({ where : { prUid : uuid} });
+        return ProductSchema.findOne({
+             where : { prUid : uuid },
+             include : [{ 
+                include : { model : SellerSchema, as : 'seller' },
+                model : UserSchema, 
+                as : 'creator' 
+            }]
+        });
     }
 
     public static ForceTypes(uuid : string) : Promise<any>{
         return ProductSchema.findOne({ where : { prUid : uuid }, attributes : ["prTypes"] });
     }
 
-    public static async ChangeStock( user : User , uuid : string, type: string , stock : number) : Promise<any> {
-        try{
-            await TypesSchema.update({
-                inStock : stock
-            },{ 
-                where : {
-                    productId : uuid,
-                    sellerId : user.PublicData.uid,
-                    typeId : type
-                }
-            })
-
-            let product = await  Product.ForceForSeller(user, uuid);
-            return {
-                success : true,
-                product
-            }
-        }catch(error){
-            return { success : false, error}
-        }
-        
+    public static ForceApproval(uuid : string, approved : boolean) : Promise<any>{
+        return ProductSchema.update({
+            prAllowed : approved
+        },{
+            where : { prUid : uuid }
+        })
     }
 
     public static ChangeTypeAvailability( user : User, uuid : string, available : boolean, data : any, group : string) : Promise<any>{
@@ -232,6 +249,24 @@ export default class Product {
         });
     }
 
+    public static ForceUnreviewd(){
+        return ProductSchema.findAll({
+            where : { prAllowed : null },
+            order: [
+                ['createdAt']
+            ],
+            attributes : ['prUid','createdAt', 'prTitle'],
+            include : [
+                { 
+                  model : UserSchema, 
+                  as : 'creator', 
+                  attributes : ['firstName','lastName'] 
+                }
+            ]         
+        });
+    }
     
 }
+
+
 

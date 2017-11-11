@@ -4,11 +4,16 @@ import categoriesPopups from '../Database/database.categories'
 
 import UserController from '../Controllers/user.controller'
 import ProductController from '../Controllers/product.controller'
+import PaymentController from '../Controllers/payment.controller'
 import WinningController from '../Controllers/winning.controller'
 import NotificationController from '../Controllers/notification.controller'
 
-import { isAuth } from '../Utils/Communication/rules'
-import { DOMAIN } from '../keys'
+import Statistics from '../Services/Statistics/statistics.loader'
+
+import { isAuth , isAdmin } from '../Utils/Communication/rules'
+import { DOMAIN, STRIPE_PUBLIC } from '../keys'
+import { Codes } from '../Database/database.static'
+
 
 interface Redirector{   
     render : string,
@@ -74,14 +79,16 @@ export default class Renderer {
             .then( product => {
                 if(!product) return res.redirect('/');
                 
+                if(!product.prAllowed) return res.redirect('/');                    
                 product.increment('prViews');
                 pageInfo['product'] = product;
                 pageInfo['pageName'] = product.prTitle;
                        
                 return res.render('Products/product', pageInfo);
             })
-            .catch( error => res.redirect('/'));
+            .catch( error => res.redirect('/') );
     }
+
 
     public static signup(req,res){
         var pageInfo = {
@@ -92,7 +99,6 @@ export default class Renderer {
 
         res.render('signup', pageInfo);
     }
-
 
     public static helpCategory(req,res){
         var pageInfo = {
@@ -107,18 +113,28 @@ export default class Renderer {
     }
 
 
+
     public static profile(req,res){
         var pageInfo = {
             pageName : "My orders & winnings",
-            currentUser : req.user,
-            domain : DOMAIN,   
+            currentUser : req.user,            
+            domain : DOMAIN,  
             login : false        
         };
 
-        Renderer.AccountRedirect(req, res, {          
-            render : "Users/my",
-            info : pageInfo
-        });   
+        isAuth(req,res,true).allowed( async user => {
+            if(user.isSeller()){
+                return res.redirect('/seller/mystore');
+            }
+
+            try{
+               pageInfo['winnings'] = await WinningController.ReadyCustomersWinnings(req.user)
+            }catch(error){
+               pageInfo['winnings'] = [];
+            }
+
+            return res.render('Users/my', pageInfo)
+        })
     }
 
     public static profileAuction(req,res){
@@ -200,6 +216,7 @@ export default class Renderer {
     public static winningCheckout(req,res){
         let wngId = req.params.id;
         let pageInfo = {
+            stripeKey : STRIPE_PUBLIC,
             pageName : "Winning checkout",
             currentUser : req.user,
             domain : DOMAIN,   
@@ -207,24 +224,25 @@ export default class Renderer {
             winning : null
         };         
   
-        isAuth(req,res,true).allowed( user => 
-            WinningController.WinningRender(user, wngId).then( answer => {   
-                if(!answer.success) return res.redirect('/');
-                   
-                pageInfo.winning = answer.result;
-                pageInfo.winning.dataValues.createdAt = TimeModule.convertTime(answer.result.createdAt);       
-                pageInfo.winning.image = answer.result.product.prTypes.colors[Object.keys(answer.result.product.prTypes.colors)[0]].image;
-                            
-                NotificationController.ReviewNotification(user, wngId)
-                .then( 
-                        result => res.render('Users/my_checkout', pageInfo), 
-                        error => res.render('Users/my_checkout', pageInfo)
-                     )
+        isAuth(req,res,true).allowed( async user => {
+            let answer = await WinningController.WinningRender(user, wngId);
+           
+            if(!answer.success) return res.redirect('/');
+
+            if(answer.result.status.toLowerCase() != 'new') return res.redirect('/');
                
-            })
-        );        
+            pageInfo.winning = answer.result;
+            pageInfo.winning.dataValues.createdAt = TimeModule.convertTime(answer.result.createdAt);       
+            pageInfo.winning.image = answer.result.product.prTypes.colors[Object.keys(answer.result.product.prTypes.colors)[0]].image;
+        
+            req.session.lastPayment = wngId;
+
+            await NotificationController.ReviewNotification(user, wngId);
+            return res.render('Users/my_checkout', pageInfo);               
+        });            
     }
     
+
 
     private static AccountRedirect(req,res, data : Redirector ){
         if(req.isAuthenticated() && req.user.isSeller())

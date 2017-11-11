@@ -12,14 +12,15 @@
 
         <link rel="stylesheet" type="text/css" href="<%=domain%>/g.assets/css/responsive.css">
     </head>
-    <body>
+    <body class="preloading">
         <div class="content">
             <!--Menu include!-->
             <%-include('../Common/menu', { page : pageName , user : currentUser })%>
             <div class="row products admin">
               <div class="col-md-2">
                 <div class="ui vertical menu profiler tabs head">   
-                    <a class="item active" data-tab="home">Home</a>                
+                    <a class="item" data-tab="home">Home</a>    
+                    <a class="item" data-tab="personal">Information</a>            
                     <a class="item" data-tab="products">Products</a>
                     <a class="item" data-tab="auctions">Auctions</a>
                     <a class="item disabled" data-tab="orders">Orders</a>
@@ -27,16 +28,17 @@
                     <a class="item " data-tab="disabled">Disabled</a>
                     <a class="item disabled" data-tab="history">History</a>
                     <a class="item disabled" data-tab="messages">Messages</a>
+                    <a class="item" data-tab="payouts">Payouts</a>
                     <a class="item disabled" data-tab="settings">Settings</a>
                     <a class="item" id="signout">Sign out</a>
                 </div>
               </div>
               <div class="col-md-10">
                 <div class="tabs body">         
-                    <div id="homeData" class="ui segment padding tab active loading" data-tab="home">
+                    <div id="home" class="ui segment padding tab loading" data-tab="home">
                         <div class="ui grid nomargin">
                             <div class="row margin auto">
-                                <div class="four wide column"> 
+                                <div class="four wide column flex center"> 
                                     <img class="ui small image margin auto" src="<%=domain%>/g.assets/img/usericons/image.png"> 
                                 </div>
                                 <div class="twelve wide column flex center"> 
@@ -75,7 +77,133 @@
                                 <div class="label">Solds</div>
                             </div>
                         </div>  
-                    </div>          
+                    </div>      
+                    <div id="personal" class="ui segment padding tab loading" data-tab="personal">
+                        <div class="ui grid nomargin">
+                            <div class="row margin auto">
+                                <div class="four wide column flex center"> 
+                                    <img class="ui small image margin auto" src="<%=domain%>/g.assets/img/commercialicons/investment.png"> 
+                                </div>
+                                <div class="twelve wide column flex center"> 
+                                    <div>
+                                        <div class="title">Store Information</div> 
+                                        <div class="subtitle">
+                                            View and update your personal information.
+                                        </div> 
+                                        <div class="description">                                            
+                                            You can update general information and payouts credentials.<br><br>
+                                            <span class="tip">
+                                                <strong> TIP </strong> - your updates will be immediately visible in public profile.                                                                                 
+                                            </span>
+                                        </div> 
+                                    </div>    
+                                </div>                                
+                            </div>
+                        </div>
+                        <div>
+                            <form id="info_update" class="ui form">
+                                <div class="field fileds-margin">
+                                    <label>
+                                        <i class="fa fa-info" aria-hidden="true"></i> &nbsp;  Store information
+                                    </label>
+
+                                    <div class="ui grid">
+                                        <div class="four wide column">
+                                            <div class="ui compact input whiled small-margin"> 
+                                                <input type="text" name="title" placeholder="Title" >
+                                            </div>
+                                            <div class="ui compact input whiled small-margin"> 
+                                                <input type="text" name="subtitle" placeholder="Subtitle" >
+                                            </div> 
+                                            <div class="ui error message"></div>
+                                        </div>
+                                        <div class="four wide column">
+                                            <div class="ui compact input whiled small-margin"> 
+                                                <textarea style="height: 50px;min-height: 70px;" type="text" name="description" placeholder="Description"></textarea>
+                                            </div>
+                                        </div>
+
+                                        <div class="two wide column" style="text-align: center;">
+                                            <button type="text" class="ui button submit compact"> Update </button>
+                                        </div>
+                                        <div class="six wide column">                                                   
+                                             <div class="ui green compact message no-margin hidden">
+                                                Store information was successfully updated
+                                             </div>   
+                                             <div class="ui red compact message no-margin hidden">
+                                                Error occurred during update
+                                             </div>                               
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        
+                            <form id="avatar_update" class="ui form" style="margin-top: 15px;">
+                                <div class="field fields-margin">
+                                    <label>
+                                        <i class="fa fa-picture-o" aria-hidden="true"></i> &nbsp; Store avatar
+                                    </label>                                
+                                
+                                    <div class="fields">
+                                        <div class="two wide field">
+                                            <img class="ui custom-mini image" src="/g.assets/img/usericons/image.png">
+                                        </div>
+                                        <div class="three wide field flex center">
+                                            <input type="file" style="display:none;" name="avatar" id="new_avatar" accept="image/*">
+                                            <label type="text" class="ui button submit compact" name="selectable" for="new_avatar"> 
+                                                Select new image
+                                            </label>
+                                        </div>
+                                        <div class="two wide field flex center">
+                                            <button type="text" class="ui button submit compact"> Upload </button>
+                                        </div>
+                                        <div class="nine wide field flex middle">
+                                             <div class="ui green compact message no-margin hidden">
+                                                Store avatar was successfully updated
+                                             </div>   
+                                             <div class="ui red compact message no-margin hidden">
+                                                Error occurred during updating of avatar
+                                             </div>                               
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>          
+
+                            <h4 class="ui horizontal divider header">
+                                <i class="dollar icon"></i>
+                                Payout credentials
+                            </h4>
+                            <form  id="paypal_update" class="ui form" >    
+                                <div class="field fileds-margin">
+                                    <label>
+                                        <i class="fa fa-paypal" aria-hidden="true"></i> &nbsp;  Paypal email
+                                    </label>
+
+                                    <div class="fields">
+                                        <div class="five wide field">
+                                            <div class="ui compact input while"> 
+                                                <input type="text" name="paypalEmail" placeholder="Email for payouts" >
+                                            </div>
+                                        </div>
+                                        <div class="two wide field" style="text-align: center;">
+                                            <button type="text" class="ui button submit compact"> Update </button>
+                                        </div>
+                                        <div class="nine wide field">
+                                             <div class="ui yellow compact message hidden">
+                                                This email will be available for payout at <strong id="paypal_date"> </strong>   
+                                             </div>        
+                                             <div class="ui green compact message no-margin hidden">
+                                                This email is available for payout
+                                             </div>   
+                                             <div class="ui red compact message no-margin hidden">
+                                                
+                                             </div>                               
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>                 
+                        </div>
+                    </div>    
                     <div class="ui segment none padding tab" data-tab="products">  
                         <span>  
                             For one page : 
@@ -139,11 +267,12 @@
                                     <a class="left icon item">
                                         <i class="left chevron icon"></i>
                                     </a>
-                                    <div class="ui left action input">
+                                    <div class="ui left action input right labeled">
                                         <button class="ui button radiusless borderless">                                            
                                             To
                                         </button>
                                         <input class="radiusless borderless" type="text" value="1">
+                                        <div class="ui label centred total"></div>
                                     </div>                                        
                                     <a class="right icon item">                                                                   
                                         <i class="right chevron icon"></i>
@@ -206,12 +335,13 @@
                                     <a class="left icon item">
                                         <i class="left chevron icon"></i>
                                     </a>
-                                    <div class="ui left action input">
+                                    <div class="ui left action input right labeled">
                                         <button class="ui button radiusless borderless">                                            
                                             To
                                         </button>
                                         <input class="radiusless borderless" type="text" value="1">
-                                    </div>                                        
+                                        <div class="ui label centred total"></div>
+                                    </div>                                       
                                     <a class="right icon item">                                                                   
                                         <i class="right chevron icon"></i>
                                     </a>
@@ -253,9 +383,9 @@
                                  <th data-field="uidFee">Fee</th>
                                  <th data-field="inStock">Stock </th>
                                  <th data-field="currentBid">Last bid</th>  
-                                 <th data-field="onAuction"> On </th>      
-                                 <th data-field="isCompleted"> Cmp </th>
-                                 <th data-field="temporaryDisabled"> Psd </th>
+                                 <th data-field="onAuction" data-content="On auction"> On </th>      
+                                 <th data-field="isCompleted" data-content="Is completed"> Cmp </th>
+                                 <th data-field="temporaryDisabled" data-content="Is paused"> Psd </th>
                                  <th data-field="updatedAt">Last action</th>                              
                                  <th data-field="createdAt">Created At</th>   
                                </tr>
@@ -276,12 +406,14 @@
                                     <a class="left icon item">
                                         <i class="left chevron icon"></i>
                                     </a>
-                                    <div class="ui left action input">
+                                    <div class="ui left action  right labeled input">
                                         <button class="ui button radiusless borderless">                                            
                                             To
                                         </button>
                                         <input class="radiusless borderless" type="text" value="1">
-                                    </div>                                        
+                                        <div class="ui label centred total"></div>
+                                    </div>  
+                                    
                                     <a class="right icon item">                                                                   
                                         <i class="right chevron icon"></i>
                                     </a>
@@ -346,11 +478,12 @@
                                     <a class="left icon item">
                                         <i class="left chevron icon"></i>
                                     </a>
-                                    <div class="ui left action input">
+                                    <div class="ui left action input right labeled">
                                         <button class="ui button radiusless borderless">                                            
                                             To
                                         </button>
                                         <input class="radiusless borderless" type="text" value="1">
+                                        <div class="ui label centred total"></div>
                                     </div>                                        
                                     <a class="right icon item">                                                                   
                                         <i class="right chevron icon"></i>
@@ -361,7 +494,137 @@
                                </tr>
                             </tfoot>
                         </table>
-                    </div>                
+                    </div>  
+                    <div id="payouts" class="ui segment padding tab" data-tab="payouts">
+                        <div class="ui grid nomargin">
+                            <div class="row margin auto">
+                                <div class="four wide column flex center"> 
+                                    <img class="ui small image margin auto" src="<%=domain%>/g.assets/img/commercialicons/change.png"> 
+                                </div>
+                                <div class="twelve wide column flex center"> 
+                                    <div>
+                                        <div class="title">Payouts</div> 
+                                        <div class="subtitle">Get payouts for your released auction items</div> 
+                                        <div class="description">                                            
+                                            <strong>Pending</strong> - group of potential earnings from customers payments. 
+                                            This earnings will be available when winning or selling will be successfully finished.
+                                            Additional fee <strong>5%</strong> will be extract for withdrawal.
+                                            During the pending period, customer can open a dispute.                                          
+                                            <br><br>
+                                            <strong>Available</strong> - earnings that you can already collect.
+                                            <br><br>
+                                            <strong>Payout </strong> - <span id="requested"> no earnings were requested for now.</span> 
+                                        </div> 
+                                    </div>    
+                                </div>                                
+                            </div>
+                        </div>                        
+                        <div class="ui segment none">
+                            <div class="ui top attached tabular menu flex center">
+                                <a class="big itemed active" data-tab="pending">
+                                    Pending
+                                    <div class="money">
+                                        
+                                    </div>                                 
+                                </a>
+                                <a class="big itemed" data-tab="available">
+                                    Available
+                                    <div class="money">
+                                        
+                                    </div>                                   
+                                </a>  
+                                <a class="big itemed" data-tab="requested">
+                                    Requested
+                                    <div class="money">
+                                        
+                                    </div>                                   
+                                </a>                              
+                            </div>
+
+                            <div class="ui bottom attached tab segment none active" data-tab="pending">
+                                <div class="ui grid">
+                                    <div class="row no-margin">
+                                            <div class="three wide column flex center"> 
+                                                <span class="inline-head">View details</span> 
+                                            </div>
+                                            <div class="two wide column flex center">
+                                                <span class="inline-head"> Amount </span>
+                                            </div>
+                                            <div class="two wide column flex center">
+                                                <span class="inline-head"> Fee </span>
+                                            </div>
+                                            <div class="four wide column flex center">
+                                                <span class="inline-head"> Type </span>
+                                            </div>     
+                                            <div class="five wide column flex center"> 
+                                                <span class="inline-head"> Date </span>
+                                            </div>                                        
+                                    </div>
+                                </div>
+                                <div class="ui segment none scroll types" style="overflow-y:scroll; height:200px;">                                    
+                                    <div class="ui grid wr">
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ui bottom attached tab segment none" data-tab="available">
+                                <div class="ui grid">
+                                    <div class="row no-margin">
+                                            <div class="three wide column flex center"> 
+                                                <span class="inline-head">View details</span> 
+                                            </div>
+                                            <div class="two wide column flex center">
+                                                <span class="inline-head"> Amount </span>
+                                            </div>
+                                            <div class="two wide column flex center">
+                                                <span class="inline-head"> Fee (subtracted) </span>
+                                            </div>
+                                            <div class="four wide column flex center">
+                                                <span class="inline-head"> Type </span>
+                                            </div>     
+                                            <div class="five wide column flex center"> 
+                                                <span class="inline-head"> Date </span>
+                                            </div>                                        
+                                    </div>
+                                </div>
+                                <div class="ui segment none scroll types" style="overflow-y:scroll; height:200px;">
+                                    <div class="ui grid wr"></div>
+                                </div>
+                            </div>   
+                            <div class="ui bottom attached tab segment none" data-tab="requested">
+                                <div class="ui grid">
+                                    <div class="row no-margin">
+                                            <div class="three wide column flex center"> 
+                                                <span class="inline-head">View details</span> 
+                                            </div>
+                                            <div class="two wide column flex center">
+                                                <span class="inline-head"> Amount </span>
+                                            </div>
+                                            <div class="two wide column flex center">
+                                                <span class="inline-head"> Fee (subtracted) </span>
+                                            </div>
+                                            <div class="four wide column flex center">
+                                                <span class="inline-head"> Type </span>
+                                            </div>     
+                                            <div class="five wide column flex center"> 
+                                                <span class="inline-head"> Date </span>
+                                            </div>                                        
+                                    </div>
+                                </div>
+                                <div class="ui segment none scroll types" style="overflow-y:scroll; height:200px;">
+                                    <div class="ui grid wr"></div>
+                                </div>
+                            </div>
+
+
+                            <div class="vertical-margin right">
+                                <form action="/seller/payout/request" method="POST">
+                                    <button class="ui button submit disabled" id="getpaid"> Get Paid</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="ui segment tab" data-tab="messages">Messages</div>                    
                     <div class="ui segment tab" data-tab="settings"></div>
                 </div>

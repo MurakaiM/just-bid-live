@@ -1,8 +1,10 @@
+import User from '../../Models/user.model'
+
 import { BuildResponse, RuleController } from "./response"
 
 
-export function isAuth(req, res, render = false): RuleController {
-    return new RuleController(async (resolve) => {
+export function isAuth(req, res, render = false): RuleController<User> {
+    return new RuleController<User>(async (resolve) => {
         if (req.isAuthenticated() && req.user.isVerified()) {
             return resolve(req.user);
         } else {
@@ -18,8 +20,8 @@ export function isAuth(req, res, render = false): RuleController {
     });
 }
 
-export function isSeller(req,res, render = false) {
-    return new RuleController((resolve) => {        
+export function isSeller(req,res, render = false): RuleController<User>  {
+    return new RuleController<User>((resolve) => {        
         if (req.isAuthenticated() && req.user.isVerified() && req.user.isSeller()) {           
             return resolve(req.user);
         } else {
@@ -32,8 +34,8 @@ export function isSeller(req,res, render = false) {
     });
 }
 
-export function isAdmin(req,res, renderer?) {
-    return new RuleController((resolve) => {        
+export function isAdmin(req,res, renderer?): RuleController<User>  {
+    return new RuleController<User>((resolve) => {        
         if (req.isAuthenticated() && req.user.isVerified() && req.user.isAdmin()) {           
             return resolve(req.user);
         } else {

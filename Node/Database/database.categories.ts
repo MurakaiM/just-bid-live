@@ -450,8 +450,8 @@ const categoriesPopups = {
         subcategories : []
       },
       {
-        id : 'cr',
-        url : "car",
+        id : 'car',
+        url : "cr",
         name :  "Automobiles & Motorcycles",
         image : DOMAIN+"/u.assets/img/OtherIcons/car.png",
         subcategories : []
@@ -498,6 +498,7 @@ function testerTranspiler( compiled : any){
 
 export const compiled = transpiler(categoriesPopups.popups);
 export const compiledTester = testerTranspiler(compiled);
+
 
 export function validateCategory( name : string) : boolean{ 
   if(compiledTester[name] !== undefined)

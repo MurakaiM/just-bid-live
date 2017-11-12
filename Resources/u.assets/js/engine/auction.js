@@ -1,5 +1,6 @@
 var GOING_OFFSET = 20;
 var GOING_TIMER = 80000;
+var HOLDUP_POPUP = undefined;
 
 $(function () {
     appender = $('.pins');
@@ -10,12 +11,10 @@ $(function () {
 
 function ReworkActivity() {
     var listener = new Listener(GOING_TIMER)
-    var popup = new Modal(
-        {
-            id: '#waiterModal',
-            middleware: body => body.find('button').click(e => { listener.ForceAction(); popup.toggleState(); })
-        }
-    );
+    var popup = new Modal({
+        id: '#waiterModal',
+        middleware: body => body.find('button').click(e => { listener.ForceAction(); popup.toggleState(); })
+    });
 
     listener.ForceStart(e => {
         if (window.WModals.signModal.isOpened()) {
@@ -24,6 +23,11 @@ function ReworkActivity() {
 
         popup.toggleState();
     });
+
+    HOLDUP_POPUP = new Modal({
+        id: '#errorModal',
+        middleware: body => body.find('button').click(e => HOLDUP_POPUP.toggleState())
+    })
 }
 
 function ReworkAuction() {
@@ -133,7 +137,7 @@ function Item(object, options) {
     props.currentButton.click(event => {                  
         POST('/auction/bid', { uidAuction: props.currentId })
            .then( result => console.log(result))
-           .catch( e => window.WModals.signModal.toggleState())             
+           .catch( e =>  e.code == 11 ? HOLDUP_POPUP.toggleState() : window.WModals.signModal.toggleState())             
     });
 
 
@@ -291,7 +295,7 @@ function render(data,name) {
                <a href="/product/id${data.uidProduct}"> <img src="${data.mainImage}" alt=""> </a>
             </div>
             <div class="titile">
-                ${data.product.prTitle}
+                ${data.prTitle}
             </div>
             <div class="name">
                 <span>${name}</span>
@@ -300,7 +304,7 @@ function render(data,name) {
                 <span class="price">
                     <span>RRP:</span>
                         <i class="fa fa-usd" aria-hidden="true"></i>
-                        ${data.product.prCost}
+                        ${data.prCost}
                     </span>               
             </div>
 

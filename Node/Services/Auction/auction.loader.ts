@@ -1,61 +1,63 @@
 import Realtime from '../../Controllers/realtime.controller'
 import AuctionStorage from './auction.storage'
+import { LoadFirst, LoadStep } from './auction.selector'
 import AuctionItem from '../../Models/auction.model'
 import User from '../../Models/user.model'
 
 import { AuctionSchema } from '../../Database/database.controller'
 import TimeModule from '../../Utils/Others/time'
 
+export interface Counted{
+    [index : string] : number
+}
+
+export const PerCategory : number = 20;
+
 export default class AuctionLoader{
     public static Instace : AuctionLoader;
-    private static ON_AUCTION : number = 50;
     private static INTERVAL : number = TimeModule.getSeconds(5);
-   
+
+    private ON_AUCTION : Counted = {
+        'wm' : 0, 'mn' : 0, 'wt' : 0,
+        'bg' : 0, 'hl' : 0, 'ph' : 0,
+        'el' : 0, 'of' : 0, 'hs' : 0,
+        'ts' : 0, 'tn' : 0, 'cr' : 0,
+        'hi' : 0
+    }
+
     private Store : AuctionStorage; 
     private WaitingInterval : any;
-    private CurrentItems : number;
 
     constructor(){
-        this.Store = new AuctionStorage();
-        this.CurrentItems = 0;
-        AuctionLoader.Instace = this;     
-
+        this.Store = new AuctionStorage();        
+        AuctionLoader.Instace = this;   
     }
     
-    public async StartLoop( number : number =  AuctionLoader.ON_AUCTION, firstLoad : boolean = true) : Promise<any>{
+    public async StartLoop( firstLoad : boolean = true) : Promise<any>{
         let auctionItems = [];
        
         if(firstLoad)
-            auctionItems = await AuctionItem.LoadFirst(number);
+            auctionItems = await LoadFirst(this.ON_AUCTION)
         else
-            auctionItems = await AuctionItem.LoadState(number);
+            auctionItems = await LoadStep(this.ON_AUCTION)
 
-        this.CurrentItems += auctionItems.length;
+
         auctionItems.forEach( async element => { 
-            const item = await this.Store.AddItem(element);
-            item.ForceStart();
+            const item = this.Store.AddItem(element)
+            await item.ForceStart();
             
-            if(!firstLoad){
+            this.ON_AUCTION[element.uidCategory]+=1
+
+            if(!firstLoad){               
                 Realtime.Instance.emitNew(item.getPublic);
             }
         });
         return true;
     }
 
-    private LoadNext() : void {
-        AuctionItem.LoadNext()
-            .then( item => this.Store.AddItem(item).ForceStart() )
-            .catch( err => this.HandleExcept());
-    }
 
     public HandleExcept() : void {
-        this.WaitingInterval = setInterval( async () => {            
-            let different = AuctionLoader.ON_AUCTION - this.CurrentItems;       
-            
-            if(different > 0)
-                await this.StartLoop(different,false);        
-                    
-        }, AuctionLoader.INTERVAL);
+        this.WaitingInterval = setInterval( async () => await this.StartLoop(false), AuctionLoader.INTERVAL)
     }
 
 
@@ -70,12 +72,8 @@ export default class AuctionLoader{
     }
 
 
-    
     public FinishTrigger( uid : string) : void {
-        var item : AuctionItem = this.Store.GetItem(uid);        
-        this.Store.DeleteItem(uid);
-        this.CurrentItems--;  
+        this.ON_AUCTION[this.Store.GetItem(uid).getPrivate.uidCategory]-=1;        
+        this.Store.DeleteItem(uid);       
     }
-
-
 }

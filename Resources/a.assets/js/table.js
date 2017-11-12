@@ -273,7 +273,10 @@ function Table(id, options) {
     this.loadInSegment = (url, head,segment,callback) => {
         this.hashed = { url , head, segment }
         LoadSegment(url, head, segment)
-            .then( answer => {segment.removeClass('loading'); this.forceLoad(answer.result.data); });
+            .then( answer => { 
+                this.forceLoad(answer.result.data); 
+                segment.removeClass('loading');
+        });
     }
 
     this.loadFromCache = () => {

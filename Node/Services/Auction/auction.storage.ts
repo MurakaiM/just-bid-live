@@ -15,7 +15,7 @@ export default class AuctionStorage{
     }
 
     public AddItem(data : any) : AuctionItem {    
-       var auctionItem : AuctionItem = new AuctionItem().ForceLoad(data);
+       let auctionItem : AuctionItem = new AuctionItem().ForceLoad(data);
 
        this.storage.set( data.uidRecord, auctionItem);     
        return auctionItem;

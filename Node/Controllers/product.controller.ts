@@ -28,7 +28,7 @@ export default class ProductController {
 
     public static async CreateProduct(user: User, params: any, files: any): Promise < any > {
         params.colors = JSON.parse(params.colors);
-        params.sizes = JSON.parse(params.sizes)
+        params.sizes = JSON.parse(params.sizes);
     
         let hasError = validProduct(params);
         var readyProduct;
@@ -68,8 +68,8 @@ export default class ProductController {
                 colors.forEach( (key,i) => params.colors[key].image = uploads[i]);
         
 
-                let typesObject = { colors: params.colors, sizes: params.sizes }
-                product.prTypes = typesObject
+                let typesObject = Object.keys(params.sizes).length == 0  ? {colors: params.colors, sizes : {}} : { colors: params.colors, sizes: params.sizes }
+                product.prTypes = typesObject                           
                 await product.save({ transaction: TR })
 
 
@@ -79,7 +79,7 @@ export default class ProductController {
                         typeUid : uuid(),
                         productId: product.prUid,
                         sellerId: product.prSeller,
-                        title: params.colors[key],
+                        title: params.colors[key].title,
                         inStock: params[key],
                         typeId: key
                     }));
@@ -105,6 +105,8 @@ export default class ProductController {
 
                 return {  succ: true, product: finished.dataValues }
             } catch (error) {
+
+                console.log(error)
                 await TR.rollback();
                 return { succ: false, err: error }
             }

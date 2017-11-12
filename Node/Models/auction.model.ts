@@ -1,5 +1,5 @@
 import * as uuid from 'uuid/v4'
-
+import * as moment from 'moment'
 
 import TimeModule from '../Utils/Others/time'
 import AuctionLoader from '../Services/Auction/auction.loader'
@@ -18,14 +18,15 @@ export default class AuctionItem{
     private dbAution : any; //Database model representation
     private timeout : any;  //Timeout for auction
     private number : number;
-    private name : string;
+
+    private name : string;   
 
     constructor(){
         this.name = "";
     }
 
     
-    public ForceLoad( data : any ) : AuctionItem{
+    public ForceLoad( data : any ) : AuctionItem{       
         this.dbAution = data;
         this.number = AuctionItem.startTimer;
         return this;
@@ -34,39 +35,9 @@ export default class AuctionItem{
     public ForceStart() : Promise<any>{     
         this.dbAution.onAuction = true;
         this.dbAution.currentUser = null;
-        this.dbAution.auctionEnds = new Date( new Date().getTime() + AuctionItem.startTimer + AuctionItem.goingTimer );        
+        this.dbAution.auctionEnds = new Date( new Date().getTime() + AuctionItem.startTimer + AuctionItem.goingTimer );  
+        this.setTimer(TimeModule.getMinutes(5))      
         return this.dbAution.save();
-    }
-
-    public async finish() : Promise<any>{  
-        await this.dbAution.reload();
-        
-        let winning = await this.registerWinning();   
-        let notification = await NotificationController.TypeWinning(winning.winnerId, {
-            title : this.dbAution.product.prTitle,
-            action : winning.winningId
-        });
-        RealtimeController.Instance.emitNewNotification(winning.winnerId, notification)
-
-
-        this.dbAution.inStock = this.dbAution.inStock - 1;
-        this.dbAution.currentUser = null;
-        this.name = "";
-
-        if(this.dbAution.inStock == 0){
-           this.dbAution.isCompleted = true;
-            
-           RealtimeController.Instance.emitEnd(this.dbAution.uidRecord);
-           AuctionLoader.Instace.FinishTrigger(this.dbAution.uidRecord);
-                
-           await this.dbAution.save();
-        }else{          
-           this.dbAution.currentBid = this.dbAution.offCost;
-           this.number = AuctionItem.startTimer;
-           await this.dbAution.save();
-
-           this.ForceStart().then( saved => RealtimeController.Instance.emitStock(this.getPublic) );
-        }        
     }
 
     public placeBid(user : User) : Promise<any> {
@@ -111,6 +82,10 @@ export default class AuctionItem{
         };
     }
 
+    public get getPrivate(){
+        return this.dbAution;
+    }
+
     public get StreamData() : AuctionStreamData {
         return {
             uid : this.dbAution.uidRecord,
@@ -120,6 +95,38 @@ export default class AuctionItem{
             ending : this.dbAution.auctionEnds           
         }
     }    
+
+    public async finish() : Promise<any>{  
+        let prTitle = this.dbAution.dataValues.prTitle;
+              
+        await this.dbAution.reload();       
+        
+        if(this.dbAution.currentUser){
+            let winning = await this.registerWinning();   
+            let notification = await NotificationController.TypeWinning(winning.winnerId, {
+                title : prTitle,
+                action : winning.winningId
+            });
+            RealtimeController.Instance.emitNewNotification(winning.winnerId, notification)        
+            this.dbAution.inStock = this.dbAution.inStock - 1;
+        }
+
+        this.dbAution.onAuction = false;
+        this.dbAution.auctionStart = moment().add(12, 'hour').toDate()
+        this.dbAution.currentUser = null;
+        this.name = "";
+
+        if(this.dbAution.inStock == 0){
+           this.dbAution.isCompleted = true;
+        }else{
+           this.dbAution.currentBid = this.dbAution.offCost;
+        }    
+        
+        RealtimeController.Instance.emitEnd(this.dbAution.uidRecord);
+        AuctionLoader.Instace.FinishTrigger(this.dbAution.uidRecord);                
+        await this.dbAution.save();               
+    }
+
 
     private setTimer(time : number) : void {
         clearTimeout(this.timeout);
@@ -136,17 +143,23 @@ export default class AuctionItem{
         })
     }
 
+    
+    
+    /* Static overloads */
     public static async ForceCreate( user : User ,data : any ) : Promise<any>{         
         delete data.currentUser;
+        data.offCost = (data.type == 'reserved') ? (data.str*100) : AuctionItem.getFees(data.type).begin;
 
         data.onAuction = false;
         data.uidSeller = user.PublicData.uid;
         data.uidRecord = uuid();
-        data.isCompleted = false;
         data.uidFee = data.type;
-        data.offCost = (data.type == 'reserved') ? (data.str*100) : AuctionItem.getFees(data.type).begin;
+              
         data.auctionStart = new Date();
         data.auctionEnds = new Date(data.auctionStart.getTime() + AuctionItem.startTimer + AuctionItem.goingTimer );
+
+        data.inStock = data.stock;      
+        data.isCompleted = false;
 
         let product = await ProductSchema.findOne({ where : { prUid : data.uidProduct } });
         let newItem;
@@ -159,76 +172,23 @@ export default class AuctionItem{
 
                 const firstColor = Object.keys(product.prTypes.colors)[0];  
 
-                data.currentBid = data.offCost;  
+                data.uidCategory = (<String>product.prCategory).substr(0, 2)                
+                data.currentBid = data.offCost;          
+               
                 data.offShipment = product.prShipment;
                 data.mainImage = product.prTypes.colors[firstColor].image;
-                data.inStock = data.stock;
-        
+                        
                 newItem = AuctionSchema.build(data);             
                 newItem.save()
                     .then( result => resolve("Successfuly saved"))
-                    .catch( error =>  reject("Database error"));
+                    .catch( error => { console.log(error); reject("Database error") });
                 
             }else{ 
                 return reject("There is no product with such id"); 
-            }    
-
+            }
         });
     }
 
-
-    public static LoadState(number : number) : Promise<any>{
-        return new Promise((resolve, reject) => {         
-
-            AuctionSchema.findAll({
-                order : [[ 'auctionStart' , 'DESC' ]],
-                limit : number,
-                where : { 
-                    isCompleted : false,       
-                    onAuction : false,                    
-                    inStock : { $gt : 0 }                        
-                },                
-                include: [{ 
-                    model : ProductSchema,
-                    attributes : ['prTitle','prCost']
-                }]
-            })
-                .then( items => resolve(items))
-                .catch( error => resolve([]));
-        });
-    }
-
-    public static LoadFirst( number : number ) : Promise<any>{
-        return new Promise((resolve, reject) => {     
-            AuctionSchema.findAll({
-                order : [[ 'auctionStart' , 'DESC' ]],
-                limit : number,
-                where : { 
-                    isCompleted : false,       
-                    onAuction :{ $or : [false,true] },                    
-                    inStock : { $gt : 0 }                        
-                },
-                include: [{ 
-                    model : ProductSchema,
-                    attributes : ['prTitle','prCost']
-                }]
-            })
-                .then( items => resolve(items))
-                .catch( error => resolve([]));
-        });
-    }
-
-
-    public static LoadNext() : Promise<any>{
-        return new Promise((resolve, reject) => {
-            AuctionSchema.findOne({
-                order : [ 'auctionStart' , 'DESC' ],              
-                where : { onAuction : false , isCompleted : false }
-            })
-                .then( items => resolve(items))
-                .catch( error => reject("There is no next items"));
-        });
-    }
 
     public static ForceStock( user : User, data : any ){
         return AuctionSchema.update(
@@ -252,8 +212,7 @@ export default class AuctionItem{
         )
     }
 
-
-    
+   
 
     private static getOff( part : number, original : number) : number{    
         original*=100;
@@ -274,3 +233,57 @@ export default class AuctionItem{
     private static startTimer : number = 22000; //Default start timer value in ms
     private static goingTimer : number = 20000; //Default end timer value in ms
 }
+
+ /* Deprecated auction v0.01 loaders
+        public static LoadState(number : number) : Promise<any>{
+            return new Promise((resolve, reject) => {         
+
+                AuctionSchema.findAll({
+                    order : [[ 'auctionStart' , 'DESC' ]],
+                    limit : number,
+                    where : { 
+                        isCompleted : false,       
+                        onAuction : false,                    
+                        inStock : { $gt : 0 }                        
+                    },                
+                    include: [{ 
+                        model : ProductSchema,
+                        attributes : ['prTitle','prCost']
+                    }]
+                })
+                    .then( items => resolve(items))
+                    .catch( error => resolve([]));
+            });
+        }
+
+        public static LoadFirst( number : number ) : Promise<any>{
+            return new Promise((resolve, reject) => {     
+                AuctionSchema.findAll({
+                    order : [[ 'auctionStart' , 'DESC' ]],
+                    limit : number,
+                    where : { 
+                        isCompleted : false,       
+                        onAuction :{ $or : [false,true] },                    
+                        inStock : { $gt : 0 }                        
+                    },
+                    include: [{ 
+                        model : ProductSchema,
+                        attributes : ['prTitle','prCost']
+                    }]
+                })
+                    .then( items => resolve(items))
+                    .catch( error => resolve([]));
+            });
+        }
+        
+        public static LoadNext() : Promise<any>{
+            return new Promise((resolve, reject) => {
+                AuctionSchema.findOne({
+                    order : [ 'auctionStart' , 'DESC' ],              
+                    where : { onAuction : false , isCompleted : false }
+                })
+                    .then( items => resolve(items))
+                    .catch( error => reject("There is no next items"));
+            });
+        }
+    */

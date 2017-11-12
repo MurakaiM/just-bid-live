@@ -17,6 +17,15 @@ body.stopscroll {
   overflow-y: scroll;
 }
 
+.custom-small-image{
+  width: 100%;
+  text-align: center;
+}
+
+.custom-small-image img{
+  width: 70%;
+}
+
 .preloading * {
   -webkit-transition: none !important;
   -moz-transition: none !important;
@@ -109,6 +118,10 @@ body.stopscroll {
 .currency{
   color: rgb(156, 156, 156);
   font-weight: 700;
+}
+
+.ui.header .content.small{
+  font-size: 16px;
 }
 
 .ui.form input:not([type]),
@@ -1444,7 +1457,7 @@ nav .mobile_nav a {
   margin: auto;
 }
 
-#waiterModal .holder {
+.my-modal.mini .holder {
   text-align: center;
   margin-top: 25px;
 }

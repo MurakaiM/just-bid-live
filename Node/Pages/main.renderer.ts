@@ -22,15 +22,14 @@ interface Redirector{
 
 export default class Renderer {    
    
-    public static live(req,res){        
-        var pageInfo = {
+    public static live(req,res){   
+        res.render('home', {
             pageName : "Live",
             domain : DOMAIN,
+            categories : categoriesPopups,
             currentUser : req.user,
             login : false        
-        };
-
-        res.render('home', pageInfo);
+        });
     }
 
     public static signin(req,res){
@@ -86,7 +85,7 @@ export default class Renderer {
                        
                 return res.render('Products/product', pageInfo);
             })
-            .catch( error => res.redirect('/') );
+            .catch( error => { console.log(error); res.redirect('/') });
     }
 
 

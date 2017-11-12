@@ -21,10 +21,10 @@ enum RCState{
     Finished
 }
 
-export class RuleController {    
+export class RuleController<T> {    
     private currentState : RCState;
     private resolveCallback : Function;
-    private answerableParams : any;
+    private answerableParams : Array<T>;
 
     constructor(fn : Function) {
         this.currentState = RCState.Pedning;
@@ -34,7 +34,7 @@ export class RuleController {
     public allowed = (fn : Function) => {         
         
         if (this.currentState == RCState.Resolved) {          
-            fn(this.answerableParams[0])
+            fn(this.answerableParams[0] as T)
             this.setProp(RCState.Finished)
         } else { 
             this.resolveCallback = fn;
@@ -56,6 +56,6 @@ export class RuleController {
         }
 
         this.setProp(RCState.Resolved);
-        
+        return
     }   
 }

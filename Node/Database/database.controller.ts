@@ -504,6 +504,10 @@ export const AuctionSchema = globalSequlize.define('auction', {
         type : Sequelize.STRING,
         allowNull : false
       },
+      uidCategory : {
+        type : Sequelize.STRING(5),
+        allowNull : false
+      },
       currentBid : {
         type : Sequelize.FLOAT,
         allowNull : false

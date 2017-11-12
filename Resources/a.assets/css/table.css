@@ -422,7 +422,6 @@ table .emptypage {
     font-weight: 500;
     color: #9d9d9d;
     background: rgba(155,155,155, .09);
-    box-shadow: inset 0px 0px 8px -2px rgba(0,0,0,.4);
     transition: .2s ease all;
     font-size: 13px;
 }

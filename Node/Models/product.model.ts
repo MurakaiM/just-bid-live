@@ -138,7 +138,7 @@ export default class Product {
     }
 
     public static ForceDelete(user : User , uuid : string) : Promise<any>{
-        return ProductSchema.remove({where : { prSeller : user.Data.uid, prUid : uuid}});
+        return ProductSchema.remove({ where : { prSeller : user.Data.uid, prUid : uuid} });
     }
 
     public static ForceDisable(user : User, uuid : string) : Promise<any>{

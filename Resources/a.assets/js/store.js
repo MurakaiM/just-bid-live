@@ -93,6 +93,7 @@ function reworkBoolean(bool) {
 }
 
 
+
 function SetUpPayouts(){  
   const payouts = $('#payouts');
 
@@ -432,8 +433,7 @@ function SetUpPersonal() {
 
   function loadData(data, segment){  
     personalStats.data = data;
-    segment.removeClass('loading')  
-    
+        
     if(data.paypalEmail){
         personalStats.paypalInput.val(data.paypalEmail)
 
@@ -454,6 +454,7 @@ function SetUpPersonal() {
     personalStats.informationSubtitle.val(data.subtitle)
     personalStats.informationDescription.val(data.description)
 
+    segment.removeClass('loading')  
   }
 }
 
@@ -462,8 +463,7 @@ function SetUpProducts() {
     position: 'bottom center',
   });
 
-  let currentItem = null,
-    currentTemp = null;
+  let currentItem = null,currentTemp = null;
   const buttons = {
     open: $("#productsOpen"),
     delete: $("#productsDelete"),
@@ -801,7 +801,7 @@ function SetUpProducts() {
           if (!currentFees[value])
             return;
 
-          props.fee.val(String(currentFees[value].fee) + ((currentFees[value].type == 'dollar') ? "$" : "%"))
+          props.fee.val(((currentFees[value].type == 'dollar') ? "$"+String(currentFees[value].fee) : String(currentFees[value].fee)+"%"))
           props.ape.val(currentFees[value].appearance)
           props.exp.val(currentFees[value].explanation)
 
@@ -1380,7 +1380,7 @@ function SetUpAuction() {
 
       currentItem = null;
     }
-  });
+  })
 
   buttons.refresh.click(e => tableAuctions.loadFromCache());
   buttons.stock.click(e => stock.toggleState())
@@ -1526,6 +1526,7 @@ function SetUpWinnings() {
   buttons.update.click(e => winningsUpdate.toggleState())
   buttons.details.click(e => winningsDetails.toggleState());
 }
+
 
 function numberRebase(number) {
   if (number < 100) {

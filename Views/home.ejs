@@ -5,6 +5,7 @@
   <head>  
     <link href="https://fonts.googleapis.com/css?family=Mukta:400,500,600,700,800&amp;subset=latin-ext" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Gloria+Hallelujah" rel="stylesheet">
+    
     <%-include('./Common/mobile')%>
     <%-include('./Common/head')%>
     <link rel="stylesheet" href="<%=domain%>/g.assets/css/responsive.css">
@@ -22,26 +23,31 @@
             </div>
             <div class="ui segment categories stock">
               <div class="list stock_list">
-                <div class="list_item top_level" data-popup="women_clothing">
-                  <span class="icon"><img src="<%=domain%>/u.assets/img/LinearIcons/dress.png" alt=""></span>
-                  <span class="text">Women's Clothing</span>
+                
+                <div class="list_item top_level" data-popup="featured">
+                    <span class="icon font">
+                      <i class="fa fa-star-o" aria-hidden="true"></i>
+                    </span>
+                    <span class="text"> Featured auctions </span>
                 </div>
-                <div class="list_item top_level" data-popup="men_clothing">
-                  <span class="icon"><img src="<%=domain%>/u.assets/img/LinearIcons/polo.png" alt=""></span>
-                  <span class="text">Men's Clothing</span>
+                <div class="list_item top_level" data-popup="reserved">
+                    <span class="icon font">
+                      <i class="fa fa-bolt" aria-hidden="true"></i>
+                    </span>
+                    <span class="text"> Reserved auctions </span>
                 </div>
-                <div class="list_item top_level" data-popup="watches">
-                  <span class="icon"><img src="<%=domain%>/u.assets/img/LinearIcons/watch.png" alt=""></span>
-                  <span class="text">Jewelry & Watches</span>
-                </div>
-                <div class="list_item top_level" data-popup="bags">
-                  <span class="icon"><img src="<%=domain%>/u.assets/img/LinearIcons/hand-bag.png" alt=""></span>
-                  <span class="text">Bags & Shoes</span>
-                </div>
-                <div class="list_item top_level" data-popup="health">
-                  <span class="icon"><img src="<%=domain%>/u.assets/img/LinearIcons/purse.png" alt=""></span>
-                  <span class="text">Health & Beauty, Hair</span>
-                </div>
+
+                <div class="ui section divider"></div>
+                
+                <%categories.popups.forEach(ct => {%>
+                  <div class="list_item top_level" data-popup="<%=ct.id%>">
+                    <span class="icon">
+                      <img src="<%=ct.image%>" alt="<%=ct.name%>"/>
+                    </span>
+                    <span class="text"> <%=ct.name%> </span>
+                  </div>
+                <%})%>
+         
               </div>
             </div>
           </div>
@@ -57,17 +63,35 @@
         
       <div id="waiterModal" class="my-modal mini">
           <div class="body">
-            <h2 class="ui header main">
+            <h2 class="ui header main small">
               <div class="content">
-                Are you here ?
+                Inactive <br> 
+                Do you wish to continue?
               </div>
             </h2>
             <h4 class="ui header main wrap"></h4>          
-            <div>
-                <img class="" src="<%=domain%>/g.assets/img/icon/hourglass.png" alt="" />
+            <div class="custom-small-image">
+                <img src="<%=domain%>/g.assets/img/icon/hourglass-2.png" alt="" />
             </div>
             <div class="holder">       
                 <button class="ui submit button"> Yes </button>     
+            </div>  
+          </div>
+      </div>
+      <div id="errorModal" class="my-modal mini">
+          <div class="body">
+            <h2 class="ui header main small">
+              <div class="content">
+                Ooopss... <br> 
+                Sellers can't post bids
+              </div>
+            </h2>
+            <h4 class="ui header main wrap"></h4>          
+            <div class="custom-small-image">
+                <img class="" src="<%=domain%>/g.assets/img/icon/locked-2.png" alt="" />
+            </div>
+            <div class="holder">       
+                <button class="ui submit button"> Sure </button>     
             </div>  
           </div>
       </div>

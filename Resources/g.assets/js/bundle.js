@@ -129,8 +129,7 @@ function AuthController(){
     this.loadNotification = () => {
         if(this.firstLoad) return;
 
-        this.notification_cnt.addClass('loading');
-
+        //this.notification_cnt.addClass('loading');
         GET('/user/notifications/new')
             .then( result => {      
                 this.drawNotification(result.data)

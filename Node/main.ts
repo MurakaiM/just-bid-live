@@ -162,7 +162,7 @@ export class Server {
 
         this.app.use(flash());
         this.app.use(express_upload());
-        this.app.use(morgan('dev'));
+       // this.app.use(morgan());
 
         this.app.use('/wbhook_strp',bodyParser.json({ verify:(req,res,buf) => req.rawBody=buf }))
 

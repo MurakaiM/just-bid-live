@@ -1455,8 +1455,8 @@ function SetUpWinnings() {
         $(props.dataValues[3]).text(data.type ? data.type.title : 'Type has not been selected yet');
         $(props.dataValues[4]).text(data.productTrack);
         $(props.dataValues[5]).text(data.status);
-        $(props.dataValues[6]).text(`${toCurrency(data.lastBid/100)}$`);
-        $(props.dataValues[7]).text(`${toCurrency(data.product.prShipment)}$`);
+        $(props.dataValues[6]).text(`\$ ${toCurrency(data.lastBid/100)}`);
+        $(props.dataValues[7]).text(`\$ ${toCurrency(data.product.prShipment)}`);
         $(props.dataValues[8]).text(data.billingId ? 'Yes' : 'No');
 
         if (data.customerInformation) {
@@ -1497,7 +1497,7 @@ function SetUpWinnings() {
           <td>${item.winnerName}</td>      
           <td><i class="dollar icon"></i>${toCurrency(item.lastBid)}</td>     
           ${reworkStatus(item.status)} 
-          <td>${item.productTrack}</td>
+          <td>${item.productTrack ? item.productTrack : "Empty" }</td>
           ${reworkBoolean(item.isPaid)}
           <td>${new Date(item.updatedAt).toLocaleDateString()}</td>
           <td>${new Date(item.createdAt).toLocaleDateString()}</td>   

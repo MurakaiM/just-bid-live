@@ -95,6 +95,16 @@ export default class Notification {
         })
     }
 
+    public static CreateProduct(user : string, data : any) : Promise<any>{
+        return Notification.Create({
+            userId : user,
+            title : `Product creation !`,
+            message : `Your product "${data.title}" was successfully created. Now it's waiting for approval.`,
+            action : data.action,
+            type : `prcr`
+        });
+    }
+
     public static CreateAuction(user : string , data : any ) : Promise<any>{
         return Notification.Create({
             userId : user,
@@ -122,6 +132,16 @@ export default class Notification {
             message : `Error occurred while charging for you winning "${data.title}".<br> ${data.error_message}`,
             action : data.action,
             type : `fch`
+        });
+    }
+
+    public static CreateApproval(user : string, data : any) : Promise<any>{
+        return Notification.Create({
+            userId : user,
+            title : `Product approval !`,
+            message : data.approved ? `Your product "${data.title}" was successfully approved.` : `Unfortunately, your product "${data.title}" was declined.` ,
+            action : data.action,
+            type : `aprv`
         });
     }
 }

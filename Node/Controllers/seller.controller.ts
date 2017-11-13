@@ -101,7 +101,7 @@ export default class SellerController {
     public static GetProducts(user: User): Promise <any> {
         return new Promise((resolve, reject) => {
             Seller.FetchProducts(user)
-                .then(products => {
+                .then(products => {                   
                     resolve(products)
                 })
                 .catch(error => {                    

@@ -201,7 +201,6 @@ tr.selected {
 .my-modal.page {
     overflow: auto;
     padding: 120px 0;
-    padding-top: 60px;
     transition: .3s ease all;
 }
 

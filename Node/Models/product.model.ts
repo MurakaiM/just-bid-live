@@ -214,7 +214,8 @@ export default class Product {
         return ProductSchema.update({
             prAllowed : approved
         },{
-            where : { prUid : uuid }
+            where : { prUid : uuid },
+            returning: true
         })
     }
 

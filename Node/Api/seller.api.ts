@@ -243,8 +243,7 @@ export default class SellerApi extends BasicController{
     protected createProduct(req,res) : void{         
         isSeller(req,res).allowed( user => {  
             ProductController.CreateProduct(user, req.body,req.files)
-                .then( result =>{
-                        console.log(result);
+                .then( result =>{                      
                         if(result.succ)
                             return res.send( BuildResponse(0,"Product was successfully created",result.product)) 
                         else

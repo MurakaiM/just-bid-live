@@ -13,7 +13,16 @@ export default class NotificationController {
         return Notifications.GetCount(user);
     }
 
-    public static TypeWinning(user,data){       
+    public static ApprovalProduct(user : string, product : any ){
+        return Notifications.CreateApproval(user, product)
+    }
+
+    public static CreationProduct(user : string, product : any){
+        return Notifications.CreateProduct(user, product)
+    }
+
+ 
+    public static TypeWinning(user : string,data){       
         return Notifications.CreateAuction(user, data)
     }
 

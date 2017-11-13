@@ -23,13 +23,23 @@ interface Redirector{
 export default class Renderer {    
    
     public static live(req,res){   
-        res.render('home', {
+        
+        res.render('preview', {
             pageName : "Live",
             domain : DOMAIN,
             categories : categoriesPopups,
             currentUser : req.user,
             login : false        
         });
+
+        /* For next stage
+        res.render('home', {
+            pageName : "Live",
+            domain : DOMAIN,
+            categories : categoriesPopups,
+            currentUser : req.user,
+            login : false        
+        });*/
     }
 
     public static signin(req,res){

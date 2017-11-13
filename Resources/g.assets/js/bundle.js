@@ -23,6 +23,7 @@ function AuthController(){
     this.currentCount = 0;
 
     this.isSigned = false;
+    this.isRedirecting = false;
     this.firstLoad = false;
 
     this.notification_cnt = $("#cnt_notification")
@@ -35,6 +36,12 @@ function AuthController(){
     this.listener = {};    
     this.userData = {};
 
+    this.notification_cnt.click(e => {
+        let en = $(e.target)
+        if( (en.hasClass('no_notification')==false) && (en.hasClass('no_login')==false)){
+          this.isRedirecting = true;
+        }
+    })
     this.notification_bell.click( e => {    
        this.loadNotification();
        this.notification_bell.addClass('opened') 
@@ -66,8 +73,8 @@ function AuthController(){
 
     socket.on('all:notification', () => this.reviewAllNotifications())
 
-    $('#rvw_notification').click(e => socket.emit('review:all'))
 
+    $('#rvw_notification').click(e => socket.emit('review:all'))
 
 
     this.on = (trigger , fn) => this.listener[trigger] = fn;
@@ -129,7 +136,6 @@ function AuthController(){
     this.loadNotification = () => {
         if(this.firstLoad) return;
 
-        //this.notification_cnt.addClass('loading');
         GET('/user/notifications/new')
             .then( result => {      
                 this.drawNotification(result.data)
@@ -164,6 +170,11 @@ function AuthController(){
     
     
     this.reviewNotification = id => { 
+        if(this.isRedirecting){
+          this.notification_cnt.addClass('loading')
+          return
+        }
+
         this.notification_cnt.find(`a[data-id="${id}"]`).remove();
         this.currentCount--;      
         this.countNotification();
@@ -224,6 +235,14 @@ function AuthController(){
             case 'fch' : 
                 payload.imgUrl = 'point-of-service'
                 payload.action = '/my/winning/'+data.action
+                break;
+            case 'aprv' :
+                payload.imgUrl = 'stamp-1'
+                payload.action = `/notification/review?id=${data.recordId}&redirect=/seller/mystore#/products`
+                break;
+            case `prcr` : 
+                payload.imgUrl = 'crate-5'
+                payload.action = `/notification/review?id=${data.recordId}&redirect=/seller/mystore#/products`
                 break;
             default:
                 imgUrl = 'price-tag-6'

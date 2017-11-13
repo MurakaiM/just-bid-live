@@ -1,29 +1,26 @@
-$(e =>  $('tr').each((i,e) => Approval($(e))))
+$(e =>  $('tr').each((i,e) => new Approval($(e))))
 
 
 function Approval(object){
+    this.dom = object;
+    this.id = object.data('id');
+  
+    this.approved = this.dom.find('.approve');
+    this.declined = this.dom.find('.decline')
 
-    let id = object.data('id');
-    console.log(id)
-
-    let approved = object.find('.approve');
-    let declined = object.find('.decline')
-
-    approved.click( e => this.sendRequest(true));
-    
-    declined.click( e => this.sendRequest(false));
+    this.approved.click( e => this.sendRequest(true));    
+    this.declined.click( e => this.sendRequest(false));
 
 
     this.setLoading = () => {
-        approved.addClass('loading');
-        declined.addClass('loading');
+        this.approved.addClass('loading');
+        this.declined.addClass('loading');
     }
 
     this.sendRequest = bl => {
-        this.setLoading();
-     
-        POST('/admin/ab/product/approval', { id, allowed : bl })
-            .then( answer => object.remove())
+        this.setLoading();     
+        POST('/admin/ab/product/approval', { id : this.id, allowed : bl })
+            .then( answer => this.dom.remove())
             .catch( error => console.log(error))
     }
 

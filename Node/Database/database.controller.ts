@@ -81,6 +81,10 @@ export class Database{
      return this.sequelize; 
    }
 
+   get Search() : Search {
+     return this.productSearch;
+   }
+
    public initConnection() : Promise<any> {  
       return new Promise((resolve, reject) => {
         this.sequelize.authenticate()
@@ -190,8 +194,7 @@ export const WinningSchema = globalSequlize.define('winning', {
   },
   productTrack : {
     type : Sequelize.STRING,
-    defaultValue : "No track number represented",
-    allowNull : false
+    allowNull : true
   },  
   status : {
     type : Sequelize.STRING,

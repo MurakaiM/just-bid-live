@@ -40,7 +40,7 @@ export default class Seller {
             where: {
                 prSeller: user.Data.uid,
                 prDisabled: false,
-                prAllowed : { $ne : false }
+                prAllowed : { $or : [ true, null] }
             },
             include: [{
                 model: TypesSchema,

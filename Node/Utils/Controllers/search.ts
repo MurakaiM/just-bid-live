@@ -77,6 +77,10 @@ export default class Search{
         }     
     }
 
+    public WeightsSQL(){
+        return this.weightsSQL;
+    }
+
     public setUp(){ 
         return new Promise((resolve, reject) => {            
             this.sequelize.query(`CREATE EXTENSION IF NOT EXISTS pg_trgm`)
@@ -88,6 +92,8 @@ export default class Search{
         });
     }
 
-
+    public ForceTSV(id : string, tr : any){
+        return this.sequelize.query(`UPDATE ${this.tableName} SET tsv = ${this.weightsSQL} WHERE "products"."prUid" = '${id}'`, { transaction : tr })
+    }
 
 }

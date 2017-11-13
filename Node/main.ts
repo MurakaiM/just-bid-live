@@ -66,8 +66,8 @@ export class Server {
         this.setDatabase({
             momentally : true
         }).then( result => {           
-            this.setAuth();
-            return  this.setAuction();
+            return this.setAuth();
+            //return  this.setAuction();
         }).then( result => {           
             this.setPayments();
             this.setControllers();       
@@ -90,11 +90,12 @@ export class Server {
     private setEndpoints() : void{
         /* User's endpoints */
         this.app.get('/', Renderer.live);
-        this.app.get('/signin', Renderer.signin);
-        this.app.get('/signup', Renderer.signup);
+        this.app.get('/earlyaccess', (req,res) => res.render('sellers'))
+       //this.app.get('/signin', Renderer.signin);
+       //this.app.get('/signup', Renderer.signup);
 
         this.app.get('/contact', Renderer.contact);
-        this.app.get('/stock', Renderer.stock);
+       // this.app.get('/stock', Renderer.stock);
         this.app.get('/help/category', Renderer.helpCategory);      
 
         this.app.get('/forgot', Renderer.forgot);
@@ -174,6 +175,8 @@ export class Server {
 
         this.app.use(express.static(path.join(__dirname, '../Resources')));
 
+        this.app.use((req, res, next) => (req.headers['x-forwarded-proto'] || '').toLowerCase() == 'https' ? next() :res.redirect('https://' + req.get('host') + req.url))
+          
         this.setStatics();
     }
 
@@ -190,6 +193,15 @@ export class Server {
 
     private setStatics() : void { }
 }
+
+
+process.on('uncaughtException', function(err) {
+    console.log("-------------uncaughtException-------------")
+    console.log(err);
+    console.log("-------------------------------------------");
+})
+  
+  
 
 const ApplicationServer : Server = new Server(keys.PORT);
 ApplicationServer.startServer();

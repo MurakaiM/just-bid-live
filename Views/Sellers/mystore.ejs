@@ -24,7 +24,7 @@
                     <a class="item" data-tab="products">Products</a>
                     <a class="item" data-tab="auctions">Auctions</a>
                     <a class="item disabled" data-tab="orders">Orders</a>
-                    <a class="item" data-tab="winnings">Winnings</a>
+                    <a class="item" data-tab="winnings">Sold Items</a>
                     <a class="item " data-tab="disabled">Disabled</a>
                     <a class="item disabled" data-tab="history">History</a>
                     <a class="item disabled" data-tab="messages">Messages</a>
@@ -469,7 +469,7 @@
                                         <i class="expand icon"></i>
                                         Details 
                                     </button>          
-                                    <button id="winningsUpdate" class="ui blue small icon button disabled" data-content="Update information">
+                                    <button id="winningsUpdate" class="ui blue small icon button disabled" data-content="Tracking number">
                                         <i class="edit icon"></i>                                     
                                     </button>                      
                                  </div>          
@@ -505,15 +505,12 @@
                                     <div>
                                         <div class="title">Payouts</div> 
                                         <div class="subtitle">Get payouts for your released auction items</div> 
-                                        <div class="description">                                            
-                                            <strong>Pending</strong> - group of potential earnings from customers payments. 
-                                            This earnings will be available when winning or selling will be successfully finished.
-                                            Additional fee <strong>5%</strong> will be extract for withdrawal.
-                                            During the pending period, customer can open a dispute.                                          
+                                        <div class="description left">                                            
+                                            <strong>Pending</strong> - Your funds which are awaiting approval via waiting for your customer payments to be processed.<br> <i> Please Note: </i> There is a <strong>5%</strong> Administration Fee.                   
                                             <br><br>
-                                            <strong>Available</strong> - earnings that you can already collect.
+                                            <strong>Available</strong> - Funds that is available to be transferred to your paypal account. <br> <i> Please Note: </i> There is a 2 week paypal email verification process.
                                             <br><br>
-                                            <strong>Payout </strong> - <span id="requested"> no earnings were requested for now.</span> 
+                                            <strong>Payout </strong> - <span id="requested"> amounts that have been paid out to you to date.</span> 
                                         </div> 
                                     </div>    
                                 </div>                                
@@ -534,7 +531,7 @@
                                     </div>                                   
                                 </a>  
                                 <a class="big itemed" data-tab="requested">
-                                    Requested
+                                    Payout
                                     <div class="money">
                                         
                                     </div>                                   

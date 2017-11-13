@@ -17,6 +17,9 @@ import {
     ProductSchema
 } from '../Database/database.controller'
 
+import RealtimeController from '../Controllers/realtime.controller'
+import NotificationController from '../Controllers/notification.controller'
+
 import { AwaitResult } from '../Utils/Communication/async'
 
 import Storage from '../Utils/Controllers/storage'
@@ -69,10 +72,11 @@ export default class ProductController {
         
 
                 let typesObject = Object.keys(params.sizes).length == 0  ? {colors: params.colors, sizes : {}} : { colors: params.colors, sizes: params.sizes }
-                product.prTypes = typesObject                           
+                product.prTypes = typesObject          
+
                 await product.save({ transaction: TR })
-
-
+                await Database.Instance.Search.ForceTSV(product.prUid,TR)       
+               
                 let bulkArray: Array < any > = [];
                 if (Object.keys(params.sizes).length == 0)
                     Object.keys(params.colors).forEach(key => bulkArray.push({
@@ -100,12 +104,16 @@ export default class ProductController {
 
                 await TypesSchema.bulkCreate(bulkArray, { transaction: TR })
                 await TR.commit()
-                
+                            
                 let finished = await Product.ForceForSeller(user,product.prUid)
+                let notification = await NotificationController.CreationProduct(product.prSeller, {
+                    title : product.prTitle,
+                    action : product.prUid                    
+                });
+                RealtimeController.Instance.emitNewNotification(product.prSeller, notification)  
 
                 return {  succ: true, product: finished.dataValues }
             } catch (error) {
-
                 console.log(error)
                 await TR.rollback();
                 return { succ: false, err: error }
@@ -142,7 +150,15 @@ export default class ProductController {
                 return { success : false , error : hasError.reason } 
             }
 
-            await Product.ForceApproval(params.id, params.allowed)    
+ 
+            let product = ( await Product.ForceApproval(params.id, params.allowed))[1][0];
+            let notification = await NotificationController.ApprovalProduct(product.prSeller, {
+                title : product.prTitle,
+                action : product.prUid,
+                approved :  params.allowed
+            })
+            RealtimeController.Instance.emitNewNotification(product.prSeller, notification)   
+
             return { success : true, result :  'Product was successfully approved' }
         }catch(error){
             console.log(error)

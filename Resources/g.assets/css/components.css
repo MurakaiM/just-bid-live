@@ -6,6 +6,28 @@ a {
   cursor: pointer;
 }
 
+#count_notificator{
+  position: absolute;
+  z-index: 3;
+  height: auto;
+  line-height: normal;
+  top: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: white;
+  background: #07406f;
+  padding: 1px 3px;
+  font-size: 13px;
+  border-radius: 3px;
+  min-width: 17px;
+  box-shadow: 0 3px 6px 0px rgba(31,31,31, .4);
+  opacity: .8;
+}
+
+#count_notificator:empty{
+  display: none;
+}
+
 body {
   padding: 0;
   margin: 0;
@@ -137,7 +159,6 @@ body.stopscroll {
 .ui.form input[type="file"],
 .ui.form input[type="url"] {
   font-family: 'Work Sans', sans-serif;
-  color: #07406f;
 }
 
 .ui.vertical.menu.profiler {
@@ -419,7 +440,7 @@ nav input:focus~i {}
 }
 
 .left {
-  text-align: left;
+  text-align: left!important;
   position: relative;
 }
 
@@ -761,6 +782,8 @@ button span {
   position: relative;
   z-index: 3;
 }
+
+
 
 .ui.button.winning {
   color: white;

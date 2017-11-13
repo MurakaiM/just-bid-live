@@ -31,8 +31,8 @@ export default class RealtimeSocket{
             store : Redis.Instance._session,
             cookieParser: cookieParser,
             secret: 'small kittens',
-            success: (data, accept) => { console.log('recconnect'); accept(null, true)},
-            fail:  (data, message, error, accept) =>{ console.log('recconnect'); accept(null,true)}
+            success: (data, accept) => accept(null, true),
+            fail:  (data, message, error, accept) => accept(null,true)
           }));
 
         RealtimeSocket.Instance = this;
@@ -104,7 +104,6 @@ export default class RealtimeSocket{
     public emitExit( uid : string){  
         this.authNms.to(uid).emit('exit',false);
     }
-
 
     public emitBid( newBid : AuctionStreamData){
         this.auctionNms.emit('bid' , newBid);

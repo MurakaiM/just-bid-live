@@ -692,13 +692,13 @@ export const PayoutSchema = globalSequlize.define('payout' ,{
 
 /* Billing association */
 PayoutSchema.hasMany(BillingSchema, { foreignKey : "payoutId", targetKey : "payoutId", as : 'billings' })
-BillingSchema.belongsTo(PayoutSchema, { foreignKey : "payoutId", targetKey : "payoutId", as : 'payout' })
+BillingSchema.belongsTo(PayoutSchema, { foreignKey : "payoutId", sourceKey : "payoutId", as : 'payout' })
 
 UserSchema.hasMany(PayoutSchema, { foreignKey : "sellerId", targetKey : "uid", as : 'payouts' })
-PayoutSchema.belongsTo(UserSchema, { foreignKey : "sellerId", targetKey : "uid", as : 'requestor' })
+PayoutSchema.belongsTo(UserSchema, { foreignKey : "sellerId", sourceKey : "uid", as : 'requestor' })
 
 UserSchema.hasMany(BillingSchema, { foreignKey : "customerId", targetKey : "uid", as : 'payments' })
-BillingSchema.belongsTo(UserSchema, { foreignKey : "customerId", targetKey : "uid", as : 'customer' })
+BillingSchema.belongsTo(UserSchema, { foreignKey : "customerId", sourceKey : "uid", as : 'customer' })
 
 
 /* Products */

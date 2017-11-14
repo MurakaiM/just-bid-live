@@ -486,6 +486,6 @@ export default class User {
         return {
             salt:salt,
             password:value
-        };
+        }
     }
 }

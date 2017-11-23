@@ -90,7 +90,7 @@ function Auction() {
 
     this.load = data => {        
         data.forEach(elem => {
-            if(elem.type == 'featured' || incoming.type == 'reserved'){
+            if(elem.type == 'featured' || elem.type == 'reserved'){
                 this.storage[elem.type].addItem(elem)
             }
 

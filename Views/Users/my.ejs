@@ -20,7 +20,14 @@
               </div>
               <div class="col-md-10">                     
                     <div class="ui segment none">           
-                        <div class="row">                           
+                        <div class="row">         
+                            <%if(winnings.length == 0){%>
+                                <div class="empty-notify">
+                                    <img src="<%=domain%>/g.assets/img/commercialicons/bag.png">
+                                    <span> You don't have any active orders for now . </span>
+                                </div>
+                            <%}%>
+
                             <%winnings.forEach(elem =>{%>
                                 <div class="col-sm-6 col-md-6 col-lg-4">
                                     <div class="product ui flex orders order">
@@ -31,7 +38,7 @@
                                         </div>
                                         <div class="second">
                                             <div class="information">
-                                                <div class="title"> <%=elem.product.prTitle%> </div>
+                                                <div class="title nomargin"> <%=elem.product.prTitle%> </div>
                                                 <div class="types"> <%=elem.type.title%></div>
                                                 <div class="cost">
                                                     <div class="option">                                          
@@ -51,18 +58,18 @@
                                         </div>
                                         <div class="third">
                                             <div class="current">
-                                                <div class="title">Information :</div>                                        
+                                                <div class="title">Information</div>                                        
                                                 <div class="option first">                                          
-                                                    <span class="labeler"><i class="fa fa-question" aria-hidden="true"></i> Status </span>
+                                                    <span class="labeler"><i class="fa fa-question" aria-hidden="true"></i> Status: </span>
                                                     <span class="info"><%=elem.status%></span>
                                                 </div>
                                                 <div class="option">                                          
-                                                    <span class="labeler"><i class="fa fa-clock-o" aria-hidden="true"></i> Created </span>
+                                                    <span class="labeler"><i class="fa fa-clock-o" aria-hidden="true"></i> Created: </span>
                                                     <span class="info"><%=convertDate(elem.createdAt)%></span>
                                                 </div>
                                                 <div class="option">                                          
-                                                    <span class="labeler"><i class="fa fa-barcode" aria-hidden="true"></i> Track </span>
-                                                    <span class="info small"> <%=elem.productTrack%> </span>
+                                                    <span class="labeler"><i class="fa fa-barcode" aria-hidden="true"></i> Track: </span>
+                                                    <span class="info small"> <%= (elem.productTrack) ? elem.productTrack : "No track added yet" %> </span>
                                                 </div> 
                                             </div> 
                                         </div>

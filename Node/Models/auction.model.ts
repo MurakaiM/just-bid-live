@@ -77,38 +77,57 @@ export default class AuctionItem{
 
     public get getPublic(){
         return { 
-            data : this.dbAution.dataValues,
-            name : this.name
-        };
+            id : this.getInside('uidRecord'),
+            end : this.getInside('auctionEnds'),
+            img : this.getInside('mainImage'),
+            bid : this.getInside('currentBid'),
+            cost : this.getInside('prCost'),
+            title : this.getInside('prTitle'),
+            user : this.getInside('currentUser'),
+            name : this.name,
+            category : this.getInside('uidCategory'),
+            type : this.getInside('uidFee'),
+            product : this.getInside('uidProduct'),
+            shipment : this.getInside('offShipment')
+        }
     }
 
+/* 
+
+
+*/
+    
     public get getPrivate(){
         return this.dbAution;
     }
 
     public get StreamData() : AuctionStreamData {
         return {
-            uid : this.dbAution.uidRecord,
+            id : this.dbAution.uidRecord,
             user : this.dbAution.currentUser,
             name : this.name,
-            currentBid : this.dbAution.currentBid,
-            ending : this.dbAution.auctionEnds           
+            bid : this.dbAution.currentBid,
+            end : this.dbAution.auctionEnds,
+            type : this.dbAution.uidFee,
+            category : this.dbAution.uidCategory     
         }
     }    
 
     public async finish() : Promise<any>{  
         let prTitle = this.dbAution.dataValues.prTitle;
+        let inactive = true;
               
         await this.dbAution.reload();       
         
         if(this.dbAution.currentUser){
+            inactive = false;
             let winning = await this.registerWinning();   
             let notification = await NotificationController.TypeWinning(winning.winnerId, {
                 title : prTitle,
                 action : winning.winningId
             });
             RealtimeController.Instance.emitNewNotification(winning.winnerId, notification)        
-            this.dbAution.inStock = this.dbAution.inStock - 1;
+            this.dbAution.inStock = this.dbAution.inStock - 1;           
         }
 
         this.dbAution.onAuction = false;
@@ -122,11 +141,20 @@ export default class AuctionItem{
            this.dbAution.currentBid = this.dbAution.offCost;
         }    
         
-        RealtimeController.Instance.emitEnd(this.dbAution.uidRecord);
-        AuctionLoader.Instace.FinishTrigger(this.dbAution.uidRecord);                
+        if(inactive){
+            RealtimeController.Instance.emitInactive(this.getPublic);
+        }else{
+            RealtimeController.Instance.emitEnd(this.getPublic);
+        }
+        
+        AuctionLoader.Instace.FinishTrigger(this.StreamData);                      
         await this.dbAution.save();               
     }
 
+    
+    private getInside(index : string) : any {
+        return this.dbAution.dataValues[index];
+    }
 
     private setTimer(time : number) : void {
         clearTimeout(this.timeout);
@@ -286,4 +314,4 @@ export default class AuctionItem{
                     .catch( error => reject("There is no next items"));
             });
         }
-    */
+ */

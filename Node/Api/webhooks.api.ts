@@ -2,7 +2,7 @@ import * as Stripe from 'stripe'
 import * as crypto from 'crypto'
 
 import { BuildResponse } from '../Utils/Communication/response'
-import { STRIPE_WEBHOOKS, STRIPE_SECRET } from '../keys'
+import { STRIPE_WEBHOOKS, STRIPE_SECRET, MODE } from '../keys'
 
 import BasicController from '../Utils/Controllers/basic.controller'
 import AuctionLoader from '../Services/Auction/auction.loader'
@@ -30,10 +30,10 @@ export default class WebhooksApi extends BasicController {
         let sig = req.headers["stripe-signature"];
 
         try{
-            let event = WebhooksApi.stripe.webhooks.constructEvent(req.rawBody, sig, STRIPE_WEBHOOKS.chargeable);
+            let event = WebhooksApi.stripe.webhooks.constructEvent(req.rawBody, sig, STRIPE_WEBHOOKS[MODE].chargeable);
             
             PaymentController.WBChargeableWinning( req.body).then(
-                answer => console.log(answer),
+                answer => {},
                 error => console.log(error)
             )
 

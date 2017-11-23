@@ -1,3 +1,8 @@
 {
-    "chargeable" : "whsec_16VR6SmqltFJRq9Qe0TN0oBOpKYP7OXQ"
+    "dev" : {
+        "chargeable" : "whsec_16VR6SmqltFJRq9Qe0TN0oBOpKYP7OXQ"
+    },
+    "prod" : {
+        "chargeable" : "whsec_VerbQypleCStJTTam60xkrkvoZfAKNxU"
+    }
 }

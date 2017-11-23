@@ -275,11 +275,11 @@
   }
 
   .left{
-    text-align: center;
+    text-align: center!important;
   }
 
   .right{
-    text-align: center;
+    text-align: center!important;
   }
 
   .links a{
@@ -364,10 +364,20 @@
 /*Generalized mobile*/
 @media (max-width: 767px) {
   .above_menu .links button .custom.dropdown{
-    left: -170px;
+    left: -210px;
+    width: 350px;
   }
 
   .above_menu .links button .custom.dropdown:after{
-    right: calc(50% - 10px);
+    right: 112px;
+  }
+  
+  .stock_list .list_item.auction_item{
+    display: inline-flex;
+    padding-right: 35px;
+  }
+
+  .left{
+    text-align: center!important;
   }
 }

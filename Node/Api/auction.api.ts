@@ -25,7 +25,7 @@ export default class AuctionApi extends BasicController{
                 return res.send( BuildResponse(11, "Sellers not allowed to place bids"))
             } 
 
-            AuctionLoader.Instace.PostBid(req.user, req.body.uidAuction)
+            AuctionLoader.Instace.PostBid(req.user, req.body.id)
                 .then( result => res.send( BuildResponse(0, "Bid was successfully posted")) )
                 .catch( error => res.send( BuildResponse(10, "Error occurred",error)) );
         });

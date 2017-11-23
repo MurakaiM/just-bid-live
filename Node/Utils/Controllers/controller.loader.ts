@@ -9,11 +9,18 @@ export default class ControllersLoader{
         this.app = app;
     }
 
-    public LoadController(controller : BasicController) : void{   
+    public Load(folder : string) : void {           
+        require("fs").readdirSync(`${folder}`).forEach(fileName => {
+            let classType = require(`${folder}/${fileName}`).default;
+            this.ReworkContoller( new classType())
+        });
+    }
+
+    private ReworkContoller(controller : BasicController) : void {
         controller.Applied.forEach(element => this.ReworkPath(element));
     }
 
-    private ReworkPath(information : ControllerInterface){
+    private ReworkPath(information : ControllerInterface) : void{
        
         switch (information.method) {            
             case RequestType.GET:                
@@ -26,6 +33,11 @@ export default class ControllersLoader{
             default:
                 break;
         }
+
+    }
+
+    public LoadController(controller : BasicController) : void{   
+        controller.Applied.forEach(element => this.ReworkPath(element));
     }
 
 }

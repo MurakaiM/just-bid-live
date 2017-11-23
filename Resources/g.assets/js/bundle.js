@@ -617,7 +617,7 @@ function Props() {
           return false;
 
       let float = parseFloat(value);
-      if(float < 0 || float > 20)
+      if(float < 0 || float > 30)
         return false;
       else 
         return true;

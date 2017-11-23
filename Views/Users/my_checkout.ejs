@@ -59,7 +59,7 @@
                         <form class="ui form loading overall none" action="/payment/charge" method="post" id="payment-form">  
                             <div class="field">
                                 <label>Type selection</label>
-                                <div class="<%if(winning.product.prTypes.colors && winning.product.prTypes.sizes){%>two fields<%}else{%>field<%}%>">
+                                <div class="<%if(winning.product.prTypes.colors && Object.keys(winning.product.prTypes.sizes).length > 0){%>two fields<%}else{%>field<%}%>">
                                     <%if(winning.product.prTypes.colors){%>
                                         <div class="field">
                                             <div id="colors" class="ui fluid selection dropdown ">
@@ -79,7 +79,7 @@
                                         </div>             
                                     <%}%>
                     
-                                    <%if(winning.product.prTypes.sizes){%>
+                                    <%if(Object.keys(winning.product.prTypes.sizes).length > 0){%>
                                         <div class="field">                                   
                                             <div id="sizes" class="ui fluid selection dropdown">
                                                 <input type="hidden" name="size">

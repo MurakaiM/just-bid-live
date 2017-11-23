@@ -141,7 +141,6 @@ export default class Winning{
     }
 
     public static UpdateTrack( seller : User, record : string ,track : string): Promise<any>{
-        console.log(record,track)
         return WinningSchema.update(
             {
                 productTrack : track,

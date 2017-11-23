@@ -234,7 +234,7 @@
                                  <th data-field="prTitle"> Title</th>                                 
                                  <th data-field="prStock">In stock</th>
                                  <th data-field="prCost">Price</th>
-                                 <th data-field="prRating">Rating</th>
+                                 <th data-field="prRating" data-content="On Auction">OA</th>
                                  <th data-field="prViews">Views </th>
                                  <th data-field="prSold"> Sold </th>                                 
                                  <th data-field="updatedAt">Last action</th>                                
@@ -250,11 +250,15 @@
                                         <i class="checkmark icon"></i>
                                         Create 
                                     </button>
+                                
                                     <button id="productsDelete" class="ui red small icon button disabled" data-content="Disable">
                                         <i class="ban icon"></i>                                     
                                     </button>
-                                    <button id="productsEdit" class="ui blue small icon button disabled" data-content="Edit">
-                                        <i class="edit icon"></i>                                       
+                                    <button id="productsChange" class="ui blue small icon button disabled" data-content="Edit">
+                                        <i class="edit icon"></i>                                                          
+                                    </button>
+                                    <button id="productsEdit" class="ui blue small icon button disabled" data-content="Update">
+                                        <i class="cube icon"></i>                                       
                                     </button>
                                     <button id="productsOpen" class="ui blue small icon button disabled" data-content="Open">
                                         <i class="open envelope outline icon"></i>                                       

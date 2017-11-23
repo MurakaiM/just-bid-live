@@ -65,6 +65,10 @@ body.stopscroll {
   margin-top: 30px;
 }
 
+.normal{
+  font-style: normal!important;
+}
+
 .my-modal {
   position: fixed;
   top: 0;
@@ -479,7 +483,7 @@ nav input:focus~i {}
   -webkit-box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, .1);
   -moz-box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, .1);
   box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, .1);
-  border: 1px solid rgba(0, 0, 0, 0.125);
+  border: 1px solid rgba(0, 0, 0, 0.085);
   width: 100%;
   margin: auto;
   background: white;
@@ -531,7 +535,6 @@ nav input:focus~i {}
 
 .product.auction.sold .product-content {
   opacity: .3;
-  filter: blur(3px);
 }
 
 .product.auction.loading {
@@ -541,7 +544,7 @@ nav input:focus~i {}
 
 .product.auction.loading .product-content {
   opacity: .3;
-  filter: blur(3px);
+  filter: blur(1px) grayscale();
 }
 
 
@@ -684,7 +687,7 @@ nav input:focus~i {}
   height: 100%;
 }
 
-.product .titile {
+.product .title {
   font-weight: 500;
   font-size: 15px;
   text-align: center;
@@ -761,6 +764,10 @@ nav input:focus~i {}
 
 .product .price span {
   color: #b3b3b3;
+}
+
+.product .price span.rrpcost{
+  color: #d12998;
 }
 
 .product .price i {
@@ -910,7 +917,7 @@ button span {
 }
 
 .list_item {
-  font-size: 16px;
+  font-size: 13px;
   font-weight: 400;
   margin: 5px 0;
 }
@@ -1145,6 +1152,7 @@ nav .mobile_nav a {
 
 .ui.form textarea {
   resize: none;
+  min-height: 125px;
 }
 
 .ui.form .field>label {
@@ -1673,14 +1681,17 @@ nav .mobile_nav a {
 }
 
 .empty {
-  margin: auto;
+  margin: 0 auto;
   display: flex;
   align-items: center;
   opacity: .6;
+  justify-content: center;
+  height: 350px;
 }
 
 .empty span {
   color: #0d5699;
+  font-size: 'Saira Semi Condensed', sans-serif;
   margin-left: 50px;
 }
 

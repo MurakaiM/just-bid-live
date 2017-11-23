@@ -52,6 +52,7 @@ export default class AuctionLoader{
                 Realtime.Instance.emitNew(item.getPublic);
             }
         });
+        
         return true;
     }
 
@@ -72,8 +73,8 @@ export default class AuctionLoader{
     }
 
 
-    public FinishTrigger( uid : string) : void {
-        this.ON_AUCTION[this.Store.GetItem(uid).getPrivate.uidCategory]-=1;        
-        this.Store.DeleteItem(uid);       
+    public FinishTrigger( data : any) : void {
+        this.ON_AUCTION[this.Store.GetItem(data.id).getPrivate.uidCategory]-=1;        
+        this.Store.DeleteItem(data.id);       
     }
 }

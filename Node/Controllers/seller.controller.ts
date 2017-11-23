@@ -104,7 +104,8 @@ export default class SellerController {
                 .then(products => {                   
                     resolve(products)
                 })
-                .catch(error => {                    
+                .catch(error => {      
+                    console.log(error)              
                     resolve([])
                 });
         });
@@ -206,8 +207,7 @@ export default class SellerController {
             }
 
             Product.ForceDisable(user, params.uid)
-                .then(result => {
-                    console.log(result);
+                .then(result => {                    
                     if (result[0] == 0) {
                         reject("Wrong values");
                     } else {
@@ -227,8 +227,7 @@ export default class SellerController {
             }
 
             Product.ForceRenew(user, params.uid)
-                .then(result => {
-                    console.log(result);
+                .then(result => {                  
                     if (result[0] == 0) {
                         reject("Wrong values");
                     } else {

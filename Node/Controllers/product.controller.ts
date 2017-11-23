@@ -4,6 +4,7 @@ import {
     validId,
     validProduct,
     validStock,
+    validChange,
     validDisable,
     validDisableType,
     validDelete
@@ -166,6 +167,31 @@ export default class ProductController {
         }
     }
 
+    public static async ChangeProduct(user: User, params: any): Promise<AwaitResult>{
+        let hasError = validChange(params);
+
+        if(hasError.invalid){
+            return { success : false, error: hasError }
+        }
+        
+        try {
+            await ProductSchema.update({
+                prDescription: params.description,
+                prFull: params.fldescription,
+                prAllowed: null  
+             },{
+                where : {
+                    prUid: params.id,
+                    prSeller : user.PublicData.uid
+                }
+            });           
+          
+            return { success : true, result : params }            
+        } catch (error) {
+            console.log(error)
+            return { success : false, error}
+        }
+    }
 
     
     public static GetProduct(uid: string): Promise < any > {

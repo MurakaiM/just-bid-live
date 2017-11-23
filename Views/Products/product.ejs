@@ -14,15 +14,6 @@
       <%-include('../Common/menu', { page : pageName, user : currentUser  })%>
 
       <div class="exactly path">
-        <div class="ui breadcrumb">
-          <a href="/" class="section">Stock</a>
-          <span class="divider">/</span>
-          <a href="/" class="section">Women Clothes</a>
-          <span class="divider">/</span>
-          <a href="/" class="section">Dresses</a>
-          <span class="divider">/</span>
-          <div class="active section">Gray shirt</div>
-        </div>
       </div>
 
       <div class="row exactly products">
@@ -35,7 +26,7 @@
                       <%if(product.prTypes){%>                       
                         <% Object.keys(product.prTypes.colors).forEach( (e,i) => { %>
                             <div id="<%=product.prTypes.colors[e].value%>" class="ui header side <%if(i == 0){%>active<%}%>">
-                              <img src="<%=product.prTypes.colors[e].image%>" alt="">
+                               <img src="<%=product.prTypes.colors[e].image%>" alt=""/>
                             </div>                            
                         <%})%>                                       
                       <%}%>
@@ -94,7 +85,7 @@
                   </div>             
                 <%}%>
               
-                <%if(product.prTypes.sizes){%>
+                <%if(Object.keys(product.prTypes.sizes).length > 0){%>
                   <div class="option">
                     <span class="labeler">  <i class="compress icon"></i> Size :</span>
                     <div id="size" class="ui fluid selection dropdown">
@@ -170,7 +161,7 @@
               </div>
               <h4 class="ui fitted divider widther"></h4>
             </div>
-            -->
+            !-->
 
         </div>
 

@@ -17,6 +17,9 @@
     font-size: 18px;
     color: #0d5699;
     font-weight: 500;
+    padding-top: 0;
+    margin-bottom: 0px;
+    height: auto;
 }
 
 .product .information .types {
@@ -24,7 +27,7 @@
     color: #b3b3b3;
     text-transform: uppercase;
     font-size: 13px;
-    margin-right: 5px;
+    text-align: center;
     line-height: 20px;
 }
 
@@ -36,21 +39,31 @@
 }
 
 .product .information .cost {
-    margin-top: 35px;
+    margin-top: 5px;
 }
 
 
-.product.auction .ui.button{
+.product.auction.winning .ui.button{
+    position: relative;
     opacity: .9;
     border-radius: 0;
-    border-radius: 0 0 25px 25px;
-    position: relative;
-    top: 1px;
-    width:100%;
+    border-radius: 0 0 15px 15px;
+    left: -1px;
+    top: 2px;
+    width: calc(100% + 2px);    
+}
+
+.product.auction.winning .ui.button.checkout{
+    background: #3d78ad;
+    color : #f2f2f2;
+}
+
+.product.auction .ui.button.checkout i{
+    padding-right: 10px;
 }
 
 .product.product.auction .information .cost {
-    margin-top: 25px;
+    margin-top: 0;
 }
 
 .product .information .cost .option .labeler,
@@ -82,7 +95,6 @@
 }
 
 .product .current {
-    padding: 20px;
     vertical-align: middle;
 }
 
@@ -94,11 +106,11 @@
 }
 
 .product .current .option {
-    margin: 20px auto;
+    margin: 10px auto;
 }
 
 .product .current .option.first {
-    margin-top: 20px;
+    margin-top: 0px;
 }
 
 .product .current .option .labeler {
@@ -107,7 +119,6 @@
     font-size: 14px;
     margin-right: 5px;
     line-height: 20px;
-    width: 85px;
     display: inline-block;
 }
 
@@ -115,8 +126,6 @@
     color: #0d5699;
     font-weight: 500;
     opacity: .85;
-    display: block;
-    padding-left: 25px;
 }
 
 .product .current .option .info.small{
@@ -154,15 +163,27 @@ tbody tr:last-child {
 .collapsing.image img {
     width: 100%;
     border-radius: 5px;
-    box-shadow: 0 0 5px 0px rgba(21, 21, 21, 0.2);
 }
 
 .product.auction{
     overflow: visible;
 }
 
+.product.auction.winning{
+    border-radius: 15px;
+}
+
+.product.auction.winning:hover{
+    box-shadow: 0px 6px 12px 0px rgba(0, 0, 0, .25);
+    top : -3px;
+}
+
+.product.auction.winning .third{
+    text-align: center;
+}
+
 .product.auction .collapsing.image img {
-    border-radius: 25px 25px 0 0;
+    border-radius: 15px 15px 0 0;
 }
 
 .product.auction .ui.label.won{

@@ -116,6 +116,10 @@ tr.selected {
     border: none;
 }
 
+.ui.celled.table tr td, .ui.celled.table tr th{
+    max-width: 250px;
+}
+
 .ui.table thead th .arrows {
     top: 50%;
     transform: translateY(calc(-50% - 10px));
@@ -408,6 +412,7 @@ table .emptypage {
     padding-bottom: 45px;
 }
 
+
 .outer{
     padding-bottom: 50px!important;
     padding-right: 50px!important;
@@ -494,6 +499,7 @@ table .emptypage {
     object-fit: cover;
     box-shadow: 0 0px 100px rgba(50, 50, 93, .1), 0 10px 20px rgba(50, 50, 93, .15), 0 5px 15px rgba(0, 0, 0, .1);
 }
+
 
 .ui.segment.padding .statistics {
     margin-top: 25px;

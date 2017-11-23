@@ -272,7 +272,7 @@ export function validProduct ( incoming : any) : UserError{
 
 }
 
-export function validStock (incoming : any) : UserError{
+export function validStock(incoming : any) : UserError{
     if(!incoming.productId){
         return buildError(true, "No product id provided")
     }
@@ -292,6 +292,26 @@ export function validStock (incoming : any) : UserError{
     }
     if(incoming.stock <= 0){
         return buildError(true, "Stock number is wrong")
+    }
+
+    return buildError(false, "Everything is valid")
+}
+
+export function validChange(incoming : any) : UserError{
+    if(!incoming.id){
+        return buildError(true, "No product id provided")
+    }
+
+    if(incoming.id.length != 36){
+        return buildError(true, "Product id is not valid")
+    }
+
+    if(!incoming.description){
+        return buildError(true, "No short description was represented")
+    }
+
+    if(!incoming.fldescription){
+        return buildError(true, "No full description was represented")
     }
 
     return buildError(false, "Everything is valid")

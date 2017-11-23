@@ -46,6 +46,7 @@ export default class SellerApi extends BasicController{
         this.Post('/seller/product/delete', this.deleteProduct)   
         this.Post('/seller/product/renew', this.renewProduct)
         this.Post('/seller/product/remove', this.removeProduct)
+        this.Post('/seller/product/change', this.changeProduct)
         
         this.Post('/seller/payout/paypal/update', this.updatePaypal)
         this.Post('/seller/avatar/update', this.updateAvatar)
@@ -202,7 +203,7 @@ export default class SellerApi extends BasicController{
     protected getStock(req,res) : void{        
         isSeller(req,res).allowed( user => 
             ProductController.GetStock(user,req.body)
-                .then( result => { console.log(result); res.send( BuildResponse(0,"Product stocks were successfully fetched",result)) })
+                .then( result => res.send( BuildResponse(0,"Product stocks were successfully fetched",result)) )
                 .catch( error => res.send( BuildResponse(10,error)))
         );
     }
@@ -238,6 +239,14 @@ export default class SellerApi extends BasicController{
                 .then( result => res.send( BuildResponse(0,"Store was successfully fetched",result)) )
                 .catch( error => res.send( BuildResponse(10,error)) ); 
         });
+    }
+
+    protected changeProduct(req,res) : void{
+        isSeller(req,res).allowed(seller => {
+            ProductController.ChangeProduct(seller, req.body)
+                .then( result => res.send( BuildResponse(0,"Product was succssfully changed",result) ))
+                .catch( error => res.send( BuildResponse(10,error) )) 
+        })
     }
 
     protected createProduct(req,res) : void{         

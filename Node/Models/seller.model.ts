@@ -28,7 +28,7 @@ export default class Seller {
     }
 
     public static FetchProducts(user: User): Promise < any > {
-        let attributes: Array < any > = ['prUid', 'prTitle', 'prRating', 'prCost', 'prSold', 'prViews', 'prWishes', 'prTypes', 'createdAt', 'updatedAt'];
+        let attributes: Array < any > = ['prUid', 'prTitle', 'prRating', 'prCost', 'prSold', 'prFull', 'prDescription', 'prViews', 'prWishes', 'prTypes', 'createdAt', 'updatedAt'];
         attributes.push([ 
             Database.Instance.Sequelize.literal(`(select sum("types"."inStock") from "types" where "types"."productId"="product"."prUid")`), 'prStock' 
         ]);
@@ -45,6 +45,14 @@ export default class Seller {
             include: [{
                 model: TypesSchema,
                 as: "types"
+             },{
+                model : AuctionSchema,    
+                attributes : ['uidProduct'],          
+                where : {
+                    onAuction : true
+                },
+                limit : 1
+
             }],
             attributes
         });
@@ -126,7 +134,7 @@ export default class Seller {
     public static UpdatePaypal(user: User, email : string): Promise<any>{
         return SellerSchema.update({
             paypalEmail: email,
-            paypalAccepted : moment().add(14, 'day')
+            paypalAccepted : moment().add(3, 'day')
          },{
             where :{ userId : user.PublicData.uid }     
         })

@@ -3,32 +3,72 @@
   position: relative;
 }
 
-.list.stock_list {
-  border-radius: 5px;
+.list .list_item{
   padding: 0!important;
 }
 
 .stock_list .list_item {
   padding:0;
   margin: 0;
-  opacity: .8;
   cursor: pointer;
+  min-height: 40px;
   font-size: 17px;
   background: white;
-  border-radius: 4px;
   transition: .7s ease all;
-  margin: 5px 0;
+  display: flex;
+  align-items: center;
 }
 
-.stock_list .list_item.active{
-  background: #0d5699;
+.auction-row{
+  padding-left: 0!important;
+  padding-right: 30px!important;
 }
+
+.stock_list .list_item.auction_item{
+  transition: .35s ease all, .7s ease color, .7s ease backgroud, .7s ease filter;
+  position: relative;
+  margin: 5px 0;
+  border-radius: 5px;
+  right: 0;
+  background: transparent!important;
+  opacity: .35;
+}
+
+.stock_list .list_item.auction_item:hover{
+  opacity: 1;
+  box-shadow: none;
+}
+
+.stock_list .list_item.auction_item.active{
+  position: relative;
+  right: -25px;
+  opacity: 1;
+}
+
+.ui.tab.active.auction_block{
+  opacity: 1;
+  left : 0;
+  position: relative;
+  transition: .95s ease all;
+  pointer-events: all;
+}
+
+.ui.tab.auction_block{
+  position: absolute;
+  display: flex;
+  left:  0;
+  top: 0;
+  opacity: 0;
+  width: 100%;
+  min-height: 100%;
+  pointer-events: none;
+}
+
 
 .stock_list .list_item .icon {
-  margin-left: 5px;
+  margin-left: 25px;
   color: #538ab9;
   text-align: center;
-  top: 6px;
   width: 25px;
   height: 25px;
 }
@@ -40,20 +80,15 @@
 
 
 .stock_list .list_item .text {
-  line-height: 40px;
   font-weight: 500;
   margin-left: 15px;
   font-size: 14px;
   letter-spacing: -.5px;
 }
 
-.stock_list .list_item.active .text{
-  color: white;
-}
+.stock_list .list_item.active .text{}
 
-.stock_list .list_item.active .icon{
-  filter: brightness() invert(1);
-}
+.stock_list .list_item.active .icon{}
 
 
 .stock_list .list_item:hover {

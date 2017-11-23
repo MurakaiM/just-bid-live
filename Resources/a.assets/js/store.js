@@ -307,7 +307,7 @@ function SetUpPersonal() {
           removePaypalLoading();
 
           var currentTime = new Date();
-          currentTime.setDate(currentTime.getDate()+14);
+          currentTime.setDate(currentTime.getDate()+3);
 
           personalStats.paypalSuccess.addClass('hidden');
           personalStats.paypalAvaiting.removeClass('hidden');
@@ -470,6 +470,7 @@ function SetUpProducts() {
     create: $("#productsCreate"),
     auction: $("#productAuction"),
     edit: $("#productsEdit"),
+    change : $("#productsChange"),
     refresh: $("#productsRefresh")
   }
 
@@ -498,7 +499,7 @@ function SetUpProducts() {
           <td>${item.prTitle}</td>
           ${reworkStock(item.prStock,hasError)}
           <td><i class="dollar icon"></i>${toCurrency(item.prCost)}</td>          
-          <td>${reworkRating(item.prRating)}</td>
+          ${reworkBoolean(item.auctions.length > 0)}
           <td>${item.prViews}</td>
           <td>${item.prSold}</td>       
           <td>${new Date(item.updatedAt).toLocaleDateString()}</td>
@@ -511,6 +512,8 @@ function SetUpProducts() {
       buttons.delete.removeClass('disabled');
       buttons.edit.removeClass('disabled');
       buttons.open.removeClass('disabled');
+      buttons.change.removeClass('disabled');
+
 
       currentItem = {
         i,
@@ -526,6 +529,7 @@ function SetUpProducts() {
       buttons.delete.addClass('disabled');
       buttons.edit.addClass('disabled');
       buttons.open.addClass('disabled');
+      buttons.change.addClass('disabled')
 
       currentItem = null;
     }
@@ -587,7 +591,7 @@ function SetUpProducts() {
 
       return $(template);
     },
-    maxSize: 7
+    maxSize: 10
   });
 
   const nestedSize = new NestedList('#typesSize', {
@@ -694,6 +698,49 @@ function SetUpProducts() {
     onClose: body => {},
     middleware: (body, props, createModal) => createForm(createModal, body, nestedColor, nestedSize, editor, table)
   }, false);
+
+  const changeModal = new Modal({
+    id : "#changeModal",
+    closer : ".closer",
+    closable : true,
+    overflowed : true,
+    onOpen : (body,props) => {
+      props.exact.text(currentItem.arr[currentItem.i].prTitle)
+      props.description.val(currentItem.arr[currentItem.i].prDescription)
+      props.full.setValue(currentItem.arr[currentItem.i].prFull)
+    },
+    onClose : body => {},
+    middleware : (body,props, modal) => {
+      props.exact = body.find('.exact')
+      props.description = body.find('textarea[name="description"]')     
+      props.full = new Simditor({
+        textarea: $("#changeModal .wwc"),
+        toolbar: toolbar,
+        defaultImage: '../<%=domain%>/g.assets/img/usericons/image.png'
+      });
+
+      props.form = new Form(body.find('form'),'/seller/product/change', {
+        inline: true,
+        on: 'blur',
+        rules: {
+          delivery : {
+            identifier: 'delivery',
+            rules: [{
+              type: 'integer[1..180]',
+              prompt: 'Please enter valid delivery time (days)'
+            }]
+          },
+        },
+        dataMiddleware: data => {
+          data.id = currentItem.arr[currentItem.i].prUid;
+          data.full = props.full.getValue();          
+          return data;
+        },
+        success: data => setTimeout(e => modal.toggleState(), 3000),
+        failure: (error,form) => {}    
+      })
+    }
+  },false);
 
   const editModal = new Modal({
     id: "#editModal",
@@ -825,6 +872,7 @@ function SetUpProducts() {
   buttons.delete.click(e => deleteModal.toggleState());
   buttons.create.click(e => createModal.toggleState());
   buttons.auction.click(e => auctionModal.toggleState());
+  buttons.change.click(e => changeModal.toggleState());
   buttons.edit.click(e => editModal.toggleState());
   buttons.open.click(e => window.open(`/product/id${currentItem.arr[currentItem.i].prUid}`));
 
@@ -886,7 +934,7 @@ function SetUpProducts() {
           identifier: 'shipment',
           rules: [{
             type: 'shipment',
-            prompt: 'Please enter valid cost in format XX.XX (0$ - 20$)'
+            prompt: 'Please enter valid cost in format XX.XX (0$ - 30$)'
           }]
         },
         delivery : {

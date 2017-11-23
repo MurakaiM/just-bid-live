@@ -109,8 +109,12 @@ export default class RealtimeSocket{
         this.auctionNms.emit('bid' , newBid);
     }
 
-    public emitEnd( uidRecord : string){
-        this.auctionNms.emit('end' , uidRecord);
+    public emitEnd( data : any){
+        this.auctionNms.emit('end', data);
+    }
+
+    public emitInactive(data : any){
+        this.auctionNms.emit('inactive', data)
     }
 
     public emitStock( oldItem : any){
@@ -120,6 +124,8 @@ export default class RealtimeSocket{
     public emitNew( newItem : any){
         this.auctionNms.emit('new' , newItem);
     }
+
+
 
     public emitNewNotification( userId : string, data : any){      
         this.authNms.to(userId).emit('new:notification', data);

@@ -180,6 +180,61 @@
         </div>
     </div>
 
+    <div id="changeModal" class="my-modal page">
+        <div class="body">
+            <div class="closer">
+                <i class="remove icon"></i>
+            </div>
+
+            <h2 class="ui header main">
+                <div class="content">
+                    Edit product
+                </div>
+            </h2>
+            <h4 class="ui header main wrap descriptor normal">
+                Edit short and full description for product 
+                <span class="exact">Watch</span>.
+            </h4>
+            <form class="ui form deleter">
+                <div class="field fileds-margin">
+                    <div class="field fileds-margin">
+                        <label>Short description</label>                        
+                        <div class="field">
+                            <textarea placeholder="Short description" name="description" rows="2"></textarea>
+                        </div>
+                    </div>
+                  
+                    <div class="field fileds-margin">
+                        <label>Full description</label>
+                        <div class="field">
+                            <textarea class="wwc" placeholder="Full description" name="fldescription"></textarea>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="ui custom error message">
+                    <div class="header">Action Forbidden</div>
+                    <p></p>
+                </div>
+
+                <div class="ui custom success message">
+                    <div class="header">Action Completed</div>
+                    <p>
+                        Descriptions were updated successfully. 
+                        Product needs one more approval.
+                    </p>
+                </div>
+
+                <div class="buttons container">
+                    <button type="submit" class="ui green button">                            
+                      Save
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <div id="editModal" class="my-modal page">
         <div class="body">
             <div class="closer">

@@ -66,8 +66,8 @@ export class Server {
         this.setDatabase({
             momentally : true
         }).then( result => {           
-            return this.setAuth();
-            //return  this.setAuction();
+            this.setAuth();
+            return  this.setAuction();
         }).then( result => {           
             this.setPayments();
             this.setControllers();       
@@ -76,7 +76,7 @@ export class Server {
     }
 
 
-    public  startServer(){
+    public startServer(){
         this.server.listen(this.port, () => console.log('Server was started'));
     }
 
@@ -90,12 +90,14 @@ export class Server {
     private setEndpoints() : void{
         /* User's endpoints */
         this.app.get('/', Renderer.live);
+        this.app.get('/about', Renderer.about)
+
         this.app.get('/earlyaccess', (req,res) => res.render('sellers'))
-       //this.app.get('/signin', Renderer.signin);
-       //this.app.get('/signup', Renderer.signup);
+        this.app.get('/signin', Renderer.signin);
+        this.app.get('/signup', Renderer.signup);
 
         this.app.get('/contact', Renderer.contact);
-       // this.app.get('/stock', Renderer.stock);
+        this.app.get('/stock', Renderer.stock);
         this.app.get('/help/category', Renderer.helpCategory);      
 
         this.app.get('/forgot', Renderer.forgot);
@@ -119,14 +121,7 @@ export class Server {
         this.storage = new Storage(this.app, keys.GOOGLE_APP,"avatars-bucket", keys.STORAGE_CREDITNAILS);
 
         this.loader = new Loader(this.app);
-        
-        this.loader.LoadController(new UserApi());
-        this.loader.LoadController(new AuctionApi());
-        this.loader.LoadController(new SellerApi());
-        this.loader.LoadController(new PaymentApi());
-        this.loader.LoadController(new WebhookApi());
-        this.loader.LoadController(new AdminApi());
-        this.loader.LoadController(new NotificationApi());
+        this.loader.Load(path.join(__dirname, './Api'))
 
         this.app.get(keys.GOOGLE_AUTH_CALLBACK, passport.authenticate('google', { failureRedirect: '/' }), this.socialHandler);
         this.app.get(keys.FACEBOOK_AUTH_CALLBACK, passport.authenticate('facebook', { failureRedirect: '/' }), this.socialHandler);

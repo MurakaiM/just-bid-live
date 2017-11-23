@@ -159,6 +159,7 @@ function selection(types) {
   const sizes = $("#sizes");
   const shape = $('.ui.text.shape').shape();
   
+  console.log(types)
 
   if (!sizes) {
     colors.find('.item').each((i, e) => doneColor(e, colors))

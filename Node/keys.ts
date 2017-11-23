@@ -1,3 +1,5 @@
+export const MODE = process.env.MODE || 'dev'
+
 export const SPARK_KEY = process.env.SPARK_KEY || '6f7e4bb7dfeb4689d8b0556794258a2d4885e305'
 
 export const DATABASE_URL = process.env.DATABASE_URL || 'postgres://admin:md53c17b0bb7cd76e4f80ad10e45d4acb56@localhost:5432/auction'
@@ -6,7 +8,7 @@ export const REDIS_URL = process.env.REDIS_URL ||  'redis://h:p4dd2c2e81c10aeebe
 
 export const GOOGLE_APP = process.env.GOOGLE_APP || 'mythical-bazaar-175300'
 
-export const DOMAIN = process.env.DOMAIN || 'https://www.justbidlive.com'
+export const DOMAIN = process.env.DOMAIN || 'https://aed6a13d.ngrok.io'
 
 export const STRIPE_SECRET = process.env.STRIPE_SECRET || 'sk_test_b3lIafPPmnd0DPdXslzRt7RG'
 
@@ -17,8 +19,6 @@ export const STRIPE_WEBHOOKS = require('../Keys/stripe.webhooks.json')
 export const STORAGE_CREDITNAILS = require('../Keys/storage.json')
 
 export const PORT = parseInt(process.env.PORT) || 8080
-
-export const HOST_URL = DOMAIN
 
 
 
@@ -36,3 +36,6 @@ export const FACEBOOK_APP_SECRET = process.env.FACEBOOK_APP_SECRET || 'c3ba385ea
 export const GOOGLE_AUTH_CALLBACK = process.env.GOOGLE_AUTH_CALLBACK || '/auth/callback/google'
 
 export const FACEBOOK_AUTH_CALLBACK = process.env.FACEBOOK_AUTH_CALLBACK || '/auth/callback/facebook'
+
+
+export const HOST_URL = DOMAIN

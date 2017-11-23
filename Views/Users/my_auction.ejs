@@ -32,10 +32,10 @@
 
                             <%winnings.forEach( winning =>{%>                          
                                 <div class="col-sm-6 col-md-6 col-lg-4">
-                                    <div class="product auction">
+                                    <div class="product auction winning">
                                         <div class="ui label won">WON</div>
                                         <div class="first">
-                                            <a href="/product/id<%=winning.productId%>" class="collapsing image">
+                                            <a href="/product/id<%=winning.productId%>" class="collapsing image" target="blank">
                                                 <img src="<%=winning.auction.mainImage%>" alt="" />
                                             </a>
                                         </div>
@@ -66,7 +66,7 @@
                                             </div> 
                                         </div>
                                         <div class="third">                                       
-                                            <a href="/my/winning/<%=winning.winningId%>" class="ui button">
+                                            <a href="/my/winning/<%=winning.winningId%>" class="ui button" >
                                                 <i class="fa fa-check" aria-hidden="true"></i>
                                                 Checkout
                                             </a>                                                                             

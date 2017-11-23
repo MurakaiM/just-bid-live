@@ -9,7 +9,7 @@
   },
   "scripts": {
     "run": "tsc && node Build/main",
-    "deploy" : "git push https://heroku:bb245d59-680c-4dc9-ad45-e7956789cd24@git.heroku.com/justbid-web.git -f HEAD",
+    "deploy": "git push https://heroku:bb245d59-680c-4dc9-ad45-e7956789cd24@git.heroku.com/justbid-web.git -f HEAD",
     "start": "npm i && tsc && node Build/main",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

@@ -1290,8 +1290,8 @@ nav .mobile_nav a {
 .above_menu .links button.opened .custom.dropdown {
   opacity: 1;
   -webkit-font-smoothing: subpixel-antialiased;
-  -webkit-transform: translateZ(0) translateX(0) rotateX(0);
-  transform: translateZ(0) translateX(0) rotateX(0);
+  -webkit-transform: translateZ(0) translateX(0);
+  transform: translateZ(0) translateX(0);
   pointer-events: all;
 }
 
@@ -1478,8 +1478,8 @@ nav .mobile_nav a {
 .above_menu .links button .custom {
   transition: .4s ease all;
   opacity: 0;
-  -webkit-transform: translateZ(0) translateX(-10%) rotateX(-15deg);
-  transform: translateZ(0) translateX(-10%) rotateX(-15deg);
+  -webkit-transform: translateZ(0) translateX(-10%);
+  transform: translateZ(0) translateX(-10%);
   will-change: opacity, transform;
 }
 

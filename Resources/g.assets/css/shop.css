@@ -50,18 +50,18 @@
   left : 0;
   position: relative;
   transition: .95s ease all;
-  pointer-events: all;
+  transition-delay: .6s;
+  display: flex;
 }
 
 .ui.tab.auction_block{
   position: absolute;
-  display: flex;
+  display: none;
   left:  0;
   top: 0;
   opacity: 0;
   width: 100%;
   min-height: 100%;
-  pointer-events: none;
 }
 
 

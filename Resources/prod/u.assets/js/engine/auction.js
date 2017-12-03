@@ -117,7 +117,7 @@ function Item(t) {
             }, 1e3)
         }, n)
     }, this.LoadWaiting = function (t) {
-        var i = Math.abs((new Date).getTime() - new Date(t.end).getTime()),
+        var i = Math.abs(new Date(t.start).getTime() - new Date(t.end).getTime()),
             n = i % 1e3,
             s = (i - n) / 1e3,
             a = s + GOING_OFFSET;

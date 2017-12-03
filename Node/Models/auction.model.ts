@@ -61,6 +61,8 @@ export default class AuctionItem{
         this.dbAution.currentUser = user.Data.uid;
 
    
+        console.log(this.dbAution.auctionEnds.getTime())
+
         return new Promise((resolve, reject) => {
             this.dbAution.save()
              .then( result => {
@@ -160,8 +162,7 @@ export default class AuctionItem{
         return this.dbAution.dataValues[index];
     }
 
-    private setTimer(time : number) : void {   
-        console.log(time)    
+    private setTimer(time : number) : void {           
         clearTimeout(this.timeout);
         this.timeout = setTimeout( () => this.finish(), time);
     }

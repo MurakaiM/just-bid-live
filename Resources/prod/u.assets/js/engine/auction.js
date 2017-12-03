@@ -121,7 +121,7 @@ function Item(t) {
             n = i % 1e3,
             s = (i - n) / 1e3,
             a = s + GOING_OFFSET;
-            console.log(i)
+            console.log(t.end)
         clearTimeout(e.intervals.offset), clearInterval(e.intervals.static), e.SetDate(a, s, getTime(s), !0), e.intervals.offset = setTimeout(function (t) {
             s--, e.intervals.static = setInterval(function () {
                 0 == s && clearInterval(e.intervals.static), e.SetDate(a, s, getTime(s), !0), s--

@@ -67,6 +67,7 @@ export default class AuctionItem{
                 //Refresh timeout and emit to stream
                 this.name = user.PublicData.firstName;               
                 this.setTimer(AuctionItem.goingTimer + this.number);  
+                
                 RealtimeController.Instance.emitBid(this.StreamData) 
                 resolve("Updated");             
              })           
@@ -118,6 +119,8 @@ export default class AuctionItem{
     }    
 
     public async finish() : Promise<any>{  
+        console.log('finished-1')
+       
         let prTitle = this.dbAution.dataValues.prTitle;
         let inactive = this.dbAution.currentUser ? false : true;
         
@@ -152,7 +155,8 @@ export default class AuctionItem{
         }else{
            this.dbAution.currentBid = this.dbAution.offCost;
         }    
-                                   
+        
+        console.log('finished-2')
         await this.dbAution.save();               
     }
 

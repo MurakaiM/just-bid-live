@@ -1,1 +1,186 @@
-"use strict";!function(t,e,o){function n(t){var e=new RegExp("tooltip-show\\s*","gi");t.className=t.className.replace(e,"").trim()}function a(t,e){return(" "+t.getAttribute("class")+" ").indexOf(" "+e+" ")>-1}var i={currency:void 0,currencyFormatCallback:void 0,tooltipOffset:{x:0,y:-20},anchorToPoint:!1,appendToBody:!1,class:void 0,pointClass:"ct-point"};o.plugins=o.plugins||{},o.plugins.tooltip=function(r){return r=o.extend({},i,r),function(i){function c(t,e,o){p.addEventListener(t,function(t){e&&!a(t.target,e)||o(t)})}function s(e){u=u||f.offsetHeight;var o,n,a=-(d=d||f.offsetWidth)/2+r.tooltipOffset.x,i=-u+r.tooltipOffset.y;if(r.appendToBody)f.style.top=e.pageY+i+"px",f.style.left=e.pageX+a+"px";else{var c=p.getBoundingClientRect(),s=e.pageX-c.left-t.pageXOffset,l=e.pageY-c.top-t.pageYOffset;!0===r.anchorToPoint&&e.target.x2&&e.target.y2&&(o=parseInt(e.target.x2.baseVal.value),n=parseInt(e.target.y2.baseVal.value)),f.style.top=(n||l)+i+"px",f.style.left=(o||s)+a+"px"}}var l=r.pointClass;i.constructor.name==o.Bar.prototype.constructor.name?l="ct-bar":i.constructor.name==o.Pie.prototype.constructor.name&&(l=i.options.donut?"ct-slice-donut":"ct-slice-pie");var p=i.container,f=p.querySelector(".chartist-tooltip");f||((f=e.createElement("div")).className=r.class?"chartist-tooltip "+r.class:"chartist-tooltip",r.appendToBody?e.body.appendChild(f):p.appendChild(f));var u=f.offsetHeight,d=f.offsetWidth;n(f),c("mouseover",l,function(t){var n=t.target,c="",l=(i instanceof o.Pie?n:n.parentNode)?n.parentNode.getAttribute("ct:meta")||n.parentNode.getAttribute("ct:series-name"):"",p=n.getAttribute("ct:meta")||l||"",g=!!p,m=n.getAttribute("ct:value");if(r.transformTooltipTextFnc&&"function"==typeof r.transformTooltipTextFnc&&(m=r.transformTooltipTextFnc(m)),r.tooltipFnc&&"function"==typeof r.tooltipFnc)c=r.tooltipFnc(p,m);else{if(r.metaIsHTML){var v=e.createElement("textarea");v.innerHTML=p,p=v.value}if(p='<span class="chartist-tooltip-meta">'+p+"</span>",g)c+=p+"<br>";else if(i instanceof o.Pie){var y=function(t,e){do{t=t.nextSibling}while(t&&!a(t,e));return t}(n,"ct-label");y&&(c+=function(t){return t.innerText||t.textContent}(y)+"<br>")}m&&(r.currency&&(m=void 0!=r.currencyFormatCallback?r.currencyFormatCallback(m,r):r.currency+m.replace(/(\d)(?=(\d{3})+(?:\.\d+)?$)/g,"$1,")),c+=m='<span class="chartist-tooltip-value">'+m+"</span>")}c&&(f.innerHTML=c,s(t),function(t){a(t,"tooltip-show")||(t.className=t.className+" tooltip-show")}(f),u=f.offsetHeight,d=f.offsetWidth)}),c("mouseout",l,function(){n(f)}),c("mousemove",null,function(t){!1===r.anchorToPoint&&s(t)})}}}(window,document,Chartist);
+/**
+* Chartist.js plugin to display a data label on top of the points in a line chart.
+*
+*/
+/* global Chartist */
+(function (window, document, Chartist) {
+  'use strict';
+
+  var defaultOptions = {
+    currency: undefined,
+    currencyFormatCallback: undefined,
+    tooltipOffset: {
+      x: 0,
+      y: -20
+    },
+    anchorToPoint: false,
+    appendToBody: false,
+    class: undefined,
+    pointClass: 'ct-point'
+  };
+
+  Chartist.plugins = Chartist.plugins || {};
+  Chartist.plugins.tooltip = function (options) {
+    options = Chartist.extend({}, defaultOptions, options);
+
+    return function tooltip(chart) {
+      var tooltipSelector = options.pointClass;
+      if (chart.constructor.name == Chartist.Bar.prototype.constructor.name) {
+        tooltipSelector = 'ct-bar';
+      } else if (chart.constructor.name ==  Chartist.Pie.prototype.constructor.name) {
+        // Added support for donut graph
+        if (chart.options.donut) {
+          tooltipSelector = 'ct-slice-donut';
+        } else {
+          tooltipSelector = 'ct-slice-pie';
+        }
+      }
+
+      var $chart = chart.container;
+      var $toolTip = $chart.querySelector('.chartist-tooltip');
+      if (!$toolTip) {
+        $toolTip = document.createElement('div');
+        $toolTip.className = (!options.class) ? 'chartist-tooltip' : 'chartist-tooltip ' + options.class;
+        if (!options.appendToBody) {
+          $chart.appendChild($toolTip);
+        } else {
+          document.body.appendChild($toolTip);
+        }
+      }
+      var height = $toolTip.offsetHeight;
+      var width = $toolTip.offsetWidth;
+
+      hide($toolTip);
+
+      function on(event, selector, callback) {
+        $chart.addEventListener(event, function (e) {
+          if (!selector || hasClass(e.target, selector))
+          callback(e);
+        });
+      }
+
+      on('mouseover', tooltipSelector, function (event) {
+        var $point = event.target;
+        var tooltipText = '';
+
+        var isPieChart = (chart instanceof Chartist.Pie) ? $point : $point.parentNode;
+        var seriesName = (isPieChart) ? $point.parentNode.getAttribute('ct:meta') || $point.parentNode.getAttribute('ct:series-name') : '';
+        var meta = $point.getAttribute('ct:meta') || seriesName || '';
+        var hasMeta = !!meta;
+        var value = $point.getAttribute('ct:value');
+
+        if (options.transformTooltipTextFnc && typeof options.transformTooltipTextFnc === 'function') {
+          value = options.transformTooltipTextFnc(value);
+        }
+
+        if (options.tooltipFnc && typeof options.tooltipFnc === 'function') {
+          tooltipText = options.tooltipFnc(meta, value);
+        } else {
+          if (options.metaIsHTML) {
+            var txt = document.createElement('textarea');
+            txt.innerHTML = meta;
+            meta = txt.value;
+          }
+
+          meta = '<span class="chartist-tooltip-meta">' + meta + '</span>';
+
+          if (hasMeta) {
+            tooltipText += meta + '<br>';
+          } else {
+            // For Pie Charts also take the labels into account
+            // Could add support for more charts here as well!
+            if (chart instanceof Chartist.Pie) {
+              var label = next($point, 'ct-label');
+              if (label) {
+                tooltipText += text(label) + '<br>';
+              }
+            }
+          }
+
+          if (value) {
+            if (options.currency) {
+              if (options.currencyFormatCallback != undefined) {
+                value = options.currencyFormatCallback(value, options);
+              } else {
+                value = options.currency + value.replace(/(\d)(?=(\d{3})+(?:\.\d+)?$)/g, '$1,');
+              }
+            }
+            value = '<span class="chartist-tooltip-value">' + value + '</span>';
+            tooltipText += value;
+          }
+        }
+
+        if(tooltipText) {
+          $toolTip.innerHTML = tooltipText;
+          setPosition(event);
+          show($toolTip);
+
+          // Remember height and width to avoid wrong position in IE
+          height = $toolTip.offsetHeight;
+          width = $toolTip.offsetWidth;
+        }
+      });
+
+      on('mouseout', tooltipSelector, function () {
+        hide($toolTip);
+      });
+
+      on('mousemove', null, function (event) {
+        if (false === options.anchorToPoint)
+        setPosition(event);
+      });
+
+      function setPosition(event) {
+        height = height || $toolTip.offsetHeight;
+        width = width || $toolTip.offsetWidth;
+        var offsetX = - width / 2 + options.tooltipOffset.x
+        var offsetY = - height + options.tooltipOffset.y;
+        var anchorX, anchorY;
+
+        if (!options.appendToBody) {
+          var box = $chart.getBoundingClientRect();
+          var left = event.pageX - box.left - window.pageXOffset ;
+          var top = event.pageY - box.top - window.pageYOffset ;
+
+          if (true === options.anchorToPoint && event.target.x2 && event.target.y2) {
+            anchorX = parseInt(event.target.x2.baseVal.value);
+            anchorY = parseInt(event.target.y2.baseVal.value);
+          }
+
+          $toolTip.style.top = (anchorY || top) + offsetY + 'px';
+          $toolTip.style.left = (anchorX || left) + offsetX + 'px';
+        } else {
+          $toolTip.style.top = event.pageY + offsetY + 'px';
+          $toolTip.style.left = event.pageX + offsetX + 'px';
+        }
+      }
+    }
+  };
+
+  function show(element) {
+    if(!hasClass(element, 'tooltip-show')) {
+      element.className = element.className + ' tooltip-show';
+    }
+  }
+
+  function hide(element) {
+    var regex = new RegExp('tooltip-show' + '\\s*', 'gi');
+    element.className = element.className.replace(regex, '').trim();
+  }
+
+  function hasClass(element, className) {
+    return (' ' + element.getAttribute('class') + ' ').indexOf(' ' + className + ' ') > -1;
+  }
+
+  function next(element, className) {
+    do {
+      element = element.nextSibling;
+    } while (element && !hasClass(element, className));
+    return element;
+  }
+
+  function text(element) {
+    return element.innerText || element.textContent;
+  }
+
+} (window, document, Chartist));

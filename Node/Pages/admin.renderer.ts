@@ -117,5 +117,12 @@ export default class Renderer {
         });
     }
     
+    public static adminQuestions(req,res){
+        isAdmin(req,res).allowed( async admin => { 
+            let pageInfo = { resources : RESOURCES_PATH }
+ 
+            return res.render('Owner/Support/questions', pageInfo)
+         });
+    }
 }
 

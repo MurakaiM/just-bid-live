@@ -4,6 +4,10 @@ label.ui.button{
     margin-bottom: 0!important;
 }
 
+.floated-right{
+    float: right!important;
+}
+
 .small-margin{
     margin-bottom: 7px;
 }
@@ -129,6 +133,7 @@ tr.selected {
     color: #0d5699;
 }
 
+
 .ui.table thead th .arrows .up,
 .ui.table thead th .arrows .down {
     position: absolute;
@@ -142,6 +147,10 @@ tr.selected {
 
 .ui.table thead th.down .arrows .down {
     visibility: visible;
+}
+
+.ui.table.none{
+    border: none!important;
 }
 
 .ui .table th {

@@ -16,6 +16,7 @@
     <div class="content">
       <!--Menu include!-->
       <%-include('./Common/menu', { page : pageName , user : currentUser })%>
+      
       <div class="row products">
           <div class="col-md-4 col-lg-3 auction-row">
             <div class="stock header">
@@ -117,6 +118,24 @@
       <%-include('./Common/footer')%>
     </div>
 
+    <div class="nag-container">
+
+      <div class="ui inline nag" id="cookie_nag">
+        <span class="title">
+          We use cookies to ensure you get the best experience on our website
+        </span>
+        <i class="close icon"></i>
+      </div>
+
+      <div class="ui inline nag green" id="usd_nag">
+        <span class="title">
+          Just Bid Live uses USD as main currency for all transactions and descriptions.
+        </span>
+        <i class="close icon"></i>
+      </div>
+
+    </div>
+    
 
   </body>
 

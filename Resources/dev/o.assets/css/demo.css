@@ -166,3 +166,8 @@ li.divider.empty{
     letter-spacing: 1px;
     border-left: 1px solid white;
 }
+
+.max-td{
+    max-width: 230px!important;
+    word-break: break-all!important;
+}

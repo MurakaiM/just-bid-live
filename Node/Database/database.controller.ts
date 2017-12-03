@@ -141,14 +141,10 @@ export const QuestionSchema = globalSequlize.define('question', {
     type : Sequelize.STRING(2),
     allowNull : false
   },
-  firstName : {
+  contactor : {
     type : Sequelize.STRING,
     allowNull : false
-  },
-  lastName : {
-    type : Sequelize.STRING,
-    allowNull : false
-  },
+  }, 
   isClosed : {
     type : Sequelize.BOOLEAN,
     allowNull : false,

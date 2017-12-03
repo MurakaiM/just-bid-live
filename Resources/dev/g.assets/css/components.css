@@ -6,6 +6,28 @@ a {
   cursor: pointer;
 }
 
+.ui.nag {
+  max-width: calc(100% - 30px);
+  border-radius: 2px;
+  margin: 15px;
+  box-shadow: 0 50px 100px rgba(50, 50, 93, .1), 0 15px 35px rgba(50, 50, 93, .15), 0 5px 15px rgba(0, 0, 0, .1);
+}
+
+.ui.nag.green{
+  background: #21ba45;
+  color : white;
+}
+
+.ui.nag.green:hover{
+  background-color: #16ab39;
+}
+
+.nag-container{
+  position: fixed;
+  bottom: 10px;
+  width: 100%;
+}
+
 #count_notificator{
   position: absolute;
   z-index: 3;
@@ -1490,6 +1512,8 @@ nav .mobile_nav a {
 #waiterModal img {
   display: block;
   margin: auto;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
 }
 
 .my-modal.mini .holder {

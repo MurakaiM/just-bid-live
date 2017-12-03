@@ -27,6 +27,7 @@ export default class AdminApi extends BasicController {
         this.Get('/admin/ab/progress', Render.adminProgress)
 
         this.Get('/admin/ab/questions/new', this.newQuestions)
+        this.Get('/admin/ab/questions', Render.adminQuestions)
 
         this.Get('/admin/ab/request/:id', Render.adminRequest)
     }

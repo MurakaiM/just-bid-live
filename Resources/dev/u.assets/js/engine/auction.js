@@ -4,7 +4,10 @@ var HOLDUP_POPUP = undefined;
 
 $(function () {
     $('.list_item').tab();
-  
+    
+    new Nag('usd_nag', { key : 'usd_nag' });
+    new Nag('cookie_nag', { key : 'cookie_nag' });
+
     ReworkAuction();
     ReworkActivity();
 });

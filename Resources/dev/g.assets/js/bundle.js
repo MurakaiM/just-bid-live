@@ -722,3 +722,19 @@ function SignIn(modal) {
   });
 
 }
+
+
+function Nag(id,options){
+  this.dom = $(`#${id}`)
+
+  this.dom.find('.close').click(event => {
+    localStorage.setItem(options.key, true);
+    this.dom.hide();
+  });
+
+  if(localStorage.getItem(options.key) != 'true'){
+    this.dom.css({ 'display' : 'block' });
+  }
+
+  return this;
+}

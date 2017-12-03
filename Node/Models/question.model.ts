@@ -15,8 +15,7 @@ export default class Question{
         return QuestionSchema.create({
             questionId : uuid(),
             message : params.message,
-            firstName : params.firstName,
-            lastName : params.lastName,
+            contactor : `${params.firstName} ${params.lastName}`,
             email : params.email,
             type : params.type
         })

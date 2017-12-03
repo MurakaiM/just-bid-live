@@ -270,6 +270,15 @@ function Table(id, options) {
         this.table.find('thead th[data-field]').each((i, elem) => this.createSortable($(elem)));
     }
 
+    this.loadInRaw = (url,callback) => { 
+        GET(url)
+            .then(answer => {               
+                this.forceLoad(answer.data);
+                callback(true);
+            })
+            .catch(error => console.log(error))
+    }
+
     this.loadInSegment = (url, head,segment,callback) => {
         this.hashed = { url , head, segment }
         LoadSegment(url, head, segment)

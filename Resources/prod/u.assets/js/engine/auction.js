@@ -104,7 +104,7 @@ function Item(t) {
     }, this.LoadTimer = function (t) {
         arguments.length > 1 && void 0 !== arguments[1] && arguments[1];
         e.subdoms.name.removeClass("waiting"), e.helpful.awaiter.remove();
-        var i = Math.abs((new Date).getTime() - new Date(t.end).getTime()),
+        var i = Math.abs(new Date(t.start).getTime() - new Date(t.end).getTime()),
             n = i % 1e3,
             s = (i - n) / 1e3,
             a = s - GOING_OFFSET;
@@ -139,8 +139,7 @@ function Item(t) {
         s ? e.SetTimer(n, t, i, s) : i > GOING_OFFSET ? e.SetTimer(n, t, i, s) : i <= GOING_OFFSET && i > GOING_OFFSET / 2 ? e.SetText("once", i) : e.SetText("twice", i)
     }, this.ForceNew = function (t) {
         e.data = t, e.subdoms.img.attr("src", e.data.img), e.subdoms.href.attr("href", "/product/id" + e.data.product), e.subdoms.title.text(e.data.text), e.subdoms.rrp.text(e.data.cost), e.subdoms.bid.text(e.data.bid / 100), e.subdoms.shipment.text(e.data.shipment), e.subdoms.product.addClass(getType(t.type)), e.subdoms.static.text("Waiting for the first bid"), e.timers.static.show(), e.timers.going.hide(), e.subdoms.name.removeClass("my"), e.subdoms.name.text(""), e.subdoms.name.append(e.helpful.awaiter), e.subdoms.name.addClass("waiting"), e.subdoms.product.removeClass("loading"), e.LoadWaiting(t)
-    }, this.ForceChange = function (t) {
-        console.log(new Date(t.end).getTime())
+    }, this.ForceChange = function (t) {        
         return e.LoadTimer(t, !0)
     }, this.ForceEnding = function () {
         e.subdoms.product.addClass("sold"), e.subdoms.going.text("last")

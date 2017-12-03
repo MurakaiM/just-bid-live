@@ -119,14 +119,20 @@ export default class AuctionItem{
 
     public async finish() : Promise<any>{  
         let prTitle = this.dbAution.dataValues.prTitle;
-        let inactive = true;
+        let inactive = this.dbAution.currentUser ? false : true;
         
-        AuctionLoader.Instace.FinishTrigger(this.StreamData);        
+        AuctionLoader.Instace.FinishTrigger(this.StreamData);     
+
+        if(inactive){
+            RealtimeController.Instance.emitInactive(this.getPublic);
+        }else{
+            RealtimeController.Instance.emitEnd(this.getPublic);
+        }
          
+        
         if(this.dbAution.currentUser){
             await this.dbAution.reload();     
 
-            inactive = false;
             let winning = await this.registerWinning();   
             let notification = await NotificationController.TypeWinning(winning.winnerId, {
                 title : prTitle,
@@ -146,13 +152,7 @@ export default class AuctionItem{
         }else{
            this.dbAution.currentBid = this.dbAution.offCost;
         }    
-        
-        if(inactive){
-            RealtimeController.Instance.emitInactive(this.getPublic);
-        }else{
-            RealtimeController.Instance.emitEnd(this.getPublic);
-        }
-                           
+                                   
         await this.dbAution.save();               
     }
 

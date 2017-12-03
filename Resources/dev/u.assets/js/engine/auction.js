@@ -203,7 +203,6 @@ function Item(payload){
         this.helpful.awaiter.remove();
         
         let difference = Math.abs(new Date().getTime() - new Date(incoming.end).getTime())
-        console.log(new Date(incoming.end).getTime()) 
         let offset = difference % 1000
         let seconds = (difference - offset) / 1000
         let total = seconds - GOING_OFFSET

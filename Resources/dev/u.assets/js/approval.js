@@ -1,6 +1,6 @@
 var validPhone = false;
 var phone, parent, wrongPrompt;
-var file;
+var fileselect;
 
 $(function () {
   setDates();

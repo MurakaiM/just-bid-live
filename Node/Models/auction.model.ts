@@ -38,7 +38,7 @@ export default class AuctionItem{
         this.dbAution.onAuction = true;
         this.dbAution.currentUser = null;
         
-        this.dbAution.auctionStart = new Date()
+        this.dbAution.auctionStart = new Date();
         this.dbAution.auctionEnds = new Date( this.dbAution.auctionStart.getTime() + random);  
         this.setTimer(random);
 
@@ -84,7 +84,7 @@ export default class AuctionItem{
     public get getPublic(){
         return { 
             id : this.getInside('uidRecord'),
-            start : this.getInside('auctionStart'),
+            start : new Date(),
             end : this.getInside('auctionEnds'),
             img : this.getInside('mainImage'),
             bid : this.getInside('currentBid'),
@@ -114,7 +114,7 @@ export default class AuctionItem{
             user : this.dbAution.currentUser,
             name : this.name,
             bid : this.dbAution.currentBid,
-            start : this.dbAution.auctionStart,
+            start : new Date(),
             end : this.dbAution.auctionEnds,
             type : this.dbAution.uidFee,
             category : this.dbAution.uidCategory     

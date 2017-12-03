@@ -8,6 +8,7 @@ import Statistics from '../Services/Statistics/statistics.loader'
 import Render from '../Pages/admin.renderer'
 
 import RealtimeController from '../Controllers/realtime.controller'
+import QuestionController from '../Controllers/question.controller';
 
 
 export default class AdminApi extends BasicController {
@@ -25,6 +26,8 @@ export default class AdminApi extends BasicController {
         this.Get('/admin/ab/finished', Render.adminFinishedPayouts)
         this.Get('/admin/ab/progress', Render.adminProgress)
 
+        this.Get('/admin/ab/questions/new', this.newQuestions)
+
         this.Get('/admin/ab/request/:id', Render.adminRequest)
     }
 
@@ -41,7 +44,7 @@ export default class AdminApi extends BasicController {
         )
     }
 
-    protected signOut(req,res){
+    protected signOut(req,res): void{
         if(req.user) 
             var uid = req.user.PublicData.uid;      
         else 
@@ -53,4 +56,11 @@ export default class AdminApi extends BasicController {
         });
     }
     
+    protected newQuestions(req,res){
+        isAdmin(req,res).allowed( admin => 
+            QuestionController.getNew()
+                .then(result => res.send( BuildResponse(0, 'New questions were successfully fetched',result)))
+                .catch(error => res.send(BuildResponse(10,error)))                
+        )
+    }
 }

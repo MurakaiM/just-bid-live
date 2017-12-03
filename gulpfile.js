@@ -7,19 +7,19 @@ const csso = require('gulp-csso');
 const babel = require('gulp-babel');
 
 
-gulp.task('compressjs', function() { 
-    gulp.src('./Resources/**/*.js')
+gulp.task('compress-js', function() { 
+    gulp.src('./Resources/dev/**/*.js')
     .pipe(babel({
-        presets: ['env']
+        "presets": [ "es2015", "stage-0" ]
     }))
     .pipe(uglify())    
-    .pipe(gulp.dest('./Compressed'));
+    .pipe(gulp.dest('./Resources/prod'));
 })
 
-gulp.task('compresscss', function() { 
-    gulp.src('./Resources/**/*.css')
+gulp.task('compress-css', function() { 
+    gulp.src('./Resources/dev/**/*.css')
     .pipe(csso())    
-    .pipe(gulp.dest('./Compressed'));
+    .pipe(gulp.dest('./Resources/prod'));
 })
 
 

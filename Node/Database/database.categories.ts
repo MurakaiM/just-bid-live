@@ -1,4 +1,4 @@
-import { DOMAIN } from '../keys'
+import { RESOURCES_PATH } from '../keys'
 
 const forWomens = [
   {
@@ -376,12 +376,12 @@ const categoriesPopups = {
         id : 'women_clothing',
         name : "Women's Clothing",
         url : "wm",
-        image : DOMAIN+"/u.assets/img/LinearIcons/dress.png",
+        image : RESOURCES_PATH+"/u.assets/img/LinearIcons/dress.png",
         subcategories : forWomens
       },
       {
         id : 'men_clothing',
-        image : DOMAIN+"/u.assets/img/LinearIcons/polo.png",
+        image : RESOURCES_PATH+"/u.assets/img/LinearIcons/polo.png",
         name :  "Men's Clothing",
         url : "mn",
         subcategories : forMens
@@ -390,77 +390,77 @@ const categoriesPopups = {
         id : 'watches',
         name :  "Jewelry & Watches",
         url : "wt",
-        image : DOMAIN+"/u.assets/img/LinearIcons/watch.png",
+        image : RESOURCES_PATH+"/u.assets/img/LinearIcons/watch.png",
         subcategories : forWatches
       },
       {
         id : 'bags',
         name :  "Bags & Shoes",
         url : "bg",
-        image : DOMAIN+"/u.assets/img/LinearIcons/hand-bag.png",
+        image : RESOURCES_PATH+"/u.assets/img/LinearIcons/hand-bag.png",
         subcategories : forBags
       },
       {
         id : 'health',
         url : "hl",
         name :  "Health & Beauty, Hair",
-        image : DOMAIN+"/u.assets/img/LinearIcons/purse.png",
+        image : RESOURCES_PATH+"/u.assets/img/LinearIcons/purse.png",
         subcategories : forHealth
       },
       {
         id : 'phone',
         url : "ph",
         name :  "Phones & Accessories",
-        image : DOMAIN+"/u.assets/img/OtherIcons/smartphone.png",
+        image : RESOURCES_PATH+"/u.assets/img/OtherIcons/smartphone.png",
         subcategories : []
       },
       {
         id : 'electronics',
         url : "el",
         name :  "Consumer Electronics",
-        image : DOMAIN+"/u.assets/img/OtherIcons/quality.png",
+        image : RESOURCES_PATH+"/u.assets/img/OtherIcons/quality.png",
         subcategories : []
       },
       {
         id : 'office',
         url : "of",
         name :  "Computer & Office",
-        image : DOMAIN+"/u.assets/img/OtherIcons/monitor.png",
+        image : RESOURCES_PATH+"/u.assets/img/OtherIcons/monitor.png",
         subcategories : []
       },
       {
         id : 'house',
         url : "hs",
         name :  "Home & Garden, Furniture",
-        image : DOMAIN+"/u.assets/img/OtherIcons/house.png",
+        image : RESOURCES_PATH+"/u.assets/img/OtherIcons/house.png",
         subcategories : []
       },
       {
         id : 'toys',
         url : "ts",
         name :  "Toys, Kids & Baby",
-        image : DOMAIN+"/u.assets/img/OtherIcons/robot.png",
+        image : RESOURCES_PATH+"/u.assets/img/OtherIcons/robot.png",
         subcategories : []
       },
       {
         id : 'tent',
         url : "tn",
         name :  "Sports & Outdoors",
-        image : DOMAIN+"/u.assets/img/OtherIcons/tent.png",
+        image : RESOURCES_PATH+"/u.assets/img/OtherIcons/tent.png",
         subcategories : []
       },
       {
         id : 'car',
         url : "cr",
         name :  "Automobiles & Motorcycles",
-        image : DOMAIN+"/u.assets/img/OtherIcons/car.png",
+        image : RESOURCES_PATH+"/u.assets/img/OtherIcons/car.png",
         subcategories : []
       },
       {
         id : 'imporvments',
         url : "hi",
         name :  "Home Improvemen",
-        image : DOMAIN+"/u.assets/img/OtherIcons/drawing.png",
+        image : RESOURCES_PATH+"/u.assets/img/OtherIcons/drawing.png",
         subcategories : []
       }
     ]

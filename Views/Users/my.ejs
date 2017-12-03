@@ -6,9 +6,9 @@
         <!--Head include!-->
         <%-include('../Common/mobile')%>
         <%-include('../Common/head')%>
-        <link rel="stylesheet" href="<%=domain%>/u.assets/css/user.css" />
-        <link rel="stylesheet" href="<%=domain%>/g.assets/css/orders.css" />
-        <link rel="stylesheet" href="<%=domain%>/g.assets/css/responsive.css">
+        <link rel="stylesheet" href="<%=resources%>/u.assets/css/user.css" />
+        <link rel="stylesheet" href="<%=resources%>/g.assets/css/orders.css" />
+        <link rel="stylesheet" href="<%=resources%>/g.assets/css/responsive.css">
     </head>
     <body class="preloading">
         <div class="content">
@@ -23,7 +23,7 @@
                         <div class="row">         
                             <%if(winnings.length == 0){%>
                                 <div class="empty-notify">
-                                    <img src="<%=domain%>/g.assets/img/commercialicons/bag.png">
+                                    <img src="<%=resources%>/g.assets/img/commercialicons/bag.png">
                                     <span> You don't have any active orders for now . </span>
                                 </div>
                             <%}%>
@@ -88,7 +88,7 @@
 
     <!--Head include!-->
     <%-include('../Common/scripts')%>
-    <script src="<%=domain%>/g.assets/js/tabulizer.js"></script>
-    <script src="<%=domain%>/u.assets/js/personal/user.js"></script>
+    <script src="<%=resources%>/g.assets/js/tabulizer.js"></script>
+    <script src="<%=resources%>/u.assets/js/personal/user.js"></script>
 
 </html>

@@ -4,9 +4,9 @@
   <head>
     <!--Head include!-->
     <%-include('../Common/mobile')%>
-    <%-include('../Common/head', { pageName })%>
+    <%-include('../Common/head')%>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker3.css"/>
-    <link rel="stylesheet" href="<%=domain%>/g.assets/css/responsive.css">
+    <link rel="stylesheet" href="<%=resources%>/g.assets/css/responsive.css">
   </head>
 
   <body class="preloading">
@@ -16,7 +16,7 @@
 
       <div class="single">
           <form id="reset" class="ui form former small">
-              <h3 class="ui image header flexcenter"> <img src="<%=domain%>/g.assets/img/commercialicons/safebox-2.png" alt="store"> Reset password  </h3>
+              <h3 class="ui image header flexcenter"> <img src="<%=resources%>/g.assets/img/commercialicons/safebox-2.png" alt="store"> Reset password  </h3>
               <div class="field">
                 <input type="text" placeholder="Your current email" name="email">
               </div>
@@ -60,6 +60,6 @@
 
   <!--Head include!-->
   <%-include('../Common/scripts')%> 
-  <script src="<%=domain%>/g.assets/js/reset.js" charset="utf-8"></script>
+  <script src="<%=resources%>/g.assets/js/reset.js" charset="utf-8"></script>
 
 </html>

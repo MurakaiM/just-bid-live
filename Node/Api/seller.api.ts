@@ -2,7 +2,7 @@ import * as passport from 'passport'
 
 import { validAuction } from '../Utils/Others/validator'
 import { Fees } from '../Database/database.categories'
-import { DOMAIN } from '../keys'
+import { RESOURCES_PATH } from '../keys'
 
 import { Response , BuildResponse } from '../Utils/Communication/response'
 import { isSeller }  from '../Utils/Communication/rules'
@@ -75,7 +75,7 @@ export default class SellerApi extends BasicController{
 
         return res.render('Sellers/approval', { 
             pageName : 'Approval', 
-            domain : DOMAIN,
+            resources :  RESOURCES_PATH,
             user : req.user.Data,
             currentUser : req.user
         })    

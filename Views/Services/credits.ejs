@@ -3,10 +3,10 @@
 
     <head>
         <!--Head include!-->
-        <%-include('../Common/head', { pageName : pageName })%>
+        <%-include('../Common/head')%>
 
-        <link rel="stylesheet" href="<%=domain%>/u.assets/css/common/index.css" />
-        <link rel="stylesheet" href="<%=domain%>/g.assets/css/responsive.css">
+        <link rel="stylesheet" href="<%=resources%>/u.assets/css/common/index.css" />
+        <link rel="stylesheet" href="<%=resources%>/g.assets/css/responsive.css">
     </head>
 
     <body class="preloading">
@@ -17,7 +17,7 @@
             <div class="above_menu row">
                 <div class="col-md-12 center">
                     <a href="/">
-                    <img class="logo" src="<%=domain%>/g.assets/img/logo.png">
+                    <img class="logo" src="<%=resources%>/g.assets/img/logo.png">
                     </a>
                 </div>
 
@@ -26,7 +26,7 @@
 
             <div class="single">
                 <form action="<%if(!isSeller){%>/signin<%}else{%>/seller/signin<%}%>" method="get" class="ui form former small">
-                    <h3 class="ui image header flexcenter"> <img src="<%=domain%>/g.assets/img/commercialicons/check.png" alt="store"> Account Verification</h3>
+                    <h3 class="ui image header flexcenter"> <img src="<%=resources%>/g.assets/img/commercialicons/check.png" alt="store"> Account Verification</h3>
                     <p class="inform">
                         Hello, <%=name%> ! <br>
                         Thanks so much for joining Just Bid Live !

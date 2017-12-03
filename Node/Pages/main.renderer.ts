@@ -11,7 +11,7 @@ import NotificationController from '../Controllers/notification.controller'
 import Statistics from '../Services/Statistics/statistics.loader'
 
 import { isAuth , isAdmin } from '../Utils/Communication/rules'
-import { DOMAIN, STRIPE_PUBLIC } from '../keys'
+import { RESOURCES_PATH, STRIPE_PUBLIC } from '../keys'
 import { Codes } from '../Database/database.static'
 
 
@@ -25,7 +25,7 @@ export default class Renderer {
     public static live(req,res){         
         res.render('home', {
             pageName : "Live",
-            domain : DOMAIN,
+            resources : RESOURCES_PATH,
             categories : categoriesPopups,
             currentUser : req.user,
             login : false        
@@ -35,7 +35,7 @@ export default class Renderer {
     public static about(req,res){
         res.render('preview', {
             pageName : "Live",
-            domain : DOMAIN,
+            resources : RESOURCES_PATH,
             categories : categoriesPopups,
             currentUser : req.user,
             login : false        
@@ -45,7 +45,7 @@ export default class Renderer {
     public static signin(req,res){
         var pageInfo = {
             pageName : "Sign In",
-            domain : DOMAIN,
+            resources : RESOURCES_PATH,
             currentUser : req.user,
             login : true 
         };
@@ -56,7 +56,7 @@ export default class Renderer {
     public static contact(req,res){
         var pageInfo = {
             pageName : "Contact",
-            domain : DOMAIN,
+            resources : RESOURCES_PATH,
             currentUser : req.user,
             login : false
         };
@@ -67,7 +67,7 @@ export default class Renderer {
     public static stock(req,res){
         var pageInfo = {
             pageName : "Stock",
-            domain : DOMAIN,
+            resources : RESOURCES_PATH,
             currentUser : req.user,
             login : false,
             popups : categoriesPopups.popups
@@ -80,7 +80,7 @@ export default class Renderer {
         let pageInfo = {
             pageName : "",
             currentUser : req.user,
-            domain : DOMAIN,           
+            resources : RESOURCES_PATH,           
             login : false
         };
 
@@ -101,7 +101,7 @@ export default class Renderer {
 
     public static signup(req,res){
         var pageInfo = {
-          domain : DOMAIN,   
+          resources :  RESOURCES_PATH,   
           pageName : "Sign Up",       
           currentUser : req.user
         };
@@ -112,7 +112,7 @@ export default class Renderer {
     public static helpCategory(req,res){
         var pageInfo = {
             pageName : "Categories list",
-            domain : DOMAIN,
+            resources :  RESOURCES_PATH,
             currentUser : req.user,
             login : false,
             popups : categoriesPopups.popups
@@ -127,7 +127,7 @@ export default class Renderer {
         var pageInfo = {
             pageName : "My orders & winnings",
             currentUser : req.user,            
-            domain : DOMAIN,  
+            resources :  RESOURCES_PATH,  
             login : false        
         };
 
@@ -150,18 +150,21 @@ export default class Renderer {
         var pageInfo = {
             pageName : "My auction",
             currentUser : req.user,
-            domain : DOMAIN,   
+            resources :  RESOURCES_PATH,   
             login : false        
         };
 
-        WinningController.LoadWinnings(req.user).then( winnings => {
-            pageInfo['winnings'] = winnings;
-            
-            Renderer.AccountRedirect(req, res, {          
-                render : "Users/my_auction",
-                info : pageInfo
-            }); 
-        })        
+        isAuth(req,res,true).allowed(user => { 
+            WinningController.LoadWinnings(req.user).then( winnings => {
+                pageInfo['winnings'] = winnings;
+                pageInfo['cuurentUser'] = user;
+                
+                Renderer.AccountRedirect(req, res, {          
+                    render : "Users/my_auction",
+                    info : pageInfo
+                }); 
+            })    
+        })    
     }
 
 
@@ -169,7 +172,8 @@ export default class Renderer {
     public static forgot(req,res){
         var pageInfo = {
             pageName : "Forgot", 
-            domain : DOMAIN               
+            currentUser : req.user,
+            resources :  RESOURCES_PATH               
         };
 
         return res.render('Users/forgot', pageInfo);
@@ -177,7 +181,12 @@ export default class Renderer {
     
     public static restore(req,res){    
         UserController.ResetVlidate(req.params.link)
-            .then( result => res.render('Users/reset',{ pageName : "Reset password", link : req.params.link, domain : DOMAIN }))
+            .then( result => res.render('Users/reset',{ 
+                pageName : "Reset password", 
+                link : req.params.link, 
+                currentUser : req.user,
+                resources :  RESOURCES_PATH 
+            }))
             .catch( error => res.redirect('/'))
     }
 
@@ -187,7 +196,7 @@ export default class Renderer {
         var pageInfo = {
             pageName : "Sign up",
             currentUser : req.user,
-            domain : DOMAIN            
+            resources :  RESOURCES_PATH            
         };
             
         return res.render('Sellers/signup', pageInfo);
@@ -197,7 +206,7 @@ export default class Renderer {
         var pageInfo = {
             pageName : "Sign in",
             currentUser : req.user,
-            domain : DOMAIN            
+            resources : RESOURCES_PATH            
         };
 
         if(req.isAuthenticated()){
@@ -211,7 +220,7 @@ export default class Renderer {
         var pageInfo = {
             pageName : "My store",
             currentUser : req.user,
-            domain : DOMAIN, 
+            resources : RESOURCES_PATH, 
             login : false         
         };        
 
@@ -228,7 +237,7 @@ export default class Renderer {
             stripeKey : STRIPE_PUBLIC,
             pageName : "Winning checkout",
             currentUser : req.user,
-            domain : DOMAIN,   
+            resources : RESOURCES_PATH,   
             login : false,
             winning : null
         };         

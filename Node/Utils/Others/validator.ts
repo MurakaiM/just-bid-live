@@ -22,7 +22,6 @@ export function validateEmail(email) {
 
 
 
-
 export function validSingIn(incoming : any) : UserError{
     if(incoming.email == undefined || incoming.password == undefined)
             return buildError(true, "Inputs fields are wrong");
@@ -490,6 +489,24 @@ export function validStoreUpdate(incoming : any) : UserError{
 
     return buildError(false, "Everything is valid")
 }
+
+export function validQuestionCreate(incoming : any) : UserError{
+    
+    if(!incoming.message) return buildError(true, "No message was provided")
+
+    if(!incoming.email) return buildError(true, "No email was provided")
+
+    if(!incoming.firstName) return buildError(true, "No firstName was provided")
+
+    if(!incoming.lastName)  return buildError(true, "No lastName was provided")
+
+    if(!incoming.type)  return buildError(true, "No type was provided")
+
+    if(incoming.type < 0 || incoming.type > 5) return buildError(true, "Wrong type was provided")
+
+    return buildError(false, 'Everything is valid')
+}
+
 
 
 function validateType(colors : any, sizes : any) : boolean{

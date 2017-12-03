@@ -11,7 +11,7 @@ import NotificationController from '../Controllers/notification.controller'
 import Statistics from '../Services/Statistics/statistics.loader'
 
 import { isAuth , isAdmin } from '../Utils/Communication/rules'
-import { DOMAIN, STRIPE_PUBLIC } from '../keys'
+import { RESOURCES_PATH, STRIPE_PUBLIC } from '../keys'
 import { Codes } from '../Database/database.static'
 
 
@@ -27,7 +27,7 @@ export default class Renderer {
         let pageInfo = {
             pageName : "",
             currentUser : req.user,
-            domain : DOMAIN,           
+            resources : RESOURCES_PATH,           
             login : false
         };
 
@@ -49,7 +49,7 @@ export default class Renderer {
     public static adminPayouts(req,res){
         isAdmin(req,res,true).allowed(async admin =>{ 
             let pageInfo = { 
-                domain : DOMAIN,
+                resources : RESOURCES_PATH,
                 requests : (await PaymentController.getRequestedPayouts())
             }
             
@@ -60,7 +60,7 @@ export default class Renderer {
     public static adminFinishedPayouts(req,res){
         isAdmin(req,res,true).allowed(async admin =>{ 
             let pageInfo = { 
-                domain : DOMAIN,
+                resources : RESOURCES_PATH,
                 requests : (await PaymentController.getFinishedPayouts())
             }
             
@@ -71,7 +71,7 @@ export default class Renderer {
     public static adminProgress(req,res){ 
         isAdmin(req,res,true).allowed(async admin =>{ 
             let pageInfo = { 
-                domain : DOMAIN,
+                resources : RESOURCES_PATH,
                 requests : (await PaymentController.getProgressPayouts())
             }
             
@@ -82,7 +82,7 @@ export default class Renderer {
     public static adminDashboard(req,res){
         let pageInfo = {
             pageName : "Dashboard",
-            domain : DOMAIN                
+            resources : RESOURCES_PATH                
         };
 
         isAdmin(req,res).allowed( admin =>  Statistics.Instance.AllStats().then(all => {           
@@ -94,7 +94,7 @@ export default class Renderer {
     public static adminProduct(req,res){
         let pageInfo = {
             pageName : "Dashboard",
-            domain : DOMAIN                
+            resources : RESOURCES_PATH                
         };
 
         isAdmin(req,res).allowed( admin =>  ProductController.GetUnchecked().then(all => {                 
@@ -111,7 +111,7 @@ export default class Renderer {
                return res.redirect('/admin/ab/dashboard')
            }
 
-           let pageInfo = { domain : DOMAIN, result : request.result }
+           let pageInfo = { resources : RESOURCES_PATH, result : request.result }
 
            return res.render('Owner/Payouts/request', pageInfo)
         });

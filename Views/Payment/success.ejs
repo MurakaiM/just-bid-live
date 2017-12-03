@@ -5,10 +5,10 @@
         <!--Head include!-->
         <%-include('../Common/mobile')%>
         <%-include('../Common/head')%>
-        <link rel="stylesheet" href="<%=domain%>/u.assets/css/user.css" />
-        <link rel="stylesheet" href="<%=domain%>/g.assets/css/orders.css" />
-        <link rel="stylesheet" href="<%=domain%>/u.assets/css/product.css" />
-        <link rel="stylesheet" href="<%=domain%>/g.assets/css/responsive.css">
+        <link rel="stylesheet" href="<%=resources%>/u.assets/css/user.css" />
+        <link rel="stylesheet" href="<%=resources%>/g.assets/css/orders.css" />
+        <link rel="stylesheet" href="<%=resources%>/u.assets/css/product.css" />
+        <link rel="stylesheet" href="<%=resources%>/g.assets/css/responsive.css">
     </head>
     <body class="preloading">
         <div class="content">
@@ -33,7 +33,7 @@
                                 </div>
                                 <div class="flexwrap">
                                     <div class="content">
-                                        <a class="header" href="<%=domain+"/product/id"+item.product.prUid%>"><%=item.product.prTitle%></a>
+                                        <a class="header" href="<%=resources+"/product/id"+item.product.prUid%>"><%=item.product.prTitle%></a>
                                         <div class="meta">
                                             <span><%=item.type.title%></span>
                                         </div>
@@ -60,7 +60,7 @@
 
     <!--Head include!-->
     <%-include('../Common/scripts')%>
-    <script src="<%=domain%>/g.assets/js/tabulizer.js"></script>
-    <script src="<%=domain%>/u.assets/js/personal/user.js"></script>
+    <script src="<%=resources%>/g.assets/js/tabulizer.js"></script>
+    <script src="<%=resources%>/u.assets/js/personal/user.js"></script>
 
 </html>

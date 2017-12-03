@@ -1,0 +1,1 @@
+ol{counter-reset:item}li{display:block}li:before{content:counters(item,".") " ";counter-increment:item}.ui.segment .header{font-size:19px;text-align:center;margin:15px auto;color:#b3b3b3;font-weight:500}.ui.segment .content{font-size:16px;font-family:Saira Semi Condensed,cursive!important;padding:5px 25px 25px;text-align:justify;color:#6a6a6a}

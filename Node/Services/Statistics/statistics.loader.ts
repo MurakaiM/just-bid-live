@@ -144,8 +144,7 @@ export default class StatisticsLoader{
                 GROUP BY date_trunc('month',"createdAt") ORDER BY date_trunc('month',"createdAt")
             `, { type: Database.Instance.Sequelize.QueryTypes.SELECT });
             
-            console.log(grWinning)
-            return this.FillUpMonthly(grWinning);
+                       return this.FillUpMonthly(grWinning);
         }catch(error){
             console.log(error)
         }
@@ -160,7 +159,6 @@ export default class StatisticsLoader{
                 GROUP BY date_trunc('month',"createdAt") ORDER BY date_trunc('month',"createdAt")
             `, { type: Database.Instance.Sequelize.QueryTypes.SELECT });
         
-            console.log(grWinning)
             return this.FillUpMonthly(grWinning);
         }catch(error){
             console.log(error)

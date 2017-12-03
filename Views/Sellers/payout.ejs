@@ -3,14 +3,14 @@
 
     <head>
         <!--Head include!-->
-        <%-include('../Common/head', { pageName : pageName })%>
-        <link rel="stylesheet" type="text/css" href="<%=domain%>/a.assets/editor/css/simditor.css" />
+        <%-include('../Common/head')%>
+        <link rel="stylesheet" type="text/css" href="<%=resources%>/a.assets/editor/css/simditor.css" />
 
-        <link rel="stylesheet" type="text/css" href="<%=domain%>/u.assets/css/user.css" />
-        <link rel="stylesheet" type="text/css" href="<%=domain%>/g.assets/css/orders.css" />
-        <link rel="stylesheet" type="text/css" href="<%=domain%>/a.assets/css/table.css" />
+        <link rel="stylesheet" type="text/css" href="<%=resources%>/u.assets/css/user.css" />
+        <link rel="stylesheet" type="text/css" href="<%=resources%>/g.assets/css/orders.css" />
+        <link rel="stylesheet" type="text/css" href="<%=resources%>/a.assets/css/table.css" />
 
-        <link rel="stylesheet" type="text/css" href="<%=domain%>/g.assets/css/responsive.css">
+        <link rel="stylesheet" type="text/css" href="<%=resources%>/g.assets/css/responsive.css">
     </head>
     <body class="preloading">
         <div class="content">
@@ -41,7 +41,7 @@
 
                                 <%if(answer.success == true){%>
                                     <div class="four wide column flex center"> 
-                                        <img class="ui small image margin auto" src="<%=domain%>/g.assets/img/commercialicons/atm.png"> 
+                                        <img class="ui small image margin auto" src="<%=resources%>/g.assets/img/commercialicons/atm.png"> 
                                     </div>
                                     <div class="twelve wide column flex center"> 
                                         <div>
@@ -63,7 +63,7 @@
                                     </div>   
                                 <%}else{%>
                                     <div class="four wide column flex center"> 
-                                        <img class="ui small image margin auto" src="<%=domain%>/g.assets/img/commercialicons/time-passing.png"> 
+                                        <img class="ui small image margin auto" src="<%=resources%>/g.assets/img/commercialicons/time-passing.png"> 
                                     </div>
 
                                     <%if(answer.error == 'No email'){%>
@@ -119,7 +119,7 @@
 
     <!--Head include!-->
     <%-include('../Common/scripts')%>   
-    <script src="<%=domain%>/g.assets/js/tabulizer.js"></script>
-    <script src="<%=domain%>/a.assets/js/table.js"></script>
+    <script src="<%=resources%>/g.assets/js/tabulizer.js"></script>
+    <script src="<%=resources%>/a.assets/js/table.js"></script>
 
 </html>

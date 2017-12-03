@@ -11,10 +11,11 @@ import {
 } from '../Utils/Others/validator'
 
 
-import { Response , BuildResponse } from '../Utils/Communication/response'
+import { BuildResponse } from '../Utils/Communication/response'
 import { isAuth, isSeller }  from '../Utils/Communication/rules'
 import { Database } from '../Database/database.controller'
-import { DOMAIN } from '../keys'
+import { Response, Request } from 'express'
+import { RESOURCES_PATH } from '../keys'
 
 import UserController from '../Controllers/user.controller'
 import ProductController from '../Controllers/product.controller'
@@ -22,6 +23,7 @@ import OrderController from '../Controllers/order.controller'
 import BasicController from '../Utils/Controllers/basic.controller'
 import AuctionController from '../Controllers/auction.controller'
 import RealtimeController from '../Controllers/realtime.controller'
+import QuestionController from '../Controllers/question.controller'
 import NotificationsController from '../Controllers/notification.controller'
 
 import Product from '../Models/product.model'
@@ -31,10 +33,7 @@ import Notificatior from '../Services/Norifications/email.service'
 
 export default class UserApi extends BasicController{
 
-    constructor() {
-        super();
-    }
-
+    
     Configure(){
         this.Get('/user/current',this.currentUser)
         this.Get('/verification/:uid',this.verify)
@@ -62,9 +61,13 @@ export default class UserApi extends BasicController{
         this.Post('/user/password/reset', this.resetPassword)
 
         this.Post('/user/product/type', this.productType)
+
+        this.Post('/user/question', this.submitQuestion)
     }
 
-    protected signInGoogle(req,res,next){     
+
+
+    protected signInGoogle(req,res,next): void{     
         if(req.query['seller']=='true'){
             req.session.seller = true;
         }
@@ -74,7 +77,7 @@ export default class UserApi extends BasicController{
              res.redirect('/'); 
     }   
 
-    protected signInFacebook(req,res,next){
+    protected signInFacebook(req,res,next): void{
         if(req.query['seller']=='true'){
             req.session.seller = true;
         }
@@ -146,7 +149,7 @@ export default class UserApi extends BasicController{
         
         return res.render('Users/approval', { 
             pageName : 'Approval', 
-            domain : DOMAIN,
+            resources :  RESOURCES_PATH,
             user : req.user.Data,
             currentUser : req.user
         })        
@@ -171,13 +174,13 @@ export default class UserApi extends BasicController{
 
 
 
-    protected verify(req,res) : void{
+    protected verify(req,res): void{
         UserController.VerifyUser(req.params.uid)
             .then( user =>  res.render('Actions/verification', {
                 pageName : "Verification",
                 name : user.firstName,
                 isSeller : user.isSeller,
-                domain : DOMAIN
+                resources :  RESOURCES_PATH
             }))
             .catch( err => res.redirect('/'));
     }
@@ -186,7 +189,7 @@ export default class UserApi extends BasicController{
         isAuth(req, res).allowed(() => res.send(BuildResponse(0, "User successfully fetched", req.user.PublicData)));
     }
 
-    protected productType(req,res) : void{
+    protected productType(req,res): void{
         isAuth(req,res).allowed(user => 
             ProductController.PublicStock(user,req.body)
                 .then( answer => answer.success ?
@@ -196,7 +199,7 @@ export default class UserApi extends BasicController{
         )
     }
 
-    protected productSearch(req,res) : void{
+    protected productSearch(req,res): void{
         Database.Instance.productSearch.search(["prUid","prTitle","prCategory","prDescription","prTypes"], req.params.query)
             .then( result => 
                 result.success ?                      
@@ -206,7 +209,7 @@ export default class UserApi extends BasicController{
        
     }
 
-    protected requestPassword(req,res) : void {
+    protected requestPassword(req,res): void {
         var values = req.body;
         var hasError : UserError =  validRequestPassword(values);
         var agent = useragent.parse(req.headers['user-agent']);
@@ -228,7 +231,7 @@ export default class UserApi extends BasicController{
 
     }
 
-    protected resetPassword(req,res) : void{
+    protected resetPassword(req,res): void{
         var values = req.body;    
         var hasError : UserError =  validResetPassword(values);
         
@@ -240,7 +243,7 @@ export default class UserApi extends BasicController{
 
     }
 
-    protected orders(req,res) : void{
+    protected orders(req,res): void{
         isAuth(req,res).allowed( user => {
             OrderController.CustomerOrders(user)
                 .then( orders => res.send(BuildResponse(0,"Orders successfully fetched",orders)) )
@@ -248,7 +251,7 @@ export default class UserApi extends BasicController{
         });
     }
 
-    protected history(req,res) : void{
+    protected history(req,res): void{
         isAuth(req,res).allowed( user => {
             OrderController.CustomerHistory(user)
                 .then( orders => res.send(BuildResponse(0,"Orders successfully fetched",orders)) )
@@ -256,19 +259,19 @@ export default class UserApi extends BasicController{
         });
     }
 
-    protected loadCart(req,res) : void{
+    protected loadCart(req,res): void{
         ProductController.LoadCart(req.body.cart)
             .then( items => res.send( BuildResponse(0,"Cart was successfully loaded",items) ))
             .catch( error => {console.log(error); res.send( BuildResponse(10,error) ) })
     }
 
-    protected createOrder(req,res) : void{
+    protected createOrder(req,res): void{
         isAuth(req,res).allowed( user => {
             
         });
     }
 
-    protected newNotifications(req,res) : void{
+    protected newNotifications(req,res): void{
         isAuth(req,res).allowed( user => 
             NotificationsController.LastNotifications(user)
                 .then( notifications => res.send( BuildResponse(0,"Notifications successfully fetched", notifications ) ))
@@ -276,11 +279,20 @@ export default class UserApi extends BasicController{
         );
     }
 
-    protected reviewNotifications(req,res) : void{
+    protected reviewNotifications(req,res): void{
         isAuth(req,res).allowed( user => 
-            NotificationsController.LastNotifications(user)
-                .then( notifications => res.send( BuildResponse(0,"Notifications successfully fetched", notifications ) ))
-                .catch( error => res.send( BuildResponse(0,"Notifications successfully fetched", [] ) ))
+            NotificationsController.ReviewAllNotifications(user)
+                .then( notifications => res.send( BuildResponse(0,"Notifications successfully reviwed") ))
+                .catch( error => res.send( BuildResponse(0,"Notifications successfully reviwed") ))
         );
+    }
+
+
+    protected submitQuestion(req,res): void{
+        QuestionController.ForceCreate(req.body)
+            .then(answer => res.send( answer.success ?
+                BuildResponse(0,answer.result) : 
+                BuildResponse(10,answer.error)
+            ));
     }
 }

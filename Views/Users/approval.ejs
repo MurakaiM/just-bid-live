@@ -6,7 +6,7 @@
     <%-include('../Common/mobile')%>
     <%-include('../Common/head')%>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker3.css"/>
-    <link rel="stylesheet" href="<%=domain%>/g.assets/css/responsive.css">
+    <link rel="stylesheet" href="<%=resources%>/g.assets/css/responsive.css">
   </head>
 
   <body class="preloading">
@@ -273,7 +273,7 @@
               <label>Additional</label>
               <div class="two fields">
                 <div class="field avatar_holder">                  
-                  <img class="ui tiny image <%if(user.imgUrl){%> avatar <%}%>" src="<%if(user.imgUrl){%> <%=user.imgUrl%> <%}else{%> <%=domain%>/g.assets/img/usericons/user-20.png <%}%>">
+                  <img class="ui tiny image <%if(user.imgUrl){%> avatar <%}%>" src="<%if(user.imgUrl){%> <%=user.imgUrl%> <%}else{%> <%=resources%>/g.assets/img/usericons/user-20.png <%}%>">
                 </div>
               </div>
             </div>
@@ -305,6 +305,6 @@
   <%-include('../Common/scripts')%>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.min.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/libphonenumber-js/0.4.18/libphonenumber-js.min.js"></script>
-  <script src="<%=domain%>/u.assets/js/approval.js" charset="utf-8"></script>
+  <script src="<%=resources%>/u.assets/js/approval.js" charset="utf-8"></script>
 
 </html>

@@ -49,7 +49,7 @@ const globalSequlize = new Sequelize(DATABASE_URL,{
   dialect : 'postgres',
   operatorsAliases : operatorsAliases,
   pool: {
-    max: 18,
+    max: 10,
     min: 1,
     idle: 10000
   }
@@ -111,6 +111,7 @@ export class Database{
       await WishSchema.sync();      
       
       await NotificationSchema.sync();
+      await QuestionSchema.sync();
      
       await this.productSearch.setUp();
     } 
@@ -120,6 +121,40 @@ export function initDatabase() : Promise<any>{
   var dbController : Database = new Database(DATABASE_URL);
   return dbController.initConnection();
 }
+
+
+/* Contact schema */
+export const QuestionSchema = globalSequlize.define('question', {
+  questionId : {
+    type : Sequelize.UUID,
+    primaryKey : true
+  },
+  message : {
+    type : Sequelize.TEXT,
+    allowNull : false
+  },
+  email : {
+    type : Sequelize.STRING,
+    allowNull : false
+  },
+  type : {
+    type : Sequelize.STRING(2),
+    allowNull : false
+  },
+  firstName : {
+    type : Sequelize.STRING,
+    allowNull : false
+  },
+  lastName : {
+    type : Sequelize.STRING,
+    allowNull : false
+  },
+  isClosed : {
+    type : Sequelize.BOOLEAN,
+    allowNull : false,
+    defaultValue : false
+  }
+});
 
 
 /* Notification schema */
@@ -208,7 +243,7 @@ export const WinningSchema = globalSequlize.define('winning', {
     type : Sequelize.BOOLEAN,
     defaultValue : false
   }
-})
+});
 
 /* Product schema */
 export const ProductSchema = globalSequlize.define('product', {

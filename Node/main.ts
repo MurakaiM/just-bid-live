@@ -14,7 +14,7 @@ import * as http from 'http';
 import * as flash from 'connect-flash';
 import * as passport from 'passport'
 import * as bodyParser from 'body-parser';
-import * as express from 'express';
+import * as express from "express";
 import * as express_upload from 'express-fileupload'
 import * as compression from 'compression'
 
@@ -160,7 +160,7 @@ export class Server {
         this.app.use(express_upload());
        // this.app.use(morgan());
 
-        this.app.use('/wbhook_strp',bodyParser.json({ verify:(req,res,buf) => req.rawBody=buf }))
+        this.app.use('/wbhook_strp',bodyParser.json({ verify:(req,res,buf) => req['rawBody']=buf }))
 
         this.app.use(bodyParser.json());
         this.app.use(bodyParser.urlencoded({ extended: false }));
@@ -170,7 +170,7 @@ export class Server {
 
         this.app.use(express.static(path.join(__dirname, '../Resources')));
 
-        this.app.use((req, res, next) => (req.headers['x-forwarded-proto'] || '').toLowerCase() == 'https' ? next() :res.redirect('https://' + req.get('host') + req.url))
+        //this.app.use((req, res, next) => (req.headers['x-forwarded-proto'] || '').toLowerCase() == 'https' ? next() :res.redirect('https://' + req.get('host') + req.url))
           
         this.setStatics();
     }

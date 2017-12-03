@@ -33,10 +33,14 @@ export default class AuctionItem{
     }
 
     public ForceStart() : Promise<any>{     
+        var random = TimeModule.getRandomSeconds(180, 350)
+
         this.dbAution.onAuction = true;
         this.dbAution.currentUser = null;
-        this.dbAution.auctionEnds = new Date( new Date().getTime() + AuctionItem.startTimer + AuctionItem.goingTimer );  
-        this.setTimer(TimeModule.getMinutes(5))      
+        
+        this.dbAution.auctionEnds = new Date( new Date().getTime() + random);  
+        this.setTimer(random);
+
         return this.dbAution.save();
     }
 

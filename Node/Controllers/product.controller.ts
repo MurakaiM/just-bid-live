@@ -169,12 +169,15 @@ export default class ProductController {
 
     public static async ChangeProduct(user: User, params: any): Promise<AwaitResult>{
         let hasError = validChange(params);
+        let TR = null;
 
         if(hasError.invalid){
             return { success : false, error: hasError }
         }
         
         try {
+            TR = await Database.Instance.Sequelize.transaction({ autocommit: false });
+
             await ProductSchema.update({
                 prDescription: params.description,
                 prFull: params.fldescription,
@@ -184,12 +187,16 @@ export default class ProductController {
                     prUid: params.id,
                     prSeller : user.PublicData.uid
                 }
-            });           
-          
+            },TR);           
+            await Database.Instance.Search.ForceTSV(params.id,TR);
+
+            await TR.commit()
             return { success : true, result : params }            
         } catch (error) {
             console.log(error)
-            return { success : false, error}
+
+            await TR.rollback();
+            return { success : false, error }
         }
     }
 

@@ -1,11 +1,10 @@
-
 <!DOCTYPE html>
 <html>  
 
   <head>
     <!--Head include!-->
     <%-include('./Common/head')%>
-    <link rel="stylesheet" href="<%=domain%>/g.assets/css/responsive.css">  
+    <link rel="stylesheet" href="<%=resources%>/g.assets/css/responsive.css">  
   </head>
 
   <body class="preloading">
@@ -15,8 +14,13 @@
       <%-include('./Common/menu', { page : pageName , user : currentUser })%>
 
       <div class="single">
+
           <form id="contact" class="ui form former">
-              <h3 class="ui dividing header"><i class="fa fa-envelope" aria-hidden="true"></i>Contact information</h3>
+              <h3 class="ui image header"> 
+                <img src="<%=resources%>/g.assets/img/icon/bookmark-1.png" alt="store"> 
+                Contact
+              </h3>
+
               <div class="field fileds-margin">
                 <label>Personal information</label>
                 <div class="two fields">
@@ -26,8 +30,6 @@
                   <div class="field">
                     <input type="text" name="lastName" placeholder="Last Name">
                   </div>
-
-
                 </div>
               </div>
               <div class="field fileds-margin">
@@ -37,14 +39,14 @@
                     <input type="text" name="email" placeholder="Email">
                   </div>
                   <div class="field">
-                    <select class="ui selection dropdown" name="question">
+                    <select class="ui selection dropdown" name="type">
                       <option value="">Type of question</option>
-                      <option value="general">General</option>
-                      <option value="payment">Payment</option>
-                      <option value="product">Product</option>
-                      <option value="report">Report about seller</option>
-                      <option value="customer">Customer service</option>
-                      <option value="account">Other</option>
+                      <option value="1">General</option>
+                      <option value="2">Payment</option>
+                      <option value="3">Product</option>
+                      <option value="4">Report about seller</option>
+                      <option value="5">Customer service</option>
+                      <option value="6">Other</option>
                     </select>
                   </div>
                 </div>
@@ -55,6 +57,17 @@
                   <textarea name="message" rows="6" placeholder="Type your message here..."></textarea>
                 </div>
               </div>
+
+              <div class="ui custom success message">
+                <div class="header">Successfully submitted</div>
+                <p>Your question will be checked as soon as possible.</p>
+              </div>
+
+              <div class="ui custom error message">
+                <div class="header">Action failure</div>
+                <p>Error occurred during submitting. Please try again later.</p>
+              </div>
+
               <div class="submit_holder">
                 <div class="ui submit button">Submit</div>
               </div>
@@ -69,6 +82,6 @@
 
   <!--Head include!-->
   <%-include('./Common/scripts')%>
-  <script src="<%=domain%>/u.assets/js/contact.js" charset="utf-8"></script>
+  <script src="<%=resources%>/u.assets/js/contact.js" charset="utf-8"></script>
 
 </html>

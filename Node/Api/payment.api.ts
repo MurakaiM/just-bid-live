@@ -1,5 +1,5 @@
 import { isAuth, isSeller } from '../Utils/Communication/rules'
-import { DOMAIN } from '../keys'
+import { RESOURCES_PATH } from '../keys'
 
 import Seller from '../Models/seller.model'
 import StripeCharges from '../Payments/stripe.charges'
@@ -30,7 +30,7 @@ export default class PaymentApi extends BasicController {
                     pageName : 'Withdrawal',
                     currentUser : seller,
                     login : false,
-                    domain : DOMAIN,
+                    resources :  RESOURCES_PATH,
                     answer 
                 }
 
@@ -57,7 +57,7 @@ export default class PaymentApi extends BasicController {
         var pageInfo = {
             pageName : "Successful payment",
             currentUser : req.user,
-            domain : DOMAIN,   
+            resources :  RESOURCES_PATH,   
             login : false        
         };
 

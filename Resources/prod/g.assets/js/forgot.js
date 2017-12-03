@@ -1,0 +1,1 @@
+"use strict";function init(){new Form("forgot","/user/password/request",{inline:!0,rules:{email:{identifier:"email",rules:[{type:"email",prompt:"Please enter valid email"}]}}})}$(function(e){return init()});

@@ -1,0 +1,63 @@
+<ul class="nav">
+    <li class="<%if(page==1){%>active<%}%>">
+        <a href="/admin/ab/dashboard">
+            <i class="material-icons">dashboard</i>
+            <p>Main</p>
+        </a>
+    </li>
+    <li class="<%if(page==2){%>active<%}%>">
+        <a href="/admin/ab/products">
+            <i class="material-icons">assignment</i>
+            <p>Products</p>
+        </a>
+    </li>
+    <li class="divider">
+        Payouts
+    </li>
+    <li class="<%if(page==3){%>active<%}%>">
+        <a href="/admin/ab/payouts">
+            <i class="fa fa-credit-card-alt" aria-hidden="true"></i>
+            <p>New</p>
+        </a>
+    </li>
+    <li class="<%if(page==4){%>active<%}%>">
+        <a href="/admin/ab/progress">
+            <i class="fa fa-credit-card" aria-hidden="true"></i>
+            <p>Processing</p>
+        </a>
+    </li>
+    <li class="<%if(page==5){%>active<%}%>">
+        <a href="/admin/ab/finished">
+            <i class="fa fa-history" aria-hidden="true"></i>
+            <p>Finished</p>
+        </a>
+    </li>
+    <li class="divider empty"></li>
+
+    <li class="divider">
+        Customer Support
+    </li>
+
+    <li class="<%if(page==6){%>active<%}%>">
+        <a href="/admin/ab/progress">
+            <i class="fa fa-question" aria-hidden="true"></i>
+            <p>Questions</p>
+        </a>
+    </li>
+    <li class="<%if(page==7){%>active<%}%>">
+        <a href="/admin/ab/finished">
+            <i class="fa fa-history" aria-hidden="true"></i>
+            <p>Closed tickets</p>
+        </a>
+    </li>
+
+
+    <li class="divider empty"></li>
+
+    <li>
+        <a href="/admin/ab/signout">
+            <i class="material-icons">https</i>
+            <p>Exit</p>
+        </a>
+    </li>
+</ul>

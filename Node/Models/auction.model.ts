@@ -32,7 +32,7 @@ export default class AuctionItem{
         return this;
     }
 
-    public ForceStart() : Promise<any>{     
+    public async ForceStart() : Promise<any>{     
         var random = TimeModule.getRandomSeconds(180, 350)
 
         this.dbAution.onAuction = true;
@@ -118,21 +118,16 @@ export default class AuctionItem{
         }
     }    
 
-    public async finish() : Promise<any>{  
-        console.log('finished-1')
-       
+    public async finish() : Promise<any>{         
         let prTitle = this.dbAution.dataValues.prTitle;
         let inactive = this.dbAution.currentUser ? false : true;
         
-        AuctionLoader.Instace.FinishTrigger(this.StreamData);     
-
         if(inactive){
             RealtimeController.Instance.emitInactive(this.getPublic);
         }else{
             RealtimeController.Instance.emitEnd(this.getPublic);
         }
-         
-
+    
         if(this.dbAution.currentUser){
             await this.dbAution.reload();     
 
@@ -155,8 +150,8 @@ export default class AuctionItem{
         }else{
            this.dbAution.currentBid = this.dbAution.offCost;
         }    
-        
-        console.log('finished-2')
+                             
+        AuctionLoader.Instace.FinishTrigger(this.StreamData);
         await this.dbAution.save();               
     }
 
@@ -165,7 +160,8 @@ export default class AuctionItem{
         return this.dbAution.dataValues[index];
     }
 
-    private setTimer(time : number) : void {
+    private setTimer(time : number) : void {   
+        console.log(time)    
         clearTimeout(this.timeout);
         this.timeout = setTimeout( () => this.finish(), time);
     }

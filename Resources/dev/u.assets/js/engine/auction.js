@@ -199,10 +199,11 @@ function Item(payload){
 
 
     this.LoadTimer = (incoming, changed = false) => {        
-        this.subdoms.name.removeClass('waiting')
-        this.helpful.awaiter.remove()
+        this.subdoms.name.removeClass('waiting');
+        this.helpful.awaiter.remove();
         
         let difference = Math.abs(new Date().getTime() - new Date(incoming.end).getTime())
+        console.log(difference) 
         let offset = difference % 1000
         let seconds = (difference - offset) / 1000
         let total = seconds - GOING_OFFSET

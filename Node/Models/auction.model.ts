@@ -65,9 +65,9 @@ export default class AuctionItem{
             this.dbAution.save()
              .then( result => {
                 //Refresh timeout and emit to stream
-                this.name = user.PublicData.firstName;
-                RealtimeController.Instance.emitBid(this.StreamData)
-                this.setTimer(AuctionItem.goingTimer + this.number);   
+                this.name = user.PublicData.firstName;               
+                this.setTimer(AuctionItem.goingTimer + this.number);  
+                RealtimeController.Instance.emitBid(this.StreamData) 
                 resolve("Updated");             
              })           
              .catch( error => {
@@ -129,7 +129,7 @@ export default class AuctionItem{
             RealtimeController.Instance.emitEnd(this.getPublic);
         }
          
-        
+
         if(this.dbAution.currentUser){
             await this.dbAution.reload();     
 

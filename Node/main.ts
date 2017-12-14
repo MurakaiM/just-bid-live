@@ -172,7 +172,7 @@ export class Server {
 
         this.app.use(express.static(path.join(__dirname, '../Resources')));
 
-        //this.app.use((req, res, next) => (req.headers['x-forwarded-proto'] || '').toLowerCase() == 'https' ? next() :res.redirect('https://' + req.get('host') + req.url))
+        this.app.use((req, res, next) => (req.headers['x-forwarded-proto'] || '').toLowerCase() == 'https' ? next() :res.redirect('https://' + req.get('host') + req.url))
           
         this.setStatics();
     }

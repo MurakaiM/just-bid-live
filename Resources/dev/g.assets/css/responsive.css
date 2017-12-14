@@ -375,6 +375,7 @@
   .stock_list .list_item.auction_item{
     display: inline-flex;
     padding-right: 35px;
+    width: 300px;
   }
 
   .left{

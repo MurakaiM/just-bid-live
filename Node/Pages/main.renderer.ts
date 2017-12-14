@@ -22,6 +22,15 @@ interface Redirector{
 
 export default class Renderer {    
    
+    public static home(req,res){
+        res.render('preview',{
+            pageName: "Welcome !",
+            resources : RESOURCES_PATH,
+            currentUser : req.user,
+            login : false        
+        });
+    }
+
     public static live(req,res){         
         res.render('home', {
             pageName : "Live",

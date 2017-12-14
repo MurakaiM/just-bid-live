@@ -7,6 +7,7 @@ import { RESOURCES_PATH } from '../keys';
 export default class InformationApi extends BasicController{
 
     Configure(){
+        this.Get('/info/beforebid', this.renderBeforebid);
         this.Get('/info/copyright', this.renderCopyright);
         this.Get('/info/privacy', this.renderPrivacy);
         this.Get('/info/terms', this.renderTerms);
@@ -15,6 +16,13 @@ export default class InformationApi extends BasicController{
         //this.Get('/info/protection/sellers', this.renderSellers);
     }
 
+    private renderBeforebid(req,res){
+        return res.render('./Informational/before-bid',{
+            pageName : 'Before You Bid',
+            resources :  RESOURCES_PATH,
+            currentUser: undefined
+        })
+    }
 
     private renderCopyright(req,res){
         return res.render('./Informational/copyright',{

@@ -210,7 +210,9 @@ function Item(payload){
         clearTimeout(this.intervals.offset);
         clearInterval(this.intervals.static);
 
-        (incoming.user == window.WAuth.getData().user.uid) ? this.subdoms.name.addClass('my') : this.subdoms.name.removeClass('my')
+        if(window.WAuth.getData().user){
+            (incoming.user == window.WAuth.getData().user.uid) ? this.subdoms.name.addClass('my') : this.subdoms.name.removeClass('my')
+        }
 
         this.subdoms.name.transition('bounce', { silent : true, duration : 800 })
         this.subdoms.name.text(incoming.name) 

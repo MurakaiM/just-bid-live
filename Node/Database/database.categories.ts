@@ -459,7 +459,7 @@ const categoriesPopups = {
       {
         id : 'imporvments',
         url : "hi",
-        name :  "Home Improvemen",
+        name :  "Home Improvements",
         image : RESOURCES_PATH+"/u.assets/img/OtherIcons/drawing.png",
         subcategories : []
       }

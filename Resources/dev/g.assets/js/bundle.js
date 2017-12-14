@@ -115,8 +115,8 @@ function AuthController(){
             if(window.location.pathname.includes('seller')){
               window.location.href = '/seller/signin'
             }else{
-              if(window.location.pathname != '/') 
-                  window.location.href = '/'
+              if(window.location.pathname != '/live') 
+                  window.location.href = '/live'
             }
 
             account.css('display','inline');

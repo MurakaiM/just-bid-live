@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <!--Head include!-->
+    <%-include('../Common/mobile')%>
+    <%-include('../Common/head')%>
+
+    <link rel="stylesheet" href="<%=resources%>/g.assets/css/informational.css">
+    <link rel="stylesheet" href="<%=resources%>/g.assets/css/responsive.css">
+  </head>
+
+  <body class="preloading">
+    <div class="content">
+      <!--Menu include!-->
+      <%-include('../Common/minimenu', { page : pageName  })%>
+
+      <div class="single">
+          <div class="ui segment">
+            <h3 class="header">
+                <b>Before You Bid</b>
+            </h3>
+
+            <div class="content">
+              Welcome to Just Bid Live, we are thankful that you have found our services.	
+              Before you begin bidding at the auctions, there are a few key points that need to be considered.
+
+              <ul>
+                <li>Our auctions are in USD pricing.</li>
+                <li>Only standard accounts can bid on the auctions.</li>
+                <li>Seller’s accounts cannot bid on the auctions.</li>
+                <li>There are a few auction pricing strategies that will be listed in the following.</li>
+              </ul>  
+
+              <h3 class="header">
+                <b>Auction Pricing Strategies</b>   
+              </h3> 
+
+              <div class="row">
+                <div class="col-md-6 wrap">
+                  <b>Standard Auctions!</b> <br>
+                  Price starts at <b>$2</b> and raises by <b>$2</b> increments. <br>
+                  No colour frame <br><br>
+                  <img src="<%=resources%>/o.assets/assets/ex-standart.png" alt="">
+                </div>
+
+                <div class="col-md-6 wrap">
+                  <b>Reserved Auctions!</b> <br>
+                  Price set at a price and raises by <b>$1</b> increments. <br>
+                  Red Frame<br><br>
+                  <img src="<%=resources%>/o.assets/assets/ex-reserved.png" alt="">
+                </div> 
+
+                <div class="col-md-6 wrap">
+                  <b>Featured Auction!</b> <br>
+                  Price starts at <b>$3</b> and raises by <b>$1</b> increments. <br>
+                  Purple Frame<br><br>
+                  <img src="<%=resources%>/o.assets/assets/ex-f.png" alt="">
+                </div> 
+
+                <div class="col-md-6 wrap">
+                  <b>Standard 20 percent!</b> <br> 
+                  Price starts at <b>$1</b> and raises by <b>20%</b> increments. <br>
+                  Orange Frame<br><br>
+                  <img src="<%=resources%>/o.assets/assets/ex-smpercent.png" alt="">
+                </div>     
+
+                <div class="col-md-12 wrap">
+                  <b>Big 50 percent!</b> <br>
+                  Price starts at <b>$1</b> and raises by <b>50%</b> increments. <br>                 
+                  Pink Frame  <br><br>
+                  <img src="<%=resources%>/o.assets/assets/ex-bgpercent.png" alt="">
+                </div>  
+              </div>
+            </div>
+          </div>
+      </div>
+     
+      <%-include('../Common/footer')%>
+    </div>
+  </body>
+
+  <!--Head include!-->
+  <%-include('../Common/scripts')%>
+</html>

@@ -89,7 +89,9 @@ export class Server {
 
     private setEndpoints() : void{
         /* User's endpoints */
-        this.app.get('/', Renderer.live);
+        this.app.get('/', Renderer.home)
+
+        this.app.get('/live', Renderer.live);
         this.app.get('/about', Renderer.about)
 
         this.app.get('/earlyaccess', (req,res) => res.render('sellers'))
@@ -170,7 +172,7 @@ export class Server {
 
         this.app.use(express.static(path.join(__dirname, '../Resources')));
 
-        this.app.use((req, res, next) => (req.headers['x-forwarded-proto'] || '').toLowerCase() == 'https' ? next() :res.redirect('https://' + req.get('host') + req.url))
+        //this.app.use((req, res, next) => (req.headers['x-forwarded-proto'] || '').toLowerCase() == 'https' ? next() :res.redirect('https://' + req.get('host') + req.url))
           
         this.setStatics();
     }

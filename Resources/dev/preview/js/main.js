@@ -9616,7 +9616,7 @@ Vue$3.prototype.$mount = function (
   /* istanbul ignore if */
   if (el === document.body || el === document.documentElement) {
     "production" !== 'production' && warn(
-      "Do not mount Vue to <html> or <body> - mount to normal elements instead."
+      "Do not mount Vue to <html lang="eng"> or <body> - mount to normal elements instead."
     );
     return this
   }

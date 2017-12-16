@@ -1,0 +1,8 @@
+{
+    "name": "Just Bid Live",
+    "short_name": "JBL",
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "#fff",
+    "description": "Auction platform that would leave both the sellers and the bidders happy and satisfied."
+  }

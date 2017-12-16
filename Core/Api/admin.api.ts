@@ -40,8 +40,7 @@ export default class AdminApi extends BasicController {
                 .then( answer =>  answer.success ? 
                         res.send( BuildResponse(0,'Product was changed')) :
                         res.send( BuildResponse(10, answer.error)) 
-                )
-                
+                )                
         )
     }
 

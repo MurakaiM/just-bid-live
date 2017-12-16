@@ -65,65 +65,74 @@
             </div>
 
             <h4 class="ui fitted divider widther "></h4>       
-            <div class="exactly options">
+
+
             
-              <div class="types">                            
-                <%if(product.prTypes.colors){%>
-                  <div class="option">
-                    <span class="labeler">  <i class="paint brush icon"></i> Color :</span>
-                    <div id="color" class="ui fluid selection dropdown ">
-                    <span class="default text">Select color</span>
-                    <div class="menu">
-                      <div class="scrolling menu">
-                        <% Object.keys(product.prTypes.colors).forEach( e => { %>
-                            <div class="item <%if(product.prTypes.colors[e].disable){%> disabled  <%}%>"  data-value="<%=product.prTypes.colors[e].value%>">
-                                  <div class="ui empty circular label" style="background : <%=product.prTypes.colors[e].color%>;!imporant"></div>
-                                  <%=product.prTypes.colors[e].title%>
-                            </div>
-                        <%})%> 
-                      </div>
-                    </div>
-                    </div>
-                  </div>             
-                <%}%>
-              
-                <%if(Object.keys(product.prTypes.sizes).length > 0){%>
-                  <div class="option">
-                    <span class="labeler">  <i class="compress icon"></i> Size :</span>
-                    <div id="size" class="ui fluid selection dropdown">
-                      <div class="default text">Select size</div>
+            <div class="row exactly options">
+              <div class="col-md-7">     
+                <div class="types">                            
+                  <%if(product.prTypes.colors){%>
+                    <div class="option">
+                      <span class="labeler"> 
+                        <i class="paint brush icon"></i> Color :
+                      </span>
+                      <div id="color" class="ui fluid selection dropdown ">
+                      <span class="default text">Select color</span>
                       <div class="menu">
                         <div class="scrolling menu">
-                          <% Object.keys(product.prTypes.sizes).forEach( e => { %>
-                              <div class="item <%if(product.prTypes.sizes[e].disable){%> disabled  <%}%>"  data-value="<%=product.prTypes.sizes[e].value%>">                                 
-                                    <%=product.prTypes.sizes[e].title%>
+                          <% Object.keys(product.prTypes.colors).forEach( e => { %>
+                              <div class="item <%if(product.prTypes.colors[e].disable){%> disabled  <%}%>"  data-value="<%=product.prTypes.colors[e].value%>">
+                                    <div class="ui empty circular label" style="background : <%=product.prTypes.colors[e].color%>;!imporant"></div>
+                                    <%=product.prTypes.colors[e].title%>
                               </div>
                           <%})%> 
-                        </div>                      
+                        </div>
                       </div>
-                    </div>
-                  </div>             
-                <%}%>               
-              </div>
+                      </div>
+                    </div>             
+                  <%}%>
+                
+                  <%if(Object.keys(product.prTypes.sizes).length > 0){%>
+                    <div class="option">
+                      <span class="labeler">  <i class="compress icon"></i> Size :</span>
+                      <div id="size" class="ui fluid selection dropdown">
+                        <div class="default text">Select size</div>
+                        <div class="menu">
+                          <div class="scrolling menu">
+                            <% Object.keys(product.prTypes.sizes).forEach( e => { %>
+                                <div class="item <%if(product.prTypes.sizes[e].disable){%> disabled  <%}%>"  data-value="<%=product.prTypes.sizes[e].value%>">                                 
+                                      <%=product.prTypes.sizes[e].title%>
+                                </div>
+                            <%})%> 
+                          </div>                      
+                        </div>
+                      </div>
+                    </div>             
+                  <%}%>               
+                </div>
 
-              <div class="option">
-                  <span class="labeler">  <i class="hashtag icon"></i> Quantity :</span>
-                  <div class="ui input">
-                    <input type="number" value="1" min="1" max="99" id="quantity">
-                  </div>
-              </div>             
-              <div class="option empty"></div>
-              <div class="option">
-                <span class="labeler">  <i class="shipping icon"></i> Shipping : </span>
-                <span class="info">   <i class="fa fa-usd" aria-hidden="true"></i> <%=product.prShipment%></span>
-              </div>              
-              <div class="option">
-                <span class="labeler">  <i class="wait icon"></i> Delivery :</span>
-                <span class="info"> <%=product.prDelivery%> days</span>
+                <div class="option">
+                    <span class="labeler">  <i class="hashtag icon"></i> Quantity :</span>
+                    <div class="ui input">
+                      <input type="number" value="1" min="1" max="99" id="quantity">
+                    </div>
+                </div>             
+                <div class="option empty"></div>
+                <div class="option">
+                  <span class="labeler">  <i class="shipping icon"></i> Shipping : </span>
+                  <span class="info">   <i class="fa fa-usd" aria-hidden="true"></i> <%=product.prShipment%></span>
+                </div>              
+                <div class="option">
+                  <span class="labeler">  <i class="wait icon"></i> Delivery :</span>
+                  <span class="info"> <%=product.prDelivery%> days</span>
+                </div>
+                <div class="option">
+                  <span class="labeler">  <i class="protect icon"></i> Guarantee :</span>
+                  <span class="info"> <%=product.prGuarantee%></span>
+                </div>
               </div>
-              <div class="option">
-                <span class="labeler">  <i class="protect icon"></i> Guarantee :</span>
-                <span class="info"> <%=product.prGuarantee%></span>
+              <div class="col-md-5">
+              
               </div>
             </div>
 

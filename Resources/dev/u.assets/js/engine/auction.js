@@ -236,7 +236,7 @@ function Item(payload){
     }
 
     this.LoadWaiting = (incoming) => {              
-        let difference = Math.abs(new Date().getTime() - new Date(incoming.end).getTime())
+        let difference = Math.abs(new Date(incoming.start).getTime() - new Date(incoming.end).getTime())
         let offset = difference % 1000
         let seconds = (difference - offset) / 1000
         let total = seconds + GOING_OFFSET;

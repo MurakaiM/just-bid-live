@@ -8,7 +8,11 @@ const babel = require('gulp-babel');
 
 
 gulp.task('compress-js', function() { 
-    gulp.src('./Resources/dev/**/*.js')
+    gulp.src([
+        './Resources/dev/**/*.js',
+        './Resources/dev/a.assets/editor/**/*.js',
+        './Resources/dev/o.assets/js/chartist.min.js'
+    ])
     .pipe(babel({
         "presets": [ "es2015", "stage-0" ]
     }))

@@ -13,6 +13,7 @@ import Statistics from '../Services/Statistics/statistics.loader'
 import { isAuth , isAdmin } from '../Utils/Communication/rules'
 import { RESOURCES_PATH, STRIPE_PUBLIC } from '../keys'
 import { Codes } from '../Database/database.static'
+import Question from '../Models/question.model';
 
 
 interface Redirector{   
@@ -123,6 +124,19 @@ export default class Renderer {
  
             return res.render('Owner/Support/questions', pageInfo)
          });
+    }
+
+    public static adminQuestion(req,res){
+        isAdmin(req,res).allowed( async admin => {
+            let pageInfo = { 
+                resources : RESOURCES_PATH,
+                question: (await Question.byId(req.params['id']))
+            }
+            
+            return pageInfo.question ?  
+                    res.render('Owner/Support/question', pageInfo): 
+                    res.redirect('/admin/ab/questions')
+        })
     }
 }
 

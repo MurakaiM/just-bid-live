@@ -9,6 +9,8 @@ import Render from '../Pages/admin.renderer'
 
 import RealtimeController from '../Controllers/realtime.controller'
 import QuestionController from '../Controllers/question.controller';
+import Question from '../Models/question.model';
+import Notificator from '../Services/Norifications/email.service';
 
 
 export default class AdminApi extends BasicController {
@@ -30,11 +32,14 @@ export default class AdminApi extends BasicController {
         this.Get('/admin/ab/questions', Render.adminQuestions)
 
         this.Get('/admin/ab/request/:id', Render.adminRequest)
+
+        this.Get('/admin/ab/question/:id', Render.adminQuestion)
+        this.Post('/admin/ab/question', this.answerQuestion)
     }
 
 
 
-    protected async approvalProduct(req,res){
+    protected approvalProduct(req,res): void{
         isAdmin(req,res).allowed( admin => 
             ProductController.ApprovalProduct(admin, req.body)
                 .then( answer =>  answer.success ? 
@@ -56,11 +61,31 @@ export default class AdminApi extends BasicController {
         });
     }
     
-    protected newQuestions(req,res){
+    protected newQuestions(req,res): void{
         isAdmin(req,res).allowed( admin => 
             QuestionController.getNew()
                 .then(result => res.send( BuildResponse(0, 'New questions were successfully fetched',result)))
                 .catch(error => res.send(BuildResponse(10,error)))                
         )
+    }
+
+    protected async answerQuestion(req,res): Promise<any>{
+        let options: Array<string> = (<String>req.headers.referer).split('/');
+        let id: string = options.pop();
+        
+        let question = await Question.byId(id);                
+        question.isClosed = true;
+
+        await Notificator.Instance.sendAnswer(req.body.message,question.email);
+        await question.save();
+
+        return res.send(`
+            Your answer was successfully submitted.<br>
+            Redirecting back in 3 seconds.
+
+            <script>
+                setTimeout(function(){ window.location.href='/admin/ab/questions'; }, 3000)
+            </script>
+        `);
     }
 }

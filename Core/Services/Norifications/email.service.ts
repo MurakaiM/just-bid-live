@@ -51,8 +51,6 @@ export default class Notificator{
     }
 
     public sendPasswordreset(data : Password) : Promise<any>{
-
-
         let options = {
             num_rcpt_errors : 3
         };
@@ -73,6 +71,35 @@ export default class Notificator{
             recipients: [
                 { address: data.email }
             ]
+        };
+        
+        return this.sparky.transmissions.send(transmission,options); 
+    }
+
+
+    public sendAnswer(message: string, email: string){
+        let options = {
+            num_rcpt_errors : 3          
+        };
+
+        let transmission = {            
+            content : {
+                from: 'support@justbidlive.com',
+                subject: 'Answer from Just Bid Live',
+                html: `
+                 <html>                  
+                    <body>
+                        <img style="width:100px;" src="https://www.justbidlive.com/prod/g.assets/img/tinylogo.png" />
+                        <pre style="font-size:13px;">${message}</pre>
+                    </body>                
+                </html>`
+            },           
+            recipients: [
+                { address: email }
+            ],
+            options: {
+                "inline_css": true
+            }
         };
         
         return this.sparky.transmissions.send(transmission,options); 

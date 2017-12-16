@@ -21,6 +21,16 @@ export default class Question{
         })
     }
 
+    public static closeQuestion(id: string): Promise<any>{
+        return QuestionSchema.update({
+            isClosed: false
+         },{
+            where: {
+                questionId: id
+            }
+        });
+    }
+
     public static byId(id : string): Promise<any>{
         return QuestionSchema.findOne({
             where : { 

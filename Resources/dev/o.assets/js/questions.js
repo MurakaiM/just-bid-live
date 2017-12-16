@@ -5,6 +5,11 @@ $(function(){
 
 
 function setTable(){    
+    var buttons = {
+      answer : $('#answerQuestion')
+    };
+    
+    var currentItem = null;
     var tableQuestions = new Table('questions', {
         defaultSort: 'createdAt',
         search: "#questionsSearch",
@@ -19,7 +24,7 @@ function setTable(){
         },
         row: item => {
           return $(` 
-            <tr>
+            <tr class="pointer">
               <td>${item.contactor}</td> 
               <td>${item.email}</td>      
               <td class="max-td">${item.message}</td>   
@@ -29,19 +34,18 @@ function setTable(){
           `)
         },
         click: (i, obj, arr) => {  
-          currentItem = {
-            i,
-            obj,
-            arr
-          }
+          currentItem = {i, obj, arr};
+          buttons.answer.removeClass('disabled');
         },
         onFocusLost: () => {    
           currentItem = null;
+          buttons.answer.addClass('disabled');
         }
     });
 
     tableQuestions.loadInRaw('/admin/ab/questions/new', e => console.log(e))
-}
+    buttons.answer.click(e => window.open(`/admin/ab/question/${currentItem.arr[currentItem.i].questionId}`))
+  }
 
 /* Help function */
 function getType(type){

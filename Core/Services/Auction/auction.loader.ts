@@ -11,7 +11,7 @@ export interface Counted{
     [index : string] : number
 }
 
-export const PerCategory : number = 20;
+export const PerCategory : number = 12;
 
 export default class AuctionLoader{
     public static Instace : AuctionLoader;

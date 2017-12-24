@@ -5,7 +5,7 @@ import { Fees } from '../Database/database.categories'
 import { RESOURCES_PATH } from '../keys'
 
 import { Response , BuildResponse } from '../Utils/Communication/response'
-import { isSeller }  from '../Utils/Communication/rules'
+import { isSeller, SellerPath }  from '../Utils/Communication/rules'
 
 import UserController from '../Controllers/user.controller'
 import ProductController from '../Controllers/product.controller'
@@ -20,10 +20,7 @@ import PaymentController from '../Controllers/payment.controller'
 import Product from '../Models/product.model'
 
 export default class SellerApi extends BasicController{
-    constructor() {
-        super();
-    }
-
+   
     Configure(){    
         this.Get('/seller/product/all', this.getProducts)
         this.Get('/seller/winning/all', this.getWinning)
@@ -47,6 +44,8 @@ export default class SellerApi extends BasicController{
         this.Post('/seller/product/renew', this.renewProduct)
         this.Post('/seller/product/remove', this.removeProduct)
         this.Post('/seller/product/change', this.changeProduct)
+        this.Post('/seller/product/update/price', this.updatePrice)
+        this.Post('/seller/product/update/shipment', this.updateShipment)
         
         this.Post('/seller/payout/paypal/update', this.updatePaypal)
         this.Post('/seller/avatar/update', this.updateAvatar)
@@ -74,14 +73,14 @@ export default class SellerApi extends BasicController{
         if(req.user.getProvider() == 'local') return res.redirect('/')
 
         return res.render('Sellers/approval', { 
-            pageName : 'Approval', 
-            resources :  RESOURCES_PATH,
-            user : req.user.Data,
-            currentUser : req.user
+            pageName: 'Approval', 
+            resources:  RESOURCES_PATH,
+            user: req.user.Data,
+            currentUser: req.user
         })    
     }   
 
-    protected externalVerify(req,res){
+    protected externalVerify(req,res){     
         if(!req.session.seller)
             return res.send(BuildResponse(10,"Not valid sign in type"))
         
@@ -104,7 +103,7 @@ export default class SellerApi extends BasicController{
 
 
     /*Payouts*/
-    protected getPayouts(req,res) : void{
+    protected getPayouts(req,res): void{
         isSeller(req,res).allowed( seller => 
             PaymentController.fetchSellerPayout(seller)
                 .then(answer => res.send( BuildResponse(0,"Payouts successfully fetched", answer) ))
@@ -112,7 +111,7 @@ export default class SellerApi extends BasicController{
         );
     }
 
-    protected updatePaypal(req,res) : void{
+    protected updatePaypal(req,res): void{
         isSeller(req,res).allowed( seller => 
             SellerController.UpdatePaypal(seller,req.body)
                 .then(answer => res.send( BuildResponse(0,"Paypal Email successfully updated", answer) ))
@@ -122,23 +121,23 @@ export default class SellerApi extends BasicController{
 
 
     /* Store information */    
-    protected updateAvatar(req,res) : void{
+    protected updateAvatar(req,res): void{
         isSeller(req,res).allowed( seller => 
             SellerController.UpdateAvatar(seller,req.files.avatar)
                 .then( 
                     answer => answer.success ? 
-                        res.send(BuildResponse(0,answer.result)) :
+                        res.send(BuildResponse(0,answer.result)):
                         res.send(BuildResponse(10,answer.error))
                 )  
         )
     }
 
-    protected updatePersonal(req,res) : void{
+    protected updatePersonal(req,res): void{
         isSeller(req,res).allowed(seller => 
             SellerController.UpdatePersonal(seller, req.body)
                 .then( 
                     answer => answer.success ? 
-                        res.send(BuildResponse(0,answer.result)) :
+                        res.send(BuildResponse(0,answer.result)):
                         res.send(BuildResponse(10,answer.error))
                 )                
         )
@@ -146,7 +145,7 @@ export default class SellerApi extends BasicController{
 
 
     /*Winnings*/
-    protected getWinning(req,res) : void {
+    protected getWinning(req,res): void {
         isSeller(req,res).allowed( seller => 
             WinningController.SellerWinnings(seller)
                 .then(result => res.send( BuildResponse(0,"Winnings were successfully fetched", result ) ))
@@ -154,7 +153,7 @@ export default class SellerApi extends BasicController{
         )
     }
 
-    protected winningStatus(req,res) : void{
+    protected winningStatus(req,res): void{
         isSeller(req,res).allowed(seller => 
             WinningController.UpdateStatus(seller, req.body)
                 .then( answer => 
@@ -165,7 +164,7 @@ export default class SellerApi extends BasicController{
         )
     }
 
-    protected winningTrack(req,res) : void{
+    protected winningTrack(req,res): void{
         isSeller(req,res).allowed(seller => 
             WinningController.UpdateTrack(seller, req.body)
                 .then( answer => 
@@ -176,7 +175,7 @@ export default class SellerApi extends BasicController{
         )
     }
     
-    protected winningEspecial(req,res) : void{
+    protected winningEspecial(req,res): void{
         isSeller(req,res).allowed(seller => 
             WinningController.EspecialWinning(seller, req.body).then(answer => 
                answer.success ? 
@@ -187,20 +186,8 @@ export default class SellerApi extends BasicController{
     }
 
 
-    /*Others*/
-    protected getPersonal(req,res) : void{
-        isSeller(req,res).allowed( seller => 
-            SellerController.GetSeller(seller)
-                .then( sl => res.send( BuildResponse(0,"Seller info was successfully fetched",sl) ))
-                .catch( er => res.send( BuildResponse(10,"Error occurred")) )    
-        );
-    }
-
-    protected getFees(req,res) : void {
-        isSeller(req,res).allowed( user => res.send(Fees));
-    }
-
-    protected getStock(req,res) : void{        
+    /*Products*/
+    protected getStock(req,res): void{        
         isSeller(req,res).allowed( user => 
             ProductController.GetStock(user,req.body)
                 .then( result => res.send( BuildResponse(0,"Product stocks were successfully fetched",result)) )
@@ -208,40 +195,7 @@ export default class SellerApi extends BasicController{
         );
     }
 
-    protected stockAuction(req,res) : void {
-        isSeller(req,res).allowed( user => {     
-            SellerController.StockAuction(user,req.body)
-                .then( result => res.send( BuildResponse(0,"Auction items was successfully fetched",result)) )
-                .catch( error => res.send( BuildResponse(10,error)) ); 
-        });
-    }
-
-    protected pauseAuction(req,res) : void {
-        isSeller(req,res).allowed( user => {     
-            SellerController.PauseAuction(user,req.body)
-                .then( result => res.send( BuildResponse(0,"Auction item was successfully updated",result)) )
-                .catch( error => res.send( BuildResponse(10,error)) ); 
-        });
-    }
-
-
-    protected getAuctions(req,res) : void{
-        isSeller(req,res).allowed( user => {     
-            SellerController.GetAuctions(user)
-                .then( result => res.send( BuildResponse(0,"Auction items were successfully fetched",result)) )
-                .catch( error => res.send( BuildResponse(10,error)) ); 
-        });
-    }
-
-    protected getStatistics(req,res) : void {
-        isSeller(req,res).allowed( user => {     
-            SellerController.GetStatistics(user)
-                .then( result => res.send( BuildResponse(0,"Store was successfully fetched",result)) )
-                .catch( error => res.send( BuildResponse(10,error)) ); 
-        });
-    }
-
-    protected changeProduct(req,res) : void{
+    protected changeProduct(req,res): void{
         isSeller(req,res).allowed(seller => {
             ProductController.ChangeProduct(seller, req.body)
                 .then( result => res.send( BuildResponse(0,"Product was succssfully changed",result) ))
@@ -249,7 +203,7 @@ export default class SellerApi extends BasicController{
         })
     }
 
-    protected createProduct(req,res) : void{         
+    protected createProduct(req,res): void{         
         isSeller(req,res).allowed( user => {  
             ProductController.CreateProduct(user, req.body,req.files)
                 .then( result =>{                      
@@ -260,8 +214,126 @@ export default class SellerApi extends BasicController{
                 })                
         });
     }
- 
-    protected createAuction(req,res) : void{
+
+    protected deleteProduct(req,res): void {
+        isSeller(req,res).allowed( user => {
+            SellerController.DeleteProduct(user, req.body)
+                .then( result => res.send( BuildResponse(0,"Successfully deleted")) )
+                .catch( error => res.send( BuildResponse(10,"Error occurred")))
+        });
+    }
+
+    protected removeProduct(req,res): void {
+        isSeller(req,res).allowed( user => {
+            SellerController.RemoveProduct(user, req.body)
+                .then( result => res.send( BuildResponse(0,"Successfully removed")) )
+                .catch( error => res.send( BuildResponse(10,"Error occurred", null, error)))
+        });
+    }
+
+    protected renewProduct(req,res): void{
+        isSeller(req,res).allowed( user => {
+            SellerController.RenewProduct(user, req.body)
+                .then( result => res.send( BuildResponse(0,"Successfully renewed")) )
+                .catch( error => res.send( BuildResponse(10,"Error occurred")))
+        });
+    }
+
+    protected updateStock(req,res): void{    
+        isSeller(req,res).allowed( user => {
+            ProductController.UpdateStock(user, req.body)
+                .then( product => res.send(BuildResponse(0,"Product stock number was successfully updated",product)) )
+                .catch( error => res.send(BuildResponse(10,error)) );
+        });
+    }
+
+    /* Experimental decorator instead of Promise Like fucntion */
+    @SellerPath
+    protected updatePrice(req,res): void{
+        ProductController.UpdatePrice(req.user, req.body)
+            .then(result => res.send(BuildResponse(0,'Product price was successfully updated')))
+            .catch(error => res.send(BuildResponse(10,'Error occurred')))
+        
+    }
+
+    @SellerPath
+    protected updateShipment(req,res): void{       
+        ProductController.UpdateShipment(req.user, req.body)
+            .then(result => res.send(BuildResponse(0,'Product shipment was successfully updated')))
+            .catch(error => res.send(BuildResponse(10,'Error occurred')))
+        
+    }
+    /* ------- */
+
+
+    protected getType(req,res): void{
+        isSeller(req,res).allowed( user => {
+            ProductController.GetType(user, req.body)
+                .then( result => res.send(BuildResponse(0,"Product types were successfully fetched", result)) )
+                .catch( error => res.send(BuildResponse(10,"Error occurred")));
+        });
+    }
+
+    protected disableType(req,res): void{
+        isSeller(req,res).allowed( user => {
+            ProductController.DisableType(user, req.body)
+                .then( result => res.send( BuildResponse(0,"Successfully updated")) )
+                .catch( error => res.send( BuildResponse(10,error)))
+        });      
+    }
+
+
+
+
+    /*Others*/
+    protected getPersonal(req,res): void{
+        isSeller(req,res).allowed( seller => 
+            SellerController.GetSeller(seller)
+                .then( sl => res.send( BuildResponse(0,"Seller info was successfully fetched",sl) ))
+                .catch( er => res.send( BuildResponse(10,"Error occurred")) )    
+        );
+    }
+
+    protected getFees(req,res): void {
+        isSeller(req,res).allowed( user => res.send(Fees));
+    }
+
+    
+
+    protected stockAuction(req,res): void {
+        isSeller(req,res).allowed( user => {     
+            SellerController.StockAuction(user,req.body)
+                .then( result => res.send( BuildResponse(0,"Auction items was successfully fetched",result)) )
+                .catch( error => res.send( BuildResponse(10,error)) ); 
+        });
+    }
+
+    protected pauseAuction(req,res): void {
+        isSeller(req,res).allowed( user => {     
+            SellerController.PauseAuction(user,req.body)
+                .then( result => res.send( BuildResponse(0,"Auction item was successfully updated",result)) )
+                .catch( error => res.send( BuildResponse(10,error)) ); 
+        });
+    }
+
+
+    protected getAuctions(req,res): void{
+        isSeller(req,res).allowed( user => {     
+            SellerController.GetAuctions(user)
+                .then( result => res.send( BuildResponse(0,"Auction items were successfully fetched",result)) )
+                .catch( error => res.send( BuildResponse(10,error)) ); 
+        });
+    }
+
+    protected getStatistics(req,res): void {
+        isSeller(req,res).allowed( user => {     
+            SellerController.GetStatistics(user)
+                .then( result => res.send( BuildResponse(0,"Store was successfully fetched",result)) )
+                .catch( error => res.send( BuildResponse(10,error)) ); 
+        });
+    }
+
+    protected createAuction(req,res): void{
          isSeller(req,res).allowed( user => {            
              var hasError = validAuction(req.body);
  
@@ -274,45 +346,21 @@ export default class SellerApi extends BasicController{
          });
     }
 
-    protected updateStock(req,res) : void{    
-        isSeller(req,res).allowed( user => {
-            ProductController.UpdateStock(user, req.body)
-                .then( product => res.send(BuildResponse(0,"Product stock number was successfully updated",product)) )
-                .catch( error => res.send(BuildResponse(10,error)) );
-        });
-    }
-
-    protected getType(req,res) : void{
-        isSeller(req,res).allowed( user => {
-            ProductController.GetType(user, req.body)
-                .then( result => res.send(BuildResponse(0,"Product types were successfully fetched", result)) )
-                .catch( error => res.send(BuildResponse(10,"Error occurred")));
-        });
-    }
-
-    protected disableType(req,res) : void{
-        isSeller(req,res).allowed( user => {
-            ProductController.DisableType(user, req.body)
-                .then( result => res.send( BuildResponse(0,"Successfully updated")) )
-                .catch( error => res.send( BuildResponse(10,error)))
-        });      
-    }
-
-    protected signUp(req,res) : void{
+    protected signUp(req,res): void{
         SellerController.SignUp(req.body, req.files.userAvatar, req.files.storeAvatar)
             .then( result => res.send( BuildResponse(0,"User was successfuly created")) )
             .catch( error => res.send( BuildResponse(10, error)))
     }
 
-    protected getProducts(req,res) : void{
-        isSeller(req,res).allowed( user => {
-            SellerController.GetProducts(user)
-                .then( result => res.send( BuildResponse(0,"Successfully fetched", result)) )
-                .catch( error => res.send( BuildResponse(10,"Error occurred")))
-        });    
+    /*Experimental decorator instead of Promise Like fucntion*/
+    @SellerPath
+    protected getProducts(req,res): void{     
+        SellerController.GetProducts(req.user)
+            .then( result => res.send( BuildResponse(0,"Successfully fetched", result)) )
+            .catch( error => res.send( BuildResponse(10,"Error occurred")))           
     }
 
-    protected getDisabled(req,res) : void{
+    protected getDisabled(req,res): void{
         isSeller(req,res).allowed( user => {
             SellerController.GetDisabled(user)
                 .then( result => res.send( BuildResponse(0,"Successfully fetched", result)) )
@@ -320,36 +368,13 @@ export default class SellerApi extends BasicController{
         });  
     }
 
-    protected searchCategory(req,res) : void{
+    protected searchCategory(req,res): void{
         isSeller(req,res).allowed( user => res.send( BuildResponse(0,"Successfully fetched", SellerController.CategorySearch(req.params.query)) ));   
     }
 
-    protected deleteProduct(req,res) : void {
-        isSeller(req,res).allowed( user => {
-            SellerController.DeleteProduct(user, req.body)
-                .then( result => res.send( BuildResponse(0,"Successfully deleted")) )
-                .catch( error => res.send( BuildResponse(10,"Error occurred")))
-        });
-    }
+   
 
-    protected removeProduct(req,res) : void {
-        isSeller(req,res).allowed( user => {
-            SellerController.RemoveProduct(user, req.body)
-                .then( result => res.send( BuildResponse(0,"Successfully renewed")) )
-                .catch( error => res.send( BuildResponse(10,"Error occurred", null, error)))
-        });
-    }
-
-    protected renewProduct(req,res) : void{
-        isSeller(req,res).allowed( user => {
-            SellerController.RenewProduct(user, req.body)
-                .then( result => res.send( BuildResponse(0,"Successfully renewed")) )
-                .catch( error => res.send( BuildResponse(10,"Error occurred")))
-        });
-    }
-
-
-    protected sellerSignout(req,res) : void{
+    protected sellerSignout(req,res): void{
         if(req.user) 
             var uid = req.user.PublicData.uid;
        else 

@@ -108,6 +108,17 @@ export default class Renderer {
     }
 
 
+    public static faq(req,res){
+        let pageInfo = {
+            pageName : "Faq | JBL",
+            currentUser : req.user,
+            resources : RESOURCES_PATH,           
+            login : false
+        };
+
+        return res.render('faq', pageInfo);
+    };
+
     public static signup(req,res){
         var pageInfo = {
           resources :  RESOURCES_PATH,   

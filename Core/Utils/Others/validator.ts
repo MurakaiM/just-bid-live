@@ -124,6 +124,26 @@ export function validAuction( incoming : any ) : UserError{
     return buildError(false, "Everything is valid");
 }
 
+export function validProductPrice( incoming: any): UserError{
+    if(!incoming.id){
+        return buildError(true, "No product id provided")
+    }
+
+    if(incoming.id.length != 36){
+        return buildError(true, "Product id is not valid")
+    }
+
+    if(!incoming.price){
+        return buildError(true, "No new product price was provided")
+    }
+
+    if(incoming.price <= 0){
+        return buildError(true, "New product price can't be less or equal to 0")
+    }
+
+    return buildError(false, "Everything is valid")
+}
+
 export function validOrder( incoming : any) : UserError{
 
     if(!incoming.quantity){

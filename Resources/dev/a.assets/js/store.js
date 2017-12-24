@@ -748,29 +748,66 @@ function SetUpProducts() {
     overflowed: true,
     closer: ".closer",
     onOpen: (body, props) => {
-      let id = currentItem.arr[currentItem.i].prUid;
+      let item = currentItem.arr[currentItem.i];
+      let id = item.prUid;
+      
+      props.price.input.val(item.prCost);
+      props.shipment.input.val(item.prShipment);
 
-      props.input.val(currentItem.arr[currentItem.i].prStock);
       props.name.text(currentItem.arr[currentItem.i].prTitle);
       props.types.addClass('loading');
       props.types.empty();
       props.stock.addClass('loading');
       props.stock.empty();
 
-      POST('/seller/product/types', {
-          id
-        })
-        .then(result => createTypes(props.types, id, result.data))
-
-      POST('/seller/product/stocks', {
-          id
-        })
-        .then(result => createStock(props.stock, id, result.data))
-
+      POST('/seller/product/types', {id}).then(result => createTypes(props.types, id, result.data))
+      POST('/seller/product/stocks', {id}).then(result => createStock(props.stock, id, result.data))
     },
     onClose: (body, props) => {},
     middleware: (body, props, modal) => {
-      props.input = body.find('form').find('input');
+      const reg = /^\d+([.]\d{1,2})?$/;     
+      props.price = {
+        input: body.find('input[name="price"]'),
+        button: $('#editPrice')
+      }
+      props.shipment = {
+        input: body.find('input[name="shipment"]'),
+        button: $('#editShipment')
+      }       
+      
+      props.price.button.click(e => {        
+        if(!reg.test(props.price.input.val())){
+          return;
+        }
+
+        props.price.button.addClass('loading');
+        POST('/seller/product/update/price', { 
+            id: currentItem.arr[currentItem.i].prUid, 
+            price: props.price.input.val() 
+        }).then(result => {            
+            props.price.button.removeClass('loading')
+        })
+      });
+
+      props.shipment.button.click(e => {
+        if(!reg.test(props.price.input.val())){
+          return;
+        }
+
+        let float = parseFloat(props.price.input.val());
+        if(float < 0 || float > 30){
+          return;
+        }
+
+        props.shipment.button.addClass('loading');
+        POST('/seller/product/update/shipment', { 
+            id: currentItem.arr[currentItem.i].prUid, 
+            price: props.shipment.input.val() 
+        }).then(result => {            
+            props.shipment.button.removeClass('loading')
+        })
+      });
+
       props.types = body.find('.ui.segment.types');
       props.stock = body.find('.ui.segment.stock');
       props.name = body.find('.exact');

@@ -91,6 +91,7 @@ export class Server {
         /* User's endpoints */
         this.app.get('/', Renderer.home)
 
+        this.app.get('/faq', Renderer.faq)
         this.app.get('/live', Renderer.live);
         this.app.get('/about', Renderer.about)
 
@@ -160,7 +161,8 @@ export class Server {
 
         this.app.use(flash());
         this.app.use(express_upload());
-       // this.app.use(morgan());
+
+      //this.app.use(morgan());
 
         this.app.use('/wbhook_strp',bodyParser.json({ verify:(req,res,buf) => req['rawBody']=buf }))
 

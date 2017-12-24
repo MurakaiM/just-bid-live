@@ -7,7 +7,8 @@ import {
     validChange,
     validDisable,
     validDisableType,
-    validDelete
+    validDelete,
+    validProductPrice
 } from '../Utils/Others/validator'
 import {
     compiledTester
@@ -205,39 +206,6 @@ export default class ProductController {
         return Product.ForceFind(uid);
     }
 
-    public static LoadCart(cart: any): Promise < any > {
-        return Product.GetCart(cart)
-    }
-
-    public static UpdateStock(user: User, params: any): Promise < any > {
-        let hasError = validStock(params);
-
-        return new Promise((resolve, reject) => {
-            if (hasError.invalid) {
-                return reject(hasError.reason);
-            }
-
-            Product.ChangeStock(user, params.productId, params.typeId, params.stock)
-                .then(result => resolve(result.product))
-                .catch(err => reject(err))
-
-        });
-    }
-
-    public static DisableType(user: User, params: any): Promise < any > {
-        return new Promise((resolve, reject) => {
-            let hasError = validDisableType(params);
-
-            if (hasError.invalid) {
-                return reject(hasError.reason);
-            }
-
-            Product.ChangeTypeAvailability(user, params.uid, params.available, params.name, params.group)
-                .then(result => resolve(result))
-                .catch(error => reject(error));
-        });
-    }
-
     public static GetStock(user: User, params: any): Promise < any > {
         let hasError = validId(params);
         return new Promise((resolve, reject) => {
@@ -271,6 +239,62 @@ export default class ProductController {
     public static GetUnchecked() : Promise<any>{
         return Product.ForceUnreviewd();
     }
+
+    public static LoadCart(cart: any): Promise < any > {
+        return Product.GetCart(cart)
+    }
+
+    public static UpdateStock(user: User, params: any): Promise <any> {
+        return new Promise((resolve, reject) => {
+            let hasError = validStock(params);
+            if (hasError.invalid) {
+                return reject(hasError.reason);
+            }
+
+            Product.ChangeStock(user, params.productId, params.typeId, params.stock)
+                .then(result => resolve(result))
+                .catch(err => reject(err));
+        });
+    }
+
+    public static UpdatePrice(user: User, params: any): Promise<any>{
+        return new Promise((resolve, reject) => {
+            let hasError = validProductPrice(params);
+            if (hasError.invalid) {
+                return reject(hasError.reason);
+            }
+
+            Product.ChangePrice(user, params.id, params.price)
+                .then(result => resolve(result))
+                .catch(err => reject(err));
+        });
+    }
+
+    public static UpdateShipment(user: User, params: any): Promise<any>{
+        return new Promise((resolve, reject) => {
+            let hasError = validProductPrice(params);
+            if (hasError.invalid) {
+                return reject(hasError.reason);
+            }
+
+            Product.ChangeShipment(user, params.id, params.price)
+                .then(result => resolve(result))
+                .catch(err => reject(err));
+        });
+    }
+
+    public static DisableType(user: User, params: any): Promise <any> {       
+        return new Promise((resolve, reject) => {
+            let hasError = validDisableType(params);
+            if (hasError.invalid) {
+                return reject(hasError.reason);
+            }
+
+            Product.ChangeTypeAvailability(user, params.uid, params.available, params.name, params.group)  
+                .then(result => resolve(result))
+                .catch(err => reject(err));
+        });   
+    }   
 
 
 }

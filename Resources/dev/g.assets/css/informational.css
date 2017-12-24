@@ -19,3 +19,14 @@
 .wrap{
     text-align: center;
 }
+
+.question-wrap{
+    padding: 0 25px;
+}
+
+.question-wrap .question{
+    font-size: 20px;
+    font-weight: 600;
+    font-family: Saira Semi Condensed, cursive;
+    color: #666;
+}

@@ -5,6 +5,7 @@
   <head>
     <!--Head include!-->
     <%-include('./Common/head')%>
+    <link rel="stylesheet" href="<%=resources%>/g.assets/css/informational.css">
     <link rel="stylesheet" href="<%=resources%>/g.assets/css/responsive.css">  
   </head>
 
@@ -15,7 +16,20 @@
       <%-include('./Common/menu', { page : pageName , user : currentUser })%>
 
       <div class="single">
+        <div class="ui segment">
+          <h3 class="header">
+            <b>FAQ</b>
+          </h3>
 
+          <div class="question-wrap">
+              <div class="question">
+                How to sign up ?
+              </div>
+              <div class="answer">
+              
+              </div>
+          </div>
+        </div>
       </div>
 
       <%-include('./Common/each')%>

@@ -47,3 +47,24 @@ export function isAdmin(req,res, renderer?): RuleController<User>  {
     });
 }
 
+export function SellerPath(target: any, propertyName: string, descriptor: TypedPropertyDescriptor<Function>){
+    let method = descriptor.value;
+    descriptor.value = function () {
+        if(!(<User>arguments['0'].user).isSeller()){
+            return arguments['1'].send(BuildResponse(10, "You are not authenticated to call this api"));
+        }
+
+        return method.apply(this, arguments);
+    }
+}
+
+export function SellerRender(target: any, propertyName: string, descriptor: TypedPropertyDescriptor<Function>){
+    let method = descriptor.value;
+    descriptor.value = function () {
+        if(!(<User>arguments['0'].user).isSeller()){
+            return arguments['1'].redirect('/')
+        }
+
+        return method.apply(this, arguments);
+    }
+}

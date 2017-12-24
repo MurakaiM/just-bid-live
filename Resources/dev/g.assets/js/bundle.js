@@ -606,12 +606,12 @@ function Props() {
 
   this.currency = () => {
     $.fn.form.settings.rules.currency = (value, params) => {
-      const reg =   /^\d+([.]\d{1,2})?$/;
+      const reg = /^\d+([.]\d{1,2})?$/;
       return reg.test(value);      
     }
 
     $.fn.form.settings.rules.shipment = (value, params) => {
-      const reg =   /^\d+([.]\d{1,2})?$/;
+      const reg = /^\d+([.]\d{1,2})?$/;
       
       if(!reg.test(value))
           return false;

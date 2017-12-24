@@ -252,18 +252,14 @@ export default class SellerController {
     }
 
     public static CategorySearch(text: string): any {
-        let result = [];
-
-        Object.keys(compiled).forEach(key => {
+        return Object.keys(compiled).map(key => {
             if (String(compiled[key].name).toLowerCase().indexOf(text.toLowerCase()) > -1)
-                result.push({
+                return ({
                     value: key,
                     name: compiled[key].name,
                     category: compiled[key].category
                 });
-        });
-
-        return result;
+        });       
     }
 
     public static PauseAuction(user: User, params: any) {

@@ -1,4 +1,4 @@
-export const MODE = process.env.MODE || 'prod'
+export const MODE = process.env.MODE || 'dev'
 
 export const PORT = parseInt(process.env.PORT) || 8080
 

@@ -28,7 +28,7 @@ export default class Seller {
     }
 
     public static FetchProducts(user: User): Promise < any > {
-        let attributes: Array < any > = ['prUid', 'prTitle', 'prRating', 'prCost', 'prSold', 'prFull', 'prDescription', 'prViews', 'prWishes', 'prTypes', 'createdAt', 'updatedAt'];
+        let attributes: Array < any > = ['prUid', 'prTitle', 'prShipment', 'prRating', 'prCost', 'prSold', 'prFull', 'prDescription', 'prViews', 'prWishes', 'prTypes', 'createdAt', 'updatedAt'];
         attributes.push([ 
             Database.Instance.Sequelize.literal(`(select sum("types"."inStock") from "types" where "types"."productId"="product"."prUid")`), 'prStock' 
         ]);

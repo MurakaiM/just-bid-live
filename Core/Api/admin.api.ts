@@ -1,5 +1,5 @@
 import { BuildResponse } from '../Utils/Communication/response'
-import { isAuth, isAdmin } from '../Utils/Communication/rules'
+import { isAuth, AdminPath } from '../Utils/Communication/rules'
 import { DOMAIN } from '../keys'
 
 import BasicController from '../Utils/Controllers/basic.controller'
@@ -35,19 +35,10 @@ export default class AdminApi extends BasicController {
 
         this.Get('/admin/ab/question/:id', Render.adminQuestion)
         this.Post('/admin/ab/question', this.answerQuestion)
+
+        this.Post('/admin/ab/import', this.uploadProducts)
     }
 
-
-
-    protected approvalProduct(req,res): void{
-        isAdmin(req,res).allowed( admin => 
-            ProductController.ApprovalProduct(admin, req.body)
-                .then( answer =>  answer.success ? 
-                        res.send( BuildResponse(0,'Product was changed')) :
-                        res.send( BuildResponse(10, answer.error)) 
-                )                
-        )
-    }
 
     protected signOut(req,res): void{
         if(req.user) 
@@ -61,14 +52,28 @@ export default class AdminApi extends BasicController {
         });
     }
     
-    protected newQuestions(req,res): void{
-        isAdmin(req,res).allowed( admin => 
-            QuestionController.getNew()
-                .then(result => res.send( BuildResponse(0, 'New questions were successfully fetched',result)))
-                .catch(error => res.send(BuildResponse(10,error)))                
-        )
+
+    @AdminPath
+    protected newQuestions(req,res): void{    
+        QuestionController.getNew()
+            .then(result => res.send( BuildResponse(0, 'New questions were successfully fetched',result)))
+            .catch(error => res.send(BuildResponse(10,error)))    
     }
 
+    @AdminPath
+    protected approvalProduct(req,res): void{
+        ProductController.ApprovalProduct(req.user, req.body)
+            .then( answer =>  answer.success ? 
+                res.send( BuildResponse(0,'Product was changed')) :
+                res.send( BuildResponse(10, answer.error)) 
+            )   
+    }
+
+    protected uploadProducts(req,res): void{       
+        ProductController.UploadProducts(req.user, req.files.cvs).then(result => res.send(result));
+    }
+
+    @AdminPath
     protected async answerQuestion(req,res): Promise<any>{
         let options: Array<string> = (<String>req.headers.referer).split('/');
         let id: string = options.pop();

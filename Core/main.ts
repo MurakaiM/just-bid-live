@@ -39,8 +39,11 @@ import Renderer from './Pages/main.renderer';
 import Auth from './Authintication/auth.controller'
 import Storage from './Utils/Controllers/storage'
 import Statistics from './Services/Statistics/statistics.loader'
+import TaskRunner from './Services/Scheduler/task.runner';
+
 
 export class Server {
+    private worker : TaskRunner;
     private auction : AuctionLoader;
     private gateway : StripeGateway;
     private socialHandler : Function;
@@ -65,7 +68,8 @@ export class Server {
         this.setCustom();             
         this.setDatabase({
             momentally : true
-        }).then( result => {           
+        }).then( result => {    
+            this.setWorkers();       
             this.setAuth();
             return  this.setAuction();
         }).then( result => {           
@@ -80,6 +84,9 @@ export class Server {
         this.server.listen(this.port, () => console.log('Server was started'));
     }
 
+    private setWorkers(){
+        this.worker = new TaskRunner();
+    }
 
     private async setAuction() : Promise<any>{
         this.auction = new AuctionLoader();
@@ -205,6 +212,7 @@ process.on('uncaughtException', function(err) {
   
 
 const ApplicationServer : Server = new Server(keys.PORT);
-ApplicationServer.startServer();
 
+ApplicationServer.startServer();
 export default ApplicationServer;
+

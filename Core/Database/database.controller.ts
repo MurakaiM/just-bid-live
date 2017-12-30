@@ -40,9 +40,7 @@ const operatorsAliases = {
 
 
 import Search from '../Utils/Controllers/search'
-
 import { DATABASE_URL } from '../keys'
-
 
 const globalSequlize = new Sequelize(DATABASE_URL,{
   logging : false,
@@ -152,7 +150,6 @@ export const QuestionSchema = globalSequlize.define('question', {
   }
 });
 
-
 /* Notification schema */
 export const NotificationSchema = globalSequlize.define('notification', {
   recordId : {
@@ -186,7 +183,6 @@ export const NotificationSchema = globalSequlize.define('notification', {
   name: 'action_index',
   fields: ['action'] 
 });
-
 
 /* Auction winning schema */
 export const WinningSchema = globalSequlize.define('winning', {  
@@ -516,7 +512,6 @@ export const WishSchema = globalSequlize.define('whish', {
         allowNull : false
       }
 });
-
 
 /* Auction schema */
 export const AuctionSchema = globalSequlize.define('auction', {

@@ -10,28 +10,47 @@ import {
     validDelete,
     validProductPrice
 } from '../Utils/Others/validator'
-import {
-    compiledTester
-} from '../Database/database.categories'
-import {
-    Database,
-    TypesSchema,
-    ProductSchema
-} from '../Database/database.controller'
+import { AwaitResult } from '../Utils/Communication/async'
+import { compiledTester } from '../Database/database.categories'
+import { Database, TypesSchema,ProductSchema} from '../Database/database.controller'
 
 import RealtimeController from '../Controllers/realtime.controller'
 import NotificationController from '../Controllers/notification.controller'
 
-import { AwaitResult } from '../Utils/Communication/async'
-
 import Storage from '../Utils/Controllers/storage'
+import Parser from '../Services/Importer/csv.parser'
+import Grouper from '../Services/Importer/records.group'
 
 import Product from '../Models/product.model'
 import User from '../Models/user.model'
 
 export default class ProductController {
 
-    public static async CreateProduct(user: User, params: any, files: any): Promise < any > {
+
+    public static async UploadProducts(user: User, file: any): Promise<any>{
+        let values: any[] = await Parser.parseFile(file);
+        let group: any[] = await Grouper.productGroup(values, {
+            id: 'Product_title',
+            toGroup: [{
+                id: 'size',
+                into: 'sizes',
+                translator: elem => elem
+            },{
+                id: 'color',
+                into: 'colors',
+                translator: (elem, whole) => {
+                    return {
+                        color : elem,
+                        image: whole['Images_link']
+                    }
+                }
+            }]
+        });
+
+        return true;
+    }
+
+    public static async CreateProduct(user: User, params: any, files: any): Promise<any>{
         params.colors = JSON.parse(params.colors);
         params.sizes = JSON.parse(params.sizes);
     
@@ -79,7 +98,7 @@ export default class ProductController {
                 await product.save({ transaction: TR })
                 await Database.Instance.Search.ForceTSV(product.prUid,TR)       
                
-                let bulkArray: Array < any > = [];
+                let bulkArray: Array <any>= [];
                 if (Object.keys(params.sizes).length == 0)
                     Object.keys(params.colors).forEach(key => bulkArray.push({
                         typeUid : uuid(),
@@ -123,7 +142,7 @@ export default class ProductController {
         })
     }
 
-    public static async PublicStock(user : User, params : any) : Promise<AwaitResult>{
+    public static async PublicStock(user : User, params : any): Promise<AwaitResult>{
         try{
             let hasError = validId(params);
 
@@ -140,7 +159,11 @@ export default class ProductController {
         }
     }
 
-    public static async ApprovalProduct(user : User, params : any) : Promise<AwaitResult>{
+
+
+
+
+    public static async ApprovalProduct(user : User, params : any): Promise<AwaitResult>{
         try{
             let hasError = validId(params);
 
@@ -202,11 +225,13 @@ export default class ProductController {
     }
 
     
-    public static GetProduct(uid: string): Promise < any > {
+
+
+    public static GetProduct(uid: string): Promise <any>{
         return Product.ForceFind(uid);
     }
 
-    public static GetStock(user: User, params: any): Promise < any > {
+    public static GetStock(user: User, params: any): Promise <any>{
         let hasError = validId(params);
         return new Promise((resolve, reject) => {
             if (hasError.invalid) {
@@ -224,7 +249,7 @@ export default class ProductController {
         });
     }
 
-    public static GetType(user: User, params: any): Promise < any > {
+    public static GetType(user: User, params: any): Promise <any>{
         return new Promise((resolve, reject) => {
             if (!params.id) {
                 return reject('No id provided');
@@ -240,7 +265,7 @@ export default class ProductController {
         return Product.ForceUnreviewd();
     }
 
-    public static LoadCart(cart: any): Promise < any > {
+    public static LoadCart(cart: any): Promise <any>{
         return Product.GetCart(cart)
     }
 

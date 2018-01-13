@@ -11,8 +11,7 @@ class CSVParser{
 
     private promisedParse(incoming: string, options: Object): Promise<any[]>{
         return new Promise((resolve,reject) => {
-            let result = [];
-           
+            let result = [];           
             csv.fromString(incoming, options)
             .on("data", data => result.push(data))            
             .on("end", event => resolve(result));

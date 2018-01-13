@@ -251,9 +251,9 @@ export default class SellerController {
         });
     }
 
-    public static CategorySearch(text: string): any {
+    public static async CategorySearch(text: string): Promise<any>{        
         return Object.keys(compiled).map(key => {
-            if (String(compiled[key].name).toLowerCase().indexOf(text.toLowerCase()) > -1)
+            if(compiled[key].name.toLowerCase().indexOf(text.toLowerCase()) > -1)
                 return ({
                     value: key,
                     name: compiled[key].name,

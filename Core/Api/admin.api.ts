@@ -69,6 +69,7 @@ export default class AdminApi extends BasicController {
             )   
     }
 
+    //@AdminPath
     protected uploadProducts(req,res): void{       
         ProductController.UploadProducts(req.user, req.files.cvs).then(result => res.send(result));
     }

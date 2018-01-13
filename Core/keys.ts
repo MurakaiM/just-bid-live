@@ -14,7 +14,7 @@ export const GOOGLE_APP = process.env.GOOGLE_APP || 'mythical-bazaar-175300'
 
 export const DOMAIN = process.env.DOMAIN || 'http://localhost:8080'
 
-export const RESOURCES_PATH = `${DOMAIN}${ (MODE == 'prod') ? '/prod' : '/dev' }` 
+export const RESOURCES_PATH = `${ (MODE == 'prod') ? '/prod' : '/dev' }` 
 
 
 

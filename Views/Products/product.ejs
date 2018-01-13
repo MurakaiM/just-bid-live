@@ -16,6 +16,14 @@
       <%-include('../Common/menu', { page : pageName, user : currentUser  })%>
 
       <div class="exactly path">
+          <div class="ui small breadcrumb">
+            <%product.prCategory.reverse().forEach((element,i) => {%>
+                  <a class="section"> <%=element.name%> </a>
+                  <i class="right chevron icon divider"></i>
+            <%})%>
+            
+            <div class="active section"> <%= product.prTitle %></div>
+          </div>
       </div>
 
       <div class="row exactly products">

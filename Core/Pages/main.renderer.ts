@@ -1,6 +1,6 @@
 import TimeModule from '../Utils/Others/time'
 
-import categoriesPopups from '../Database/database.categories'
+import categoriesPopups, { collectCategory } from '../Database/database.categories'
 
 import UserController from '../Controllers/user.controller'
 import ProductController from '../Controllers/product.controller'
@@ -97,10 +97,14 @@ export default class Renderer {
             .then( product => {
                 if(!product) return res.redirect('/');
                 
-                if(!product.prAllowed) return res.redirect('/');                    
+                if(!product.prAllowed) return res.redirect('/');
                 product.increment('prViews');
+                
+                product['prCategory'] = collectCategory(product['prCategory']);      
+              
                 pageInfo['product'] = product;
                 pageInfo['pageName'] = product.prTitle;
+                
                        
                 return res.render('Products/product', pageInfo);
             })

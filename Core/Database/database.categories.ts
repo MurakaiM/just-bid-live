@@ -1,4 +1,14 @@
+import * as _ from 'lodash'
+
 import { RESOURCES_PATH } from '../keys'
+
+interface CategorySQL{
+  name: string,
+  parent?: string,
+  id : string,
+  imageUrl?: string
+}
+
 
 const forWomens = [
   {
@@ -471,23 +481,65 @@ export default categoriesPopups;
 
 function transpiler(categories : any){
   var readyResult = {};
-  categories.forEach( (element,i) => {  
-
+  categories.forEach( (element,i) => {
         if(element.subcategories && element.subcategories.length > 0){
             element.subcategories.forEach( (subelement,j) => {              
               if(subelement.subnames && subelement.subnames.length > 0){                
                   subelement.subnames.forEach((subname,l) => {
-                    readyResult[element.url+""+j+""+l]  = { name : subname.name, category : element.name}; ;
+                    readyResult[element.url+"_"+j+"_"+l] = { 
+                      name : subname.name, 
+                      category : element.name,
+                      parent: element.url+"_"+j
+                    }; 
                   });
-              }else{
-                readyResult[element.url+""+j]  = { name : subelement.name, category : element.name}; 
               }
+               
+              readyResult[element.url+"_"+j]  = { 
+                name : subelement.name, 
+                category : element.name,
+                parent : element.url
+              };               
             }); 
-        }else{
-           readyResult[element.url]  = { name : element.name, category : element.name};
         }
+          
+        readyResult[element.url]  = { name : element.name, category : element.name};
+        
   });
   return readyResult;
+}
+
+function sqlTranspiler(categories: any){
+  let bulkArray: CategorySQL[] = [];  
+
+  categories.forEach( (element,i) => {
+    if(element.subcategories && element.subcategories.length > 0){
+        element.subcategories.forEach( (subelement,j) => {              
+          if(subelement.subnames && subelement.subnames.length > 0){                
+              subelement.subnames.forEach((subname,l) => {
+                bulkArray.push({ 
+                  name : subname.name, 
+                  id : `${element.url}_${j}_${l}`,
+                  parent: `${element.url}_${j}`
+                })             
+              });
+          }
+            
+          bulkArray.push({ 
+            name : subelement.name, 
+            id : `${element.url}_${j}`,
+            parent: `${element.url}`
+          })
+        }); 
+    }
+
+    bulkArray.push({ 
+      name : element.name, 
+      id : `${element.url}`,
+      imageUrl : element.image
+    })     
+  });
+
+  return bulkArray;
 }
 
 function testerTranspiler( compiled : any){
@@ -497,16 +549,23 @@ function testerTranspiler( compiled : any){
 }
 
 export const compiled = transpiler(categoriesPopups.popups);
+export const compiledSql = sqlTranspiler(categoriesPopups.popups);
 export const compiledTester = testerTranspiler(compiled);
 
 
-export function validateCategory( name : string) : boolean{ 
-  if(compiledTester[name] !== undefined)
-    return true;
-  else
-    return false;
+export function collectCategory(id: string){
+  let category = compiled[id];
+  return category.parent ? [{ id, ...category }].concat(collectCategory(category.parent)) : [{ id, ...category }];
 }
 
+export function validateCategory(name: string): boolean{ 
+  return (compiledTester[name] !== undefined)   
+}
+
+
+
+
+/* Fees part */
 export const Fees = {
   standard : {
     fee : 200,
@@ -592,3 +651,66 @@ function calcFee( amount : number, name : string) : number{
 export function getWinningFee(winning : any){
   return calcFee(winning.lastBid, winning.auction.uidFee)  
 }
+
+/* Deprecated mapper */
+export const mapper = {
+  'Women': 'wm',
+  'Women\'s Dresses': 'wm_0_0',
+  'Tees & T-Shirts': 'wm_0_2',
+  'Blouses': ' ',
+  'Sweaters & Cardigans': ' ',
+  'Jackets & Coats': ' ',
+  'Denim & Jeans': ' ',
+  'Pajamas': ' ',
+  'Hosiery': ' ',
+  'Gloves': ' ',
+  'Hats': ' ',
+  'Babydolls': ' ',
+  'Corset & Bustiers': ' ',
+  'Men': 'mn',
+  'Cardigans & Sweaters': ' ',
+  'Pants': ' ',
+  'Kids': ' ',
+  ' Green': ' ',
+  'Kids Accessories': 'ts',
+  'Long sleeves': ' ',
+  'Women\'s Handbags': ' ',
+  'Home & Garden': ' ',
+  'ROSE GOLD': ' ',
+  'Womens Flats': ' ',
+  'Bra sets': ' ',
+  'Vintage Dresses': 'wm_0_0',
+  'Print Dresses': 'wm_0_0',
+  'Tote Bags': ' ',
+  'Blankets & throws': ' ',
+  'Long Sleeve Dresses': 'wm_0_0',
+  'Bikinis': ' ',
+  'Long Sleeves': ' ',
+  'Casual Dresses': ' ',
+  'Womens Boots': ' ',
+  'One-Pieces': ' ',
+  'Casual': ' ',
+  'Decorative Accents': ' ',
+  'Hoodies': ' ',
+  'Tankinis': ' ',
+  'Romper': ' ',
+  'Big & Tall': ' ',
+  'Necklaces': ' ',
+  'T-shirts': 'wm_0_2',
+  'Outerwear': ' ',
+  'Athletic Shoes': ' ',
+  'Sneakers': ' ',
+  'Two Piece Dresses': 'wm_0_0',
+  'Platform Shoes': ' ',
+  'Wall Stickers': ' ',
+  'Bedding Sets': ' ',
+  'Pet Supplies': ' ',
+  'Hair Extensions': ' ',
+  'Bracelets': ' ',
+  'Womens Slippers': ' ',
+  'Sweatshirts & Hoodies' : ' '
+};
+
+
+
+ 

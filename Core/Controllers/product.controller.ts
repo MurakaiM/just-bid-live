@@ -1,3 +1,4 @@
+import * as _ from 'lodash'
 import * as uuid from 'uuid/v4'
 
 import {
@@ -11,7 +12,7 @@ import {
     validProductPrice
 } from '../Utils/Others/validator'
 import { AwaitResult } from '../Utils/Communication/async'
-import { compiledTester } from '../Database/database.categories'
+import { compiled, compiledTester } from '../Database/database.categories'
 import { Database, TypesSchema,ProductSchema} from '../Database/database.controller'
 
 import RealtimeController from '../Controllers/realtime.controller'
@@ -30,23 +31,37 @@ export default class ProductController {
     public static async UploadProducts(user: User, file: any): Promise<any>{
         let values: any[] = await Parser.parseFile(file);
         let group: any[] = await Grouper.productGroup(values, {
-            id: 'Product_title',
+            id: 'Title',
             toGroup: [{
-                id: 'size',
+                id: 'Size',
                 into: 'sizes',
                 translator: elem => elem
             },{
-                id: 'color',
+                id: 'Color',
                 into: 'colors',
                 translator: (elem, whole) => {
+                    if(elem == ''){
+                        return null;
+                    }    
                     return {
-                        color : elem,
-                        image: whole['Images_link']
+                        color : elem,                       
+                        image: whole['Image Src']
                     }
                 }
             }]
         });
 
+        console.log(group[1])
+       
+        /*
+            console.log(_.uniqWith(values, (a,b) => {
+                if(a['Category'] == 'Tees & T-Shirts'){
+                    console.log(a['Image Src'])
+                }
+
+                return a['Category'] === b['Category'];
+            }).map(e => compiledTester[e['Category']] || e['Category'] ))
+        */
         return true;
     }
 
@@ -99,6 +114,7 @@ export default class ProductController {
                 await Database.Instance.Search.ForceTSV(product.prUid,TR)       
                
                 let bulkArray: Array <any>= [];
+               
                 if (Object.keys(params.sizes).length == 0)
                     Object.keys(params.colors).forEach(key => bulkArray.push({
                         typeUid : uuid(),

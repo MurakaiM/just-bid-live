@@ -491,14 +491,14 @@ function SetUpProducts() {
     },
     row: item => {
       let hasError = false;
-
       item.types.forEach(e => e.inStock <= 0 ? hasError = true : false);
 
       return $(`
         <tr>
           <td>${item.prTitle}</td>
           ${reworkStock(item.prStock,hasError)}
-          <td><i class="dollar icon"></i>${toCurrency(item.prCost)}</td>          
+          <td><i class="dollar icon"></i>${toCurrency(item.prCost)}</td>         
+          <td><i class="dollar icon"></i>${toCurrency(item.prShipment)}</td>   
           ${reworkBoolean(item.auctions.length > 0)}
           <td>${item.prViews}</td>
           <td>${item.prSold}</td>       

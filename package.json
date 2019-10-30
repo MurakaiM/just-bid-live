@@ -52,7 +52,7 @@
     "pg": "^6.4.1",
     "pg-hstore": "^2.3.2",
     "redis": "^2.7.1",
-    "sequelize": "^4.13.5",
+    "sequelize": "^5.15.1",
     "socket.io": "^2.0.2",
     "sparkpost": "^2.1.2",
     "stripe": "^5.1.0",

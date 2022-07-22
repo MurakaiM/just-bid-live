@@ -35,7 +35,7 @@
     "express-fileupload": "^0.1.3",
     "express-session": "^1.15.3",
     "fast-csv": "^2.4.1",
-    "file-type": "^6.1.0",
+    "file-type": "^16.5.4",
     "gentelella": "^1.3.0",
     "libphonenumber-js": "^0.4.18",
     "lodash": "^4.17.4",
